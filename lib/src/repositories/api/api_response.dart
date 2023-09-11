@@ -6,8 +6,8 @@ class ApiResponse {
 
   static ApiResponse toApiResponse(Map<String, dynamic> response) {
     return ApiResponse(
-        title: response['data'],
-        message: response['message'],
+        title: response['error'],
+        message: response['error_description'],
         status: response['status']);
   }
 }

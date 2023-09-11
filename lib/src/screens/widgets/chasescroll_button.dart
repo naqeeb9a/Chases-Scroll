@@ -38,7 +38,7 @@ class ChasescrollButton extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           color: !hasBorder ? color : null,
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(10),
           border: hasBorder
               ? Border.all(color: borderColor!)
               : Border.all(width: 0, color: color),
