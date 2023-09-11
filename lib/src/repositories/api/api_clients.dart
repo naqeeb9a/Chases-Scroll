@@ -218,6 +218,8 @@ class ApiClient {
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         // locator<GoRouter>().push(AppRoutes.login);
       }
+      log(e.response!.data.toString());
+      // log(e.response?.statusMessage);
       _handleDioError(ApiResponse.toApiResponse(
           e.response?.data ?? e.response?.statusMessage));
       return ApiResponse.toApiResponse(e.response!.data);

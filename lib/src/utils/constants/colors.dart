@@ -6,4 +6,17 @@ class AppColors {
   static const Color blue = Colors.blue;
   static const Color black = Colors.black;
   static const Color primary = Color(0XFF5D70F9);
+  static const Color grey = Color(0XFF7D7878);
+  static OutlineInputBorder errorBorder = const OutlineInputBorder(
+      borderSide: BorderSide(
+        color: red,
+      ),
+      borderRadius: BorderRadius.all(Radius.circular(5)));
+  static OutlineInputBorder normalBorder = const OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.grey),
+      borderRadius: BorderRadius.all(Radius.circular(5)));
+
+  static OutlineInputBorder emptyBorder = const OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.grey),
+      borderRadius: BorderRadius.all(Radius.circular(5)));
 }
