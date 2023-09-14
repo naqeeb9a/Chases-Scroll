@@ -14,13 +14,31 @@ import 'package:overlay_support/overlay_support.dart';
 import '../../config/locator.dart';
 import '../../services/storage_service.dart';
 
-void _handleDioError(ApiResponse response) {
-  // showToast(response.message!);
+dynamic getTypeAsString(dynamic input) {
+  log(input.toString());
   OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
-  ToastResp.toastMsgError(resp: response.message);
-
-  inspect(response.title);
+  if (input.response?.data is String) {
+    ToastResp.toastMsgError(resp: input.response?.data);
+    return ApiResponse(
+        message: input.response.data, status: input.response.statusCode);
+  } else {
+    log(input.response!.data.toString());
+    log(input.response!.statusMessage.toString());
+    log(input.response.statusCode.toString());
+    // return _handleDioError(ApiResponseAsString.toApiResponse(
+    //     input.response?.data ?? input.response?.statusMessage);
+    return ApiResponse(
+        message: input.response.data, status: input.response.statusCode);
+  }
 }
+
+// void _handleDioError(ApiResponse response) {
+//   // showToast(response.message!);
+//   OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+//   ToastResp.toastMsgError(resp: response.message);
+
+//   inspect(response.title);
+// }
 
 class ApiClient {
   static final _dio = Dio(
@@ -48,7 +66,7 @@ class ApiClient {
         AppHelper.showOverlayLoader();
         final response = await _dio.delete(endpoint, options: options);
         OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
-        return response.data;
+        return response;
       },
     );
 
@@ -79,7 +97,7 @@ class ApiClient {
           options: options,
           queryParameters: queryParameters,
         );
-        return response.data;
+        return response;
       },
     );
     return result;
@@ -104,7 +122,7 @@ class ApiClient {
             await _dio.patch(endpoint, data: body, options: options);
         debugPrint('Response from $endpoint \n${response.data}');
         OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
-        return response.data;
+        return response;
       },
     );
 
@@ -133,7 +151,7 @@ class ApiClient {
         log("$response");
 
         OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
-        return response.data;
+        return response;
       },
     );
 
@@ -192,7 +210,7 @@ class ApiClient {
         final response = await _dio.put(endpoint, data: body, options: options);
         OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
         debugPrint('Response from $endpoint \n${response.data}');
-        return response.data;
+        return response;
       },
     );
 
@@ -201,7 +219,7 @@ class ApiClient {
 
   static String _getToken() {
     String token =
-        locator<LocalStorageService>().getDataFromDisk(Appkeys.token);
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.token);
     log("this is the token here");
     return json.decode(token);
   }
@@ -213,16 +231,22 @@ class ApiClient {
   static Future _makeRequest(Function request) async {
     try {
       final result = await request();
-      return SuccessResponse.toApiResponse(result);
+
+      return ApiResponse(message: result.data, status: result.statusCode);
     } on DioError catch (e) {
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         // locator<GoRouter>().push(AppRoutes.login);
       }
       log(e.response!.data.toString());
-      // log(e.response?.statusMessage);
-      _handleDioError(ApiResponse.toApiResponse(
-          e.response?.data ?? e.response?.statusMessage));
-      return ApiResponse.toApiResponse(e.response!.data);
+      OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+      if (e.response?.data is String) {
+        ToastResp.toastMsgError(resp: e.response?.data.toString());
+      } else {
+        ToastResp.toastMsgError(resp: e.response?.data["error_description"]);
+      }
+      return ApiResponse(
+          message: e.response?.data ?? e.response?.statusMessage,
+          status: e.response?.statusCode);
     } on SocketException catch (e) {
       _handleSocketException(e);
       return e.message;

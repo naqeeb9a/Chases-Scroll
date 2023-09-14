@@ -1,4 +1,6 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/repositories/auth_repository.dart';
+import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
@@ -13,12 +15,24 @@ import 'package:go_router/go_router.dart';
 class ForgotPasswordScreen extends StatelessWidget {
   static final _formKey = GlobalKey<FormState>();
   static final emailController = TextEditingController();
+  static final AuthRepository _authRepository = AuthRepository();
   const ForgotPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    sendEmail() async {
+      if (_formKey.currentState!.validate()) {
+        bool result = await _authRepository.sendEmail(emailController.text, 2);
+        if (result) {
+          if (context.mounted) {
+            context.push(AppRoutes.pincode, extra: false);
+          }
+        }
+      }
+    }
+
     return Scaffold(
-        appBar: AppBar(leading: const Icon(Icons.arrow_back_ios)),
+        appBar: appBar(),
         body: SingleChildScrollView(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -43,12 +57,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 heightSpace(2),
                 ChasescrollButton(
                   buttonText: "Next",
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      context.push(AppRoutes.pincode,
-                          extra: emailController.text);
-                    }
-                  },
+                  onTap: sendEmail,
                 ),
                 heightSpace(2),
                 ChasescrollButton(
@@ -77,7 +86,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                         textColor: AppColors.black),
                     widthSpace(1),
                     InkWell(
-                      onTap: () => context.push(AppRoutes.signupone),
+                      onTap: sendEmail,
                       child: customText(
                           text: "Sign up",
                           fontSize: 12,

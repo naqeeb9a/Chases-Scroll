@@ -1,4 +1,5 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
@@ -11,14 +12,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class EmailScreen extends StatelessWidget {
-  static final _formKey = GlobalKey<FormState>();
   static final emailController = TextEditingController();
-  const EmailScreen({super.key});
+  final _formKey = GlobalKey<FormState>();
+  EmailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(leading: const Icon(Icons.arrow_back_ios)),
+        appBar: appBar(),
         body: SingleChildScrollView(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),

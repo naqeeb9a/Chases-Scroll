@@ -1,14 +1,11 @@
 class ApiResponse {
-  String? message;
-  String? title;
-  String? status;
-  ApiResponse({this.title, this.message, this.status});
+  dynamic message;
 
-  static ApiResponse toApiResponse(Map<String, dynamic> response) {
-    return ApiResponse(
-        title: response['error'],
-        message: response['error_description'],
-        status: response['status']);
+  int? status;
+  ApiResponse({this.message, this.status});
+
+  static ApiResponse toApiResponse(String message, int status) {
+    return ApiResponse(message: message, status: status);
   }
 }
 
@@ -22,6 +19,6 @@ class SuccessResponse {
     return SuccessResponse(
         data: response['data'],
         message: response['message'],
-        status: response['status']);
+        status: response['statusCode']);
   }
 }

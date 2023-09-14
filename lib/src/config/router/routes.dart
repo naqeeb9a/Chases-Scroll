@@ -8,4 +8,7 @@ class AppRoutes {
   static const String signuptwo = "/signuptwo";
   static const String forgotPassword = "/forgot-password";
   static const String pincode = "/pincode";
+  static const String newPassword = "/new-password";
+  static const String successPassword = "/success-password";
+  static const String bottomNav = "/bottom-nav";
 }
