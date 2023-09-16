@@ -1,11 +1,13 @@
 class SignupOneModel {
-  final String fullname;
+  final String firstname;
+  final String lastName;
   final String username;
   final String password;
   final String retypePassword;
 
   SignupOneModel(
-      {required this.fullname,
+      {required this.firstname,
+      required this.lastName,
       required this.username,
       required this.password,
       required this.retypePassword});

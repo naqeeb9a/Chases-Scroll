@@ -11,21 +11,24 @@ import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class PasswordScreen extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
-  final String email;
-  final password = TextEditingController();
+class NewPassword extends StatelessWidget {
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final AuthRepository _authRepository = AuthRepository();
-  PasswordScreen({super.key, required this.email});
+  final String token;
+  final _formKey = GlobalKey<FormState>();
+  NewPassword({super.key, required this.token});
 
   @override
   Widget build(BuildContext context) {
-    void login() async {
+    void confirmPassword() async {
       if (_formKey.currentState!.validate()) {
-        bool result = await _authRepository.login(email, password.text);
+        bool result = await _authRepository.changePassword(
+            passwordController.text, token);
+
         if (result) {
           if (context.mounted) {
-            context.push(AppRoutes.bottomNav);
+            context.push(AppRoutes.successPassword);
           }
         }
       }
@@ -47,24 +50,31 @@ class PasswordScreen extends StatelessWidget {
                     text: "Chasescroll",
                     fontSize: 20,
                     textColor: AppColors.primary),
-                heightSpace(2),
+                heightSpace(3),
                 AppTextFormField(
-                  textEditingController: password,
+                  textEditingController: passwordController,
                   validator: passwordValidation,
-                  label: "Enter your password",
+                  label: "New Password",
                   hintText: "Password",
                 ),
                 heightSpace(2),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: customText(
-                        text: "Forgot Password?",
-                        fontSize: 12,
-                        textColor: AppColors.primary)),
-                heightSpace(2),
+                AppTextFormField(
+                  textEditingController: confirmPasswordController,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Password can't be empty";
+                    }
+                    if (val != passwordController.text) {
+                      return "Passwords do not match";
+                    }
+                    return null;
+                  },
+                  hintText: "Confirm Password",
+                ),
+                heightSpace(3),
                 ChasescrollButton(
-                  buttonText: "Login",
-                  onTap: login,
+                  buttonText: "Submit",
+                  onTap: confirmPassword,
                 ),
                 heightSpace(2),
               ],

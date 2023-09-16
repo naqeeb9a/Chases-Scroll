@@ -16,6 +16,7 @@ class PinView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Pinput(
+      length: 6,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       onChanged: onChanged,
       androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsUserConsentApi,

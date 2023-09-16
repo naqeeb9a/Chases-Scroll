@@ -1,5 +1,6 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/screens/auth_screens/data.dart';
+import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
@@ -11,18 +12,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class SignupScreen extends StatelessWidget {
-  static final _formKey = GlobalKey<FormState>();
   static final emailController = TextEditingController();
-  static final fullName = TextEditingController();
+  static final firstName = TextEditingController();
+  static final lastName = TextEditingController();
   static final username = TextEditingController();
   static final password = TextEditingController();
   static final confirmPassword = TextEditingController();
-  const SignupScreen({super.key});
+  final _formKey = GlobalKey<FormState>();
+  SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(leading: const Icon(Icons.arrow_back_ios)),
+        appBar: appBar(),
         body: SingleChildScrollView(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -38,8 +40,14 @@ class SignupScreen extends StatelessWidget {
                 heightSpace(2),
                 AppTextFormField(
                   validator: stringValidation,
-                  textEditingController: fullName,
-                  hintText: "Full-name",
+                  textEditingController: firstName,
+                  hintText: "Enter First Name",
+                ),
+                heightSpace(.5),
+                AppTextFormField(
+                  validator: stringValidation,
+                  textEditingController: lastName,
+                  hintText: "Enter Last Name",
                 ),
                 heightSpace(.5),
                 AppTextFormField(
@@ -75,7 +83,8 @@ class SignupScreen extends StatelessWidget {
                     if (_formKey.currentState!.validate()) {
                       context.push(AppRoutes.signuptwo,
                           extra: SignupOneModel(
-                              fullname: fullName.text,
+                              firstname: firstName.text,
+                              lastName: lastName.text,
                               username: username.text,
                               password: password.text,
                               retypePassword: confirmPassword.text));

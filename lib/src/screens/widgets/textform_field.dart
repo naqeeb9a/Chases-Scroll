@@ -2,6 +2,8 @@ import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/constants/colors.dart';
 
@@ -108,7 +110,11 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
                 }
               }()),
               hintText: widget.hintText,
-              hintStyle: const TextStyle(fontSize: 14),
+              hintStyle: GoogleFonts.dmSans(
+                  textStyle: TextStyle(
+                      color: AppColors.black.withOpacity(.5),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.dp)),
               prefixIcon: widget.prefixIcon != null
                   ? Padding(
                       padding: const EdgeInsets.all(15),
