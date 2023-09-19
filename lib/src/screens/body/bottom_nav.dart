@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/images.dart';
+import '../expore_screens/explore_main_view.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -16,7 +17,8 @@ class _BottomNavState extends State<BottomNav> {
   final List<Widget> _widgets = [
     const Center(
       child: Text("Option 1"),
-    )
+    ),
+    const ExploreMainView(),
   ];
 
   @override
