@@ -7,6 +7,9 @@ class AppColors {
   static const Color black = Colors.black;
   static const Color primary = Color(0XFF5D70F9);
   static const Color grey = Color(0XFFD0D5DD);
+  static const Color lightGrey = Color(0xffECECEC);
+  static const Color textGrey = Color(0xFF9E9595);
+  static const Color textFormColor = Color(0x3FD0D4EB);
   static OutlineInputBorder errorBorder = const OutlineInputBorder(
       borderSide: BorderSide(
         color: red,

@@ -8,7 +8,7 @@ import 'package:chases_scroll/src/screens/auth_screens/pincode.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
-import 'package:chases_scroll/src/screens/body/bottom_nav.dart';
+import 'package:chases_scroll/src/screens/bottom_nav.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
