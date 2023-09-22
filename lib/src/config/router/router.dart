@@ -14,6 +14,9 @@ import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../screens/expore_screens/widgets/search_explode_view.dart';
+import '../../screens/expore_screens/widgets/suggestion_more_view.dart';
+
 GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.splashscreen,
@@ -73,5 +76,15 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         path: AppRoutes.bottomNav,
         name: AppRoutes.bottomNav,
         builder: (_, __) => const BottomNav(),
+      ),
+      GoRoute(
+        path: AppRoutes.suggestionFriendMore,
+        name: AppRoutes.suggestionFriendMore,
+        builder: (_, __) => const SuggestionFriendMore(), //SearchExploreView
+      ),
+      GoRoute(
+        path: AppRoutes.searchExploreView,
+        name: AppRoutes.searchExploreView,
+        builder: (_, __) => const SearchExploreView(),
       ),
     ]);

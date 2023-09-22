@@ -19,4 +19,8 @@ class AppImages {
   static const String like = "assets/svgs/like.svg";
   static const String comment = "assets/svgs/comment.svg";
   static const String share = "assets/svgs/share.svg";
+  static const String suggestionGrid = "assets/svgs/grid_suggestion.svg";
+  static const String location = "assets/svgs/Location.svg";
+  static const String bookmark = "assets/svgs/Bookmark.svg";
+  static const String bookmarkFilled = "assets/svgs/Bookmark-filled.svg";
 }

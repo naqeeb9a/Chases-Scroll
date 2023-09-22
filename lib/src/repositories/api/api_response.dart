@@ -17,8 +17,9 @@ class SuccessResponse {
   SuccessResponse({this.message, this.status, this.data});
   static SuccessResponse toApiResponse(Map<String, dynamic> response) {
     return SuccessResponse(
-        data: response['data'],
-        message: response['message'],
-        status: response['statusCode']);
+      data: response['data'],
+      message: response['message'],
+      status: response['statusCode'],
+    );
   }
 }
