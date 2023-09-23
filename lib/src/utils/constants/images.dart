@@ -23,4 +23,5 @@ class AppImages {
   static const String location = "assets/svgs/Location.svg";
   static const String bookmark = "assets/svgs/Bookmark.svg";
   static const String bookmarkFilled = "assets/svgs/Bookmark-filled.svg";
+  static const String favouriteFilled = "assets/svgs/favorite-filled.svg";
 }

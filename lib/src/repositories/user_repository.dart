@@ -1,15 +1,17 @@
+import 'dart:developer';
 
-// class PostRepository {
-//   final _storage = locator<LocalStorageService>();
+import 'package:chases_scroll/src/models/user_model.dart';
+import 'package:chases_scroll/src/repositories/endpoints.dart';
 
-//   Future<PostModel> getPost() async {
-//     final response = await ApiClient.get(Endpoints.getPost, useToken: true);
+import 'api/api_clients.dart';
 
-//     if (response.status == 200 || response.status == 201) {
-//       log("this is the message");
-//       log(response.message.toString());
-//       return PostModel.fromJson(response.message);
-//     }
-//     return PostModel();
-//   }
-// }
+class UserRepository {
+  Future<UserModel> getUserProfile() async {
+    final response = await ApiClient.get(Endpoints.getUserProfile);
+    if (response.status == 200) {
+      return UserModel.fromJson(response.message);
+    }
+    log(response.message.toString());
+    return UserModel();
+  }
+}

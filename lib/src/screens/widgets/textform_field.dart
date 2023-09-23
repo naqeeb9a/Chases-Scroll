@@ -127,9 +127,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
               // suffix: widget.suffixIcon,
               fillColor: AppColors.white,
               filled: true,
-              enabledBorder: widget.hasBorder != null
-                  ? AppColors.normalBorder
-                  : InputBorder.none,
+              enabledBorder: AppColors.normalBorder,
               errorBorder: AppColors.errorBorder,
               focusedBorder: AppColors.normalBorder,
               focusedErrorBorder: AppColors.normalBorder),
