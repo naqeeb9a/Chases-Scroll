@@ -14,6 +14,15 @@ class Endpoints {
   static const String sendEmail = '$port88/chasescroll/verification/send-email';
   static const String changePassword =
       '$port88/chasescroll/verification/change-password';
+
+  //------------------------------------------------------------------------//
+  //---------------------------- Explore ------------------------------------//
   static const String getTopEvents =
       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8084/events/get-top-events";
+  static const String getAllEvents =
+      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8084/events/events";
+  static const String getSuggestedUsers =
+      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8082/user/suggest-connections";
+  static const String getAllCommunities =
+      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8083/group/group";
 }

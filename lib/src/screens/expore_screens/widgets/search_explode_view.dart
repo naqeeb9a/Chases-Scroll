@@ -1,63 +1,147 @@
-import 'package:chases_scroll/src/config/router/routes.dart';
-import 'package:chases_scroll/src/screens/expore_screens/widgets/event_container_tranform_view.dart';
+import 'dart:developer';
+
+import 'package:chases_scroll/src/models/community_model.dart';
+import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_community_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_event_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_people_info_widget.dart';
-import 'package:chases_scroll/src/screens/expore_screens/widgets/suggestions_view.dart';
+import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
-import 'package:chases_scroll/src/utils/constants/dimens.dart';
-import 'package:chases_scroll/src/utils/constants/images.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../../models/event_model.dart';
 import '../../../utils/constants/spacer.dart';
 import '../../widgets/custom_fonts.dart';
 import '../../widgets/textform_field.dart';
 
-class SearchExploreView extends StatefulWidget {
+class SearchExploreView extends HookWidget {
+  static final ExploreRepository _exploreRepository = ExploreRepository();
+
   const SearchExploreView({super.key});
-
-  @override
-  State<SearchExploreView> createState() => _SearchExploreViewState();
-}
-
-class _SearchExploreViewState extends State<SearchExploreView>
-    with TickerProviderStateMixin {
-  final searchController = TextEditingController();
-
-  PageController pageController = PageController(viewportFraction: 0.95);
-  int currentIndex = 0;
-  PageController? _controller;
-
-  double _currentPageValue = 0.0;
-  final double _scaleFactor = 0.8;
-  double height = 200;
-
-  @override
-  void initState() {
-    _controller = PageController(initialPage: 0);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller!.dispose();
-    super.dispose();
-  }
-
-  void animateTo(int page) {
-    pageController.animateToPage(
-      page, // convert int to double
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.ease,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final searchController = TextEditingController();
+
+    PageController pageController = PageController(viewportFraction: 0.95);
+
+    void animateTo(int page) {
+      pageController.animateToPage(
+        page, // convert int to double
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+    }
+
+    //------------------------------------------------------------------------//
+    //-------------------This is for Events -----------------------------------//
+    final allEventLoading = useState<bool>(true);
+    final allEventModel = useState<List<ContentEvent>>([]);
+    //final currentPageValue = useState<double>(0);
+    final allEvents = useState<List<ContentEvent>>([]);
+    final foundEvents = useState<List<ContentEvent>>([]);
+    final currentPageValue = useValueNotifier(0);
+
+    getAllEvents() {
+      _exploreRepository.getAllEvents().then((value) {
+        allEventLoading.value = false;
+        allEventModel.value = value;
+        foundEvents.value = value;
+        allEvents.value = value;
+      });
+    }
+
+    //for events filtered list
+    void _runEventFilter(String enteredKeyword) {
+      log(enteredKeyword);
+      if (enteredKeyword.isEmpty) {
+        foundEvents.value = allEvents.value;
+      } else {
+        final found = allEvents.value
+            .where((event) => event.eventName
+                .toLowerCase()
+                .contains(enteredKeyword.toLowerCase()))
+            .toList();
+
+        foundEvents.value = found;
+      }
+    }
+
+    //------------------------------------------------------------------------//
+    //-------------------This is for Users -----------------------------------//
+    final usersLoading = useState<bool>(true);
+    final usersModel = useState<List<Content>>([]);
+    final allUsers = useState<List<Content>>([]);
+    final foundUsers = useState<List<Content>>([]);
+
+    getSuggestedUsers() {
+      _exploreRepository.getSuggestedUsers().then((value) {
+        usersLoading.value = false;
+        usersModel.value = value;
+        allUsers.value = value;
+        foundUsers.value = value;
+      });
+    }
+
+    //for events filtered list
+    void _runUsersFilter(String enteredKeyword) {
+      log(enteredKeyword);
+      if (enteredKeyword.isEmpty) {
+        foundUsers.value = allUsers.value;
+      } else {
+        final found = allUsers.value
+            .where((event) => event.firstName!
+                .toLowerCase()
+                .contains(enteredKeyword.toLowerCase()))
+            .toList();
+
+        foundUsers.value = found;
+      }
+    }
+
+    //------------------------------------------------------------------------//
+    //----------------------This is for community-----------------------------//
+    final communityLoading = useState<bool>(true);
+    final communityModel = useState<List<CommContent>>([]);
+    final allCommunity = useState<List<CommContent>>([]);
+    final foundCommunity = useState<List<CommContent>>([]);
+
+    getAllCommunities() {
+      _exploreRepository.getAllCommunity().then((value) {
+        communityLoading.value = false;
+        communityModel.value = value;
+        allCommunity.value = value;
+        foundCommunity.value = value;
+      });
+    }
+
+    //for events filtered list
+    void _runCommunityFilter(String enteredKeyword) {
+      log(enteredKeyword);
+      if (enteredKeyword.isEmpty) {
+        foundCommunity.value = allCommunity.value;
+      } else {
+        final found = allCommunity.value
+            .where((event) => event.data!.name!
+                .toLowerCase()
+                .contains(enteredKeyword.toLowerCase()))
+            .toList();
+
+        foundCommunity.value = found;
+      }
+    }
+
+    useEffect(() {
+      getAllEvents();
+      getSuggestedUsers();
+      getAllCommunities();
+      return null;
+    }, []);
+
     return Scaffold(
       backgroundColor: AppColors.white,
+      appBar: appBar(),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,9 +149,19 @@ class _SearchExploreViewState extends State<SearchExploreView>
             Padding(
               padding: const EdgeInsets.only(bottom: 0, left: 15, right: 15),
               child: AppTextFormField(
-                textEditingController: searchController,
+                //textEditingController: searchController,
                 //label: "",
                 hintText: "Search for users, event or...",
+                onChanged: (value) {
+                  //_runUsersFilter(value);
+                  if (currentPageValue.value == 0) {
+                    _runUsersFilter(value);
+                  } else if (currentPageValue.value == 1) {
+                    _runEventFilter(value);
+                  } else {
+                    _runCommunityFilter(value);
+                  }
+                },
               ),
             ),
             heightSpace(1),
@@ -77,35 +171,71 @@ class _SearchExploreViewState extends State<SearchExploreView>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () => animateTo(0),
-                    child: customText(
-                        text: "People",
-                        fontSize: 14,
-                        textColor: AppColors.primary,
-                        fontWeight: FontWeight.w700),
+                    onTap: () {
+                      animateTo(0);
+                      //log(currentPageValue.value.toString());
+                    },
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: currentPageValue,
+                      builder:
+                          (BuildContext context, int value, Widget? child) {
+                        return customText(
+                          text: "People",
+                          fontSize: 14,
+                          textColor: value == 0
+                              ? AppColors.deepPrimary
+                              : AppColors.searchTextGrey,
+                          fontWeight: FontWeight.w700,
+                        );
+                      },
+                    ),
                   ),
                   GestureDetector(
-                    onTap: () => animateTo(1),
-                    child: customText(
-                        text: "Events",
-                        fontSize: 14,
-                        textColor: AppColors.primary,
-                        fontWeight: FontWeight.w700),
+                    onTap: () {
+                      animateTo(1);
+                      //log(currentPageValue.value.toString());
+                    },
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: currentPageValue,
+                      builder:
+                          (BuildContext context, int value, Widget? child) {
+                        return customText(
+                          text: "Events",
+                          fontSize: 14,
+                          textColor: value == 1
+                              ? AppColors.deepPrimary
+                              : AppColors.searchTextGrey,
+                          fontWeight: FontWeight.w700,
+                        );
+                      },
+                    ),
                   ),
                   GestureDetector(
-                    onTap: () => animateTo(2),
-                    child: customText(
-                        text: "Communities",
-                        fontSize: 14,
-                        textColor: AppColors.primary,
-                        fontWeight: FontWeight.w700),
+                    onTap: () {
+                      animateTo(2);
+                      //log(currentPageValue.value.toString());
+                    },
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: currentPageValue,
+                      builder:
+                          (BuildContext context, int value, Widget? child) {
+                        return customText(
+                          text: "Communities",
+                          fontSize: 14,
+                          textColor: value == 2
+                              ? AppColors.deepPrimary
+                              : AppColors.searchTextGrey,
+                          fontWeight: FontWeight.w700,
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
             heightSpace(1),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 //color: Colors.amber,
                 width: double.infinity,
                 child: Container(
@@ -113,46 +243,73 @@ class _SearchExploreViewState extends State<SearchExploreView>
                   child: PageView(
                     scrollDirection: Axis.horizontal,
                     controller: pageController,
+                    onPageChanged: (index) {
+                      currentPageValue.value = index;
+                      log("currentPageValue.value-======> ${currentPageValue.value.toString()}");
+                    },
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       //----------first page view ------------------
-                      // ... Your code for the first page view ...
                       Container(
-                        margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                         width: double.infinity,
                         child: ListView.builder(
-                          itemCount: 5,
+                          itemCount: foundUsers.value.length,
                           itemBuilder: (BuildContext context, int index) {
+                            Content user = foundUsers.value[index];
                             return SearchPeopleWidget(
-                              fullName: "BOB Wheeler",
-                              username: "@bobwheeler",
+                              fullName: "${user.firstName} ${user.lastName}",
+                              username: "${user.username}",
+                              image: user.data!.imgMain!.value,
                             );
                           },
                         ),
                       ),
 
                       //----------second page view ------------------
-                      // ... Your code for the second page view ...
                       Container(
-                        margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                         width: double.infinity,
                         child: ListView.builder(
-                          itemCount: 5,
+                          itemCount: foundEvents.value.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return SearchEventWidget();
+                            ContentEvent event = foundEvents.value[index];
+
+                            //for formatted time
+                            int startTimeInMillis = event.startTime;
+                            DateTime startTime =
+                                DateTimeUtils.convertMillisecondsToDateTime(
+                                    startTimeInMillis);
+                            String formattedDate =
+                                DateUtilss.formatDateTime(startTime);
+                            return SearchEventWidget(
+                              eventName: event.eventName,
+                              date: formattedDate,
+                              location: event.location.address,
+                              image: event.currentPicUrl,
+                              price: event.minPrice,
+                              onSave: () {},
+                            );
                           },
                         ),
                       ),
 
-                      //----------third page view ------------------
-                      // ... Your code for the third page view ...
+                      //----------Community page view ------------------
                       Container(
-                        margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                         width: double.infinity,
                         child: ListView.builder(
-                          itemCount: 5,
+                          itemCount: foundCommunity.value.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return SearchCommunityWidget();
+                            CommContent comm = foundCommunity.value[index];
+                            return SearchCommunityWidget(
+                              image: comm.data!.imgSrc,
+                              name: comm.data!.name,
+                              desc: comm.data!.description,
+                              isPublic: comm.data!.isPublic,
+                              memberCount: comm.data!.memberCount.toString(),
+                              joinStatus: comm.joinStatus,
+                            );
                           },
                         ),
                       ),

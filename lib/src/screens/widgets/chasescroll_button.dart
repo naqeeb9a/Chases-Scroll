@@ -59,8 +59,10 @@ class ChasescrollButton extends StatelessWidget {
                 buttonText!,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: textColor ?? AppColors.white),
+                  fontWeight: FontWeight.w500,
+                  color: textColor ?? AppColors.white,
+                  fontSize: 12,
+                ),
               ),
             ),
             const SizedBox(

@@ -1,3 +1,4 @@
+import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -5,11 +6,16 @@ import '../../widgets/custom_fonts.dart';
 
 class EventContainerTransformView extends StatefulWidget {
   const EventContainerTransformView(
-      {super.key, this.index, this.currentPageValue, this.scaleFactor});
+      {super.key,
+      this.index,
+      this.currentPageValue,
+      this.scaleFactor,
+      this.event});
 
   final int? index;
   final double? currentPageValue;
   final double? scaleFactor;
+  final ContentEvent? event;
 
   @override
   State<EventContainerTransformView> createState() =>
@@ -105,27 +111,22 @@ class _EventContainerTransformViewState
                       ),
                       //color: Colors.grey.shade200,
                     ),
-                    child: ListView.builder(
-                      itemCount: 4,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(40),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0),
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(0),
+                        ),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                            "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.event!.currentPicUrl.toString()}",
                           ),
-                          child: Container(
-                            height: 200,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                                // image: DecorationImage(
-                                //   fit: BoxFit.cover,
-                                //   image: NetworkImage(
-                                //     "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$eventUrl",
-                                //   ),
-                                // ),
-                                ),
-                          ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -140,13 +141,17 @@ class _EventContainerTransformViewState
                         topLeft: Radius.circular(0),
                         topRight: Radius.circular(0),
                       ),
-                      color: AppColors.primary),
+                      color: AppColors.deepPrimary),
                   child: Center(
-                    child: customText(
-                        text: "Davido London Tour",
-                        fontSize: 12,
-                        textColor: AppColors.primary,
-                        fontWeight: FontWeight.w400),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child: customText(
+                        text: widget.event!.eventName,
+                        fontSize: 11,
+                        textColor: AppColors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
                 ),
               ),

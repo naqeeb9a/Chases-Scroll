@@ -8,7 +8,22 @@ import '../../../utils/constants/spacer.dart';
 import '../../widgets/custom_fonts.dart';
 
 class SearchEventWidget extends StatelessWidget {
-  const SearchEventWidget({super.key});
+  const SearchEventWidget({
+    super.key,
+    this.eventName,
+    this.image,
+    this.date,
+    this.location,
+    this.onSave,
+    this.price,
+  });
+
+  final String? eventName;
+  final String? image;
+  final String? date;
+  final String? location;
+  final double? price;
+  final Function()? onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +57,12 @@ class SearchEventWidget extends StatelessWidget {
                           topRight: Radius.circular(0),
                         ),
                         color: Colors.grey.shade200,
-                        // image: DecorationImage(
-                        //   scale: 1.0,
-                        //   fit: BoxFit.fill,
-                        //   image: NetworkImage(
-                        //       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image"),
-                        // ),
+                        image: DecorationImage(
+                          scale: 1.0,
+                          fit: BoxFit.fill,
+                          image: NetworkImage(
+                              "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image"),
+                        ),
                       ),
                     ),
                     Expanded(
@@ -64,13 +79,13 @@ class SearchEventWidget extends StatelessWidget {
                                   width: 150,
                                   //color: Colors.amber,
                                   child: customText(
-                                      text: "MOHBAD RIP Concert",
+                                      text: eventName.toString(),
                                       fontSize: 14,
                                       textColor: AppColors.black,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 customText(
-                                    text: "\$200",
+                                    text: "\$${price.toString()}",
                                     fontSize: 14,
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w500),
@@ -86,18 +101,20 @@ class SearchEventWidget extends StatelessWidget {
                                 ),
                                 widthSpace(1),
                                 customText(
-                                    text: "Oct. 20 2023 at 09:00am",
+                                    text: date.toString(),
                                     fontSize: 12,
                                     textColor: AppColors.searchTextGrey,
                                     fontWeight: FontWeight.w500),
                               ],
                             ),
-                            heightSpace(1),
+                            heightSpace(0.5),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
                                   child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       SvgPicture.asset(
                                         AppImages.location,
@@ -108,7 +125,7 @@ class SearchEventWidget extends StatelessWidget {
                                       widthSpace(1),
                                       Expanded(
                                         child: customText(
-                                            text: "Eko Hotel & Suites",
+                                            text: location.toString(),
                                             fontSize: 11,
                                             textColor: AppColors.primary,
                                             fontWeight: FontWeight.w500),
@@ -134,6 +151,7 @@ class SearchEventWidget extends StatelessWidget {
                     heightSpace(5),
                   ],
                 ),
+                Divider(),
               ],
             ),
           ),

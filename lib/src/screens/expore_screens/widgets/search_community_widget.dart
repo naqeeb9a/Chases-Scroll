@@ -8,12 +8,31 @@ import '../../widgets/chasescroll_button.dart';
 import '../../widgets/custom_fonts.dart';
 
 class SearchCommunityWidget extends StatelessWidget {
-  const SearchCommunityWidget({super.key});
+  const SearchCommunityWidget(
+      {super.key,
+      this.name,
+      this.image,
+      this.memberCount,
+      this.desc,
+      this.joinStatus,
+      this.isPublic});
+
+  final String? name;
+  final String? image;
+  final String? memberCount;
+  final String? desc;
+  final String? joinStatus;
+  final bool? isPublic;
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    //this is to split the name of community and take the initails out of the name
+    String n = name.toString();
+    List<String> words = n.split(' ');
+    String initials = words.map((word) => word[0]).join('');
     return GestureDetector(
       onTap: () {
         // Navigator.of(context).push(
@@ -90,11 +109,18 @@ class SearchCommunityWidget extends StatelessWidget {
                                   topRight: Radius.circular(0),
                                 ),
                                 color: Colors.grey.shade200,
-                                // image: DecorationImage(
-                                //   fit: BoxFit.cover,
-                                //   image: NetworkImage(
-                                //       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm['data']['imgSrc']}"),
-                                // ),
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image"),
+                                ),
+                              ),
+                              child: Center(
+                                child: customText(
+                                    text: image!.isEmpty ? initials : "",
+                                    fontSize: 10,
+                                    textColor: AppColors.deepPrimary,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
@@ -106,7 +132,7 @@ class SearchCommunityWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         customText(
-                            text: "A Haven Party Light",
+                            text: name.toString(),
                             fontSize: 14,
                             textColor: AppColors.black,
                             fontWeight: FontWeight.w500),
@@ -115,8 +141,7 @@ class SearchCommunityWidget extends StatelessWidget {
                           width: width / 2.5,
                           //color: Colors.amber,
                           child: customText(
-                              text:
-                                  "Rorem ipsum  Dolor sit amet, conse Rorem ipsum  Dolor sit amet, conse",
+                              text: desc.toString(),
                               fontSize: 12,
                               textColor: AppColors.searchTextGrey,
                               fontWeight: FontWeight.w500),
@@ -125,7 +150,7 @@ class SearchCommunityWidget extends StatelessWidget {
                         Row(
                           children: [
                             customText(
-                                text: "24k Members",
+                                text: memberCount.toString(),
                                 fontSize: 10,
                                 textColor: AppColors.searchTextGrey,
                                 fontWeight: FontWeight.w500),
@@ -138,7 +163,8 @@ class SearchCommunityWidget extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(3.0),
                                 child: customText(
-                                    text: "Public",
+                                    text:
+                                        isPublic == true ? "Public" : "Private",
                                     fontSize: 8,
                                     textColor: AppColors.red,
                                     fontWeight: FontWeight.w500),
@@ -156,7 +182,15 @@ class SearchCommunityWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   padding: EdgeInsets.all(10),
                   child: customText(
-                      text: "Joined",
+                      text: joinStatus == "CONNECTED"
+                          ? "Connected"
+                          : joinStatus == "REQUEST_PENDING"
+                              ? "Pending Request"
+                              : joinStatus == "FRIEND_REQUEST_SENT"
+                                  ? "Request Sent"
+                                  : joinStatus == "FRIEND_REQUEST_RECIEVED"
+                                      ? "Received"
+                                      : "Join",
                       fontSize: 10,
                       textColor: AppColors.white,
                       fontWeight: FontWeight.w500),
