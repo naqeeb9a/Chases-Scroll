@@ -15,7 +15,7 @@ class Endpoints {
   static const String changePassword =
       '$port88/chasescroll/verification/change-password';
 
-  //------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//
   static const String getTopEvents =
       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8084/events/get-top-events";
@@ -25,4 +25,11 @@ class Endpoints {
       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8082/user/suggest-connections";
   static const String getAllCommunities =
       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8083/group/group";
+
+  static const String connectFriend =
+      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8082/user/send-friend-request";
+
+  //--------------------------- Event Endpoint ------------------------------//
+  static const String saveEvent =
+      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8084/events/save-event";
 }

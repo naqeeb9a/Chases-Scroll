@@ -1,11 +1,16 @@
 import 'dart:developer';
 
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/models/community_model.dart';
+import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_community_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_event_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_people_info_widget.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +23,7 @@ import '../../widgets/textform_field.dart';
 
 class SearchExploreView extends HookWidget {
   static final ExploreRepository _exploreRepository = ExploreRepository();
+  static final EventRepository _eventRepository = EventRepository();
 
   const SearchExploreView({super.key});
   @override
@@ -50,6 +56,12 @@ class SearchExploreView extends HookWidget {
         foundEvents.value = value;
         allEvents.value = value;
       });
+    }
+
+    //for event data changes
+    void refreshEventData() {
+      allEventLoading.value = false; // Set loading state back to true
+      getAllEvents(); // Trigger the API call again
     }
 
     //for events filtered list
@@ -131,6 +143,9 @@ class SearchExploreView extends HookWidget {
         foundCommunity.value = found;
       }
     }
+
+    String userId =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
 
     useEffect(() {
       getAllEvents();
@@ -268,7 +283,7 @@ class SearchExploreView extends HookWidget {
 
                       //----------second page view ------------------
                       Container(
-                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                         width: double.infinity,
                         child: ListView.builder(
                           itemCount: foundEvents.value.length,
@@ -288,7 +303,23 @@ class SearchExploreView extends HookWidget {
                               location: event.location.address,
                               image: event.currentPicUrl,
                               price: event.minPrice,
-                              onSave: () {},
+                              isSaved: event.isSaved!,
+                              onSave: () async {
+                                final result = await _eventRepository.saveEvent(
+                                  eventID: event.id,
+                                  userID: userId,
+                                );
+                                log(userId);
+                                if (result['message'] == true) {
+                                  // Trigger a refresh of the events data
+                                  refreshEventData();
+                                  ToastResp.toastMsgSuccess(
+                                      resp: result['message']);
+                                } else {
+                                  ToastResp.toastMsgError(
+                                      resp: result['message']);
+                                }
+                              },
                             );
                           },
                         ),

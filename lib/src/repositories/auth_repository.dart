@@ -36,6 +36,8 @@ class AuthRepository {
     if (response.status == 200) {
       _storage.saveDataToDisk(
           AppKeys.token, json.encode(response.message['access_token']));
+      _storage.saveDataToDisk(
+          AppKeys.userId, json.encode(response.message['user_id']));
       return true;
     }
     log(response.message.toString());

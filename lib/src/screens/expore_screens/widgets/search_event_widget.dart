@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../utils/constants/colors.dart';
@@ -7,7 +8,15 @@ import '../../../utils/constants/images.dart';
 import '../../../utils/constants/spacer.dart';
 import '../../widgets/custom_fonts.dart';
 
-class SearchEventWidget extends StatelessWidget {
+class SearchEventWidget extends StatefulWidget {
+  final String? eventName;
+
+  final String? image;
+  final String? date;
+  final String? location;
+  final double? price;
+  final bool isSaved;
+  final Function()? onSave;
   const SearchEventWidget({
     super.key,
     this.eventName,
@@ -16,15 +25,14 @@ class SearchEventWidget extends StatelessWidget {
     this.location,
     this.onSave,
     this.price,
+    required this.isSaved,
   });
 
-  final String? eventName;
-  final String? image;
-  final String? date;
-  final String? location;
-  final double? price;
-  final Function()? onSave;
+  @override
+  State<SearchEventWidget> createState() => _SearchEventWidgetState();
+}
 
+class _SearchEventWidgetState extends State<SearchEventWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -61,7 +69,7 @@ class SearchEventWidget extends StatelessWidget {
                           scale: 1.0,
                           fit: BoxFit.fill,
                           image: NetworkImage(
-                              "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image"),
+                              "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.image}"),
                         ),
                       ),
                     ),
@@ -79,13 +87,13 @@ class SearchEventWidget extends StatelessWidget {
                                   width: 150,
                                   //color: Colors.amber,
                                   child: customText(
-                                      text: eventName.toString(),
+                                      text: widget.eventName.toString(),
                                       fontSize: 14,
                                       textColor: AppColors.black,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 customText(
-                                    text: "\$${price.toString()}",
+                                    text: "\$${widget.price.toString()}",
                                     fontSize: 14,
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w500),
@@ -101,7 +109,7 @@ class SearchEventWidget extends StatelessWidget {
                                 ),
                                 widthSpace(1),
                                 customText(
-                                    text: date.toString(),
+                                    text: widget.date.toString(),
                                     fontSize: 12,
                                     textColor: AppColors.searchTextGrey,
                                     fontWeight: FontWeight.w500),
@@ -125,7 +133,7 @@ class SearchEventWidget extends StatelessWidget {
                                       widthSpace(1),
                                       Expanded(
                                         child: customText(
-                                            text: location.toString(),
+                                            text: widget.location.toString(),
                                             fontSize: 11,
                                             textColor: AppColors.primary,
                                             fontWeight: FontWeight.w500),
@@ -135,10 +143,21 @@ class SearchEventWidget extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    SvgPicture.asset(
-                                      AppImages.bookmark,
-                                      height: 15,
-                                      width: 15,
+                                    GestureDetector(
+                                      onTap: widget.onSave,
+                                      child: Container(
+                                        child: widget.isSaved == true
+                                            ? SvgPicture.asset(
+                                                AppImages.bookmarkFilled,
+                                                height: 2.3.h,
+                                                width: 2.3.w,
+                                              )
+                                            : SvgPicture.asset(
+                                                AppImages.bookmark,
+                                                height: 2.3.h,
+                                                width: 2.3.w,
+                                              ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -151,7 +170,7 @@ class SearchEventWidget extends StatelessWidget {
                     heightSpace(5),
                   ],
                 ),
-                Divider(),
+                const Divider(),
               ],
             ),
           ),

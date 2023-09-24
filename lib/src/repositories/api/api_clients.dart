@@ -129,12 +129,12 @@ class ApiClient {
     return result;
   }
 
-  static Future post(
-    String endpoint, {
-    required dynamic body,
-    bool useToken = true,
-    Function(int, int)? onSendProgress,
-  }) async {
+  static Future post(String endpoint,
+      {required dynamic body,
+      bool useToken = true,
+      Function(int, int)? onSendProgress,
+      Color? backgroundColor,
+      Widget? widget}) async {
     final result = await _makeRequest(
       () async {
         final header = _defaultHeader;
@@ -147,7 +147,8 @@ class ApiClient {
 
         final options = Options(headers: header);
         log("${_dio.options.baseUrl}$endpoint $body");
-        AppHelper.showOverlayLoader();
+        AppHelper.showOverlayLoader(
+            backgroundColor: backgroundColor, widget: widget);
         final response = await _dio.post(endpoint,
             data: body, options: options, onSendProgress: onSendProgress);
         log("$response");
@@ -226,6 +227,13 @@ class ApiClient {
         locator<LocalStorageService>().getDataFromDisk(AppKeys.token);
     log("this is the token here");
     return json.decode(token);
+  }
+
+  static String _getUserId() {
+    String userId =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+    log("this is the userID here");
+    return json.decode(userId);
   }
 
   static void _handleSocketException(SocketException e) {

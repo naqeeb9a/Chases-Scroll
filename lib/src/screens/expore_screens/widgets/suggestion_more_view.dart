@@ -1,6 +1,7 @@
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
@@ -27,6 +28,11 @@ class SuggestionFriendMore extends HookWidget {
         usersLoading.value = false;
         usersModel.value = value;
       });
+    }
+
+    void refreshSuggestedUsers() {
+      usersLoading.value = false; // Set loading state back to true
+      getSuggestedUsers(); // Trigger the API call again
     }
 
     useEffect(() {
@@ -140,6 +146,22 @@ class SuggestionFriendMore extends HookWidget {
                                   color: AppColors.deepPrimary,
                                   height: 30,
                                   width: 90,
+                                  onTap: () async {
+                                    final result = await _exploreRepository
+                                        .connectWithFriend(
+                                            friendID: content.userId);
+                                    if (result['updated'] == true) {
+                                      // Trigger a refresh of the events data
+                                      refreshSuggestedUsers();
+                                      ToastResp.toastMsgSuccess(
+                                          resp: result['message']);
+
+                                      //refreshEventProvider(context.read);
+                                    } else {
+                                      ToastResp.toastMsgError(
+                                          resp: result['message']);
+                                    }
+                                  },
                                 ),
                                 widthSpace(1.8),
                                 Container(

@@ -1,6 +1,7 @@
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/repositories/api/api_clients.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/event_model.dart';
@@ -19,6 +20,22 @@ class ExploreRepository {
   List<ContentEvent> allEventList = [];
   //this is for community
   List<CommContent> allCommunityList = [];
+
+  Future<dynamic> connectWithFriend({String? friendID}) async {
+    final data = {
+      "toUserID": friendID,
+    };
+    final response = await ApiClient.post(Endpoints.connectFriend,
+        body: data,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
 
   Future<List<CommContent>> getAllCommunity() async {
     final response =

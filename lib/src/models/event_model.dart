@@ -72,6 +72,7 @@ class ContentEvent {
   String mediaType;
   String currentVideoUrl;
   bool isPublic;
+  bool? isSaved;
   bool isExclusive;
   dynamic mask;
   bool isOrganizer;
@@ -109,6 +110,7 @@ class ContentEvent {
     required this.isPublic,
     required this.isExclusive,
     this.mask,
+    required this.isSaved,
     required this.isOrganizer,
     required this.attendeesVisibility,
     required this.isJoined,
@@ -145,6 +147,7 @@ class ContentEvent {
         isPublic: json["isPublic"] ?? false,
         isExclusive: json["isExclusive"] ?? false,
         mask: json["mask"] ?? "",
+        isSaved: json['isSaved'],
         isOrganizer: json["isOrganizer"] ?? false,
         attendeesVisibility: json["attendeesVisibility"] ?? false,
         isJoined: json["isJoined"] ?? false,
@@ -182,6 +185,7 @@ class ContentEvent {
         "isPublic": isPublic,
         "isExclusive": isExclusive,
         "mask": mask,
+        "isSaved": isSaved,
         "isOrganizer": isOrganizer,
         "attendeesVisibility": attendeesVisibility,
         "isJoined": isJoined,
