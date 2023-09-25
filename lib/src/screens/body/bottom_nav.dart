@@ -19,6 +19,15 @@ class _BottomNavState extends State<BottomNav> {
       child: Text("Option 1"),
     ),
     const ExploreMainView(),
+    const Center(
+      child: Text("Option 1"),
+    ),
+    const Center(
+      child: Text("Option 1"),
+    ),
+    const Center(
+      child: Text("Option 1"),
+    ),
   ];
 
   @override
@@ -57,7 +66,7 @@ class _BottomNavState extends State<BottomNav> {
               label: '',
             ),
             BottomNavigationBarItem(
-                icon: selectedIndex == 2
+                icon: selectedIndex == 3
                     ? SvgPicture.asset(
                         AppImages.userIcon,
                         color: AppColors.primary,
@@ -68,7 +77,7 @@ class _BottomNavState extends State<BottomNav> {
                       ),
                 label: ""),
             BottomNavigationBarItem(
-                icon: selectedIndex == 3
+                icon: selectedIndex == 4
                     ? SvgPicture.asset(
                         AppImages.userIcon,
                         color: AppColors.primary,

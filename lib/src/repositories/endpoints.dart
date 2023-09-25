@@ -21,6 +21,15 @@ class Endpoints {
   static const String getUserProfile = '$port82/user/privateprofile';
   static const String createPost = '$port89/feed/create-post';
   static const String uploadImage = '$port90/resource-api/upload-image';
+
+  //------------------------------------------------------------------------//
+  //---------------------------- Explore ------------------------------------//
   static const String getTopEvents =
       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8084/events/get-top-events";
+  static const String getAllEvents =
+      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8084/events/events";
+  static const String getSuggestedUsers =
+      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8082/user/suggest-connections";
+  static const String getAllCommunities =
+      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8083/group/group";
 }

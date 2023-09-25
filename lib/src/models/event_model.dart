@@ -1,3 +1,58 @@
+//suggested users
+class Content {
+  String? userId;
+  String? firstName;
+  String? lastName;
+  String? username;
+  String? dob;
+  bool? publicProfile;
+  String? joinStatus;
+  Data? data;
+
+  Content({
+    this.userId,
+    this.firstName,
+    this.lastName,
+    this.username,
+    this.dob,
+    this.publicProfile,
+    this.data,
+    this.joinStatus,
+  });
+
+  Content.fromJson(Map<String, dynamic> json) {
+    userId = json['userId'] ?? "";
+    firstName = json['firstName'] ?? "";
+    lastName = json['lastName'] ?? "";
+    username = json['username'] ?? "";
+    dob = json['dob'] ?? "";
+
+    publicProfile = json['publicProfile'] ?? false;
+    joinStatus = json['joinStatus'] ?? "";
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userId'] = userId;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['username'] = username;
+    data['dob'] = dob;
+    data['joinStatus'] = joinStatus;
+    data['publicProfile'] = publicProfile;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+
+  @override
+  String toString() {
+    return '{userId: $userId, firstName: $firstName, lastName: $lastName, username: $username, dob: $dob, publicProfile: $publicProfile, joinStatus: $joinStatus, data: $data}';
+  }
+}
+
 class ContentEvent {
   String id;
   dynamic createdDate;
@@ -10,12 +65,12 @@ class ContentEvent {
   String eventDescription;
   String eventType;
   String joinSetting;
-  String locationType;
+  dynamic locationType;
   String currency;
   String currentPicUrl;
   dynamic eventFunnelGroupId;
   String mediaType;
-  dynamic currentVideoUrl;
+  String currentVideoUrl;
   bool isPublic;
   bool isExclusive;
   dynamic mask;
@@ -50,7 +105,7 @@ class ContentEvent {
     required this.currentPicUrl,
     this.eventFunnelGroupId,
     required this.mediaType,
-    this.currentVideoUrl,
+    required this.currentVideoUrl,
     required this.isPublic,
     required this.isExclusive,
     this.mask,
@@ -70,37 +125,37 @@ class ContentEvent {
   });
 
   factory ContentEvent.fromJson(Map<String, dynamic> json) => ContentEvent(
-        id: json["id"],
-        createdDate: json["createdDate"],
+        id: json["id"] ?? "",
+        createdDate: json["createdDate"] ?? "",
         lastModifiedBy: EdBy.fromJson(json["lastModifiedBy"]),
         createdBy: EdBy.fromJson(json["createdBy"]),
-        lastModifiedDate: json["lastModifiedDate"],
-        isDeleted: json["isDeleted"],
+        lastModifiedDate: json["lastModifiedDate"] ?? "",
+        isDeleted: json["isDeleted"] ?? false,
         picUrls: List<String>.from(json["picUrls"].map((x) => x)),
-        eventName: json["eventName"],
-        eventDescription: json["eventDescription"],
-        eventType: json["eventType"],
-        joinSetting: json["joinSetting"],
-        locationType: json["locationType"],
-        currency: json["currency"],
-        currentPicUrl: json["currentPicUrl"],
-        eventFunnelGroupId: json["eventFunnelGroupID"],
-        mediaType: json["mediaType"],
-        currentVideoUrl: json["currentVideoUrl"],
-        isPublic: json["isPublic"],
-        isExclusive: json["isExclusive"],
-        mask: json["mask"],
-        isOrganizer: json["isOrganizer"],
-        attendeesVisibility: json["attendeesVisibility"],
-        isJoined: json["isJoined"],
-        minPrice: json["minPrice"],
-        maxPrice: json["maxPrice"],
-        startTime: json["startTime"],
-        endTime: json["endTime"],
-        startDate: json["startDate"],
-        endDate: json["endDate"],
-        expirationDate: json["expirationDate"],
-        memberCount: json["memberCount"],
+        eventName: json["eventName"] ?? "",
+        eventDescription: json["eventDescription"] ?? "",
+        eventType: json["eventType"] ?? "",
+        joinSetting: json["joinSetting"] ?? "",
+        locationType: json["locationType"] ?? "",
+        currency: json["currency"] ?? "",
+        currentPicUrl: json["currentPicUrl"] ?? "",
+        eventFunnelGroupId: json["eventFunnelGroupID"] ?? "",
+        mediaType: json["mediaType"] ?? "",
+        currentVideoUrl: json["currentVideoUrl"] ?? "",
+        isPublic: json["isPublic"] ?? false,
+        isExclusive: json["isExclusive"] ?? false,
+        mask: json["mask"] ?? "",
+        isOrganizer: json["isOrganizer"] ?? false,
+        attendeesVisibility: json["attendeesVisibility"] ?? false,
+        isJoined: json["isJoined"] ?? false,
+        minPrice: json["minPrice"] ?? "",
+        maxPrice: json["maxPrice"] ?? "",
+        startTime: json["startTime"] ?? "",
+        endTime: json["endTime"] ?? "",
+        startDate: json["startDate"] ?? "",
+        endDate: json["endDate"] ?? "",
+        expirationDate: json["expirationDate"] ?? "",
+        memberCount: json["memberCount"] ?? 0,
         location: Location.fromJson(json["location"]),
         productTypeData: List<ProductTypeDatum>.from(
             json["productTypeData"].map((x) => ProductTypeDatum.fromJson(x))),
@@ -144,6 +199,140 @@ class ContentEvent {
       };
 }
 
+class Country {
+  bool? objectPublic;
+  dynamic value;
+
+  Country({this.objectPublic, this.value});
+
+  Country.fromJson(Map<String, dynamic> json) {
+    objectPublic = json['objectPublic'] ?? false;
+    value = json['value'] ?? "";
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['objectPublic'] = objectPublic;
+    data['value'] = value;
+    return data;
+  }
+}
+
+class Data {
+  Country? country;
+  Country? imgMain;
+  Country? images;
+  MobilePhone? mobilePhone;
+  Country? gender;
+  Country? city;
+  Country? webAddress;
+  Country? work;
+  Country? about;
+  Country? state;
+  Country? userSchool;
+  Country? maritalStatus;
+
+  Data(
+      {this.country,
+      this.imgMain,
+      this.images,
+      this.mobilePhone,
+      this.gender,
+      this.city,
+      this.webAddress,
+      this.work,
+      this.about,
+      this.state,
+      this.userSchool,
+      this.maritalStatus});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    country =
+        json['country'] != null ? Country.fromJson(json['country']) : null;
+    imgMain =
+        json['imgMain'] != null ? Country.fromJson(json['imgMain']) : null;
+    images = json['images'] != null ? Country.fromJson(json['images']) : null;
+    mobilePhone = json['mobilePhone'] != null
+        ? MobilePhone.fromJson(json['mobilePhone'])
+        : null;
+    gender = json['gender'] != null ? Country.fromJson(json['gender']) : null;
+    city = json['city'] != null ? Country.fromJson(json['city']) : null;
+    webAddress = json['webAddress'] != null
+        ? Country.fromJson(json['webAddress'])
+        : null;
+    work = json['work'] != null ? Country.fromJson(json['work']) : null;
+    about = json['about'] != null ? Country.fromJson(json['about']) : null;
+    state = json['state'] != null ? Country.fromJson(json['state']) : null;
+    userSchool = json['userSchool'] != null
+        ? Country.fromJson(json['userSchool'])
+        : null;
+    maritalStatus = json['maritalStatus'] != null
+        ? Country.fromJson(json['maritalStatus'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (country != null) {
+      data['country'] = country!.toJson();
+    }
+    if (imgMain != null) {
+      data['imgMain'] = imgMain!.toJson();
+    }
+    if (images != null) {
+      data['images'] = images!.toJson();
+    }
+    if (mobilePhone != null) {
+      data['mobilePhone'] = mobilePhone!.toJson();
+    }
+    if (gender != null) {
+      data['gender'] = gender!.toJson();
+    }
+    if (city != null) {
+      data['city'] = city!.toJson();
+    }
+    if (webAddress != null) {
+      data['webAddress'] = webAddress!.toJson();
+    }
+    if (work != null) {
+      data['work'] = work!.toJson();
+    }
+    if (about != null) {
+      data['about'] = about!.toJson();
+    }
+    if (state != null) {
+      data['state'] = state!.toJson();
+    }
+    if (userSchool != null) {
+      data['userSchool'] = userSchool!.toJson();
+    }
+    if (maritalStatus != null) {
+      data['maritalStatus'] = maritalStatus!.toJson();
+    }
+    return data;
+  }
+}
+
+class Datum {
+  bool objectPublic;
+  dynamic value;
+
+  Datum({
+    required this.objectPublic,
+    this.value,
+  });
+
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        objectPublic: json["objectPublic"] ?? false,
+        value: json["value"] ?? "",
+      );
+
+  Map<String, dynamic> toJson() => {
+        "objectPublic": objectPublic,
+        "value": value,
+      };
+}
+
 class EdBy {
   String userId;
   String firstName;
@@ -166,13 +355,13 @@ class EdBy {
   });
 
   factory EdBy.fromJson(Map<String, dynamic> json) => EdBy(
-        userId: json["userId"],
-        firstName: json["firstName"],
-        lastName: json["lastName"],
-        username: json["username"],
-        dob: json["dob"],
-        publicProfile: json["publicProfile"],
-        joinStatus: json["joinStatus"],
+        userId: json["userId"] ?? "",
+        firstName: json["firstName"] ?? "",
+        lastName: json["lastName"] ?? "",
+        username: json["username"] ?? "",
+        dob: json["dob"] ?? "",
+        publicProfile: json["publicProfile"] ?? false,
+        joinStatus: json["joinStatus"] ?? "",
         data: Map.from(json["data"])
             .map((k, v) => MapEntry<String, Datum>(k, Datum.fromJson(v))),
       );
@@ -187,26 +376,6 @@ class EdBy {
         "joinStatus": joinStatus,
         "data": Map.from(data)
             .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
-      };
-}
-
-class Datum {
-  bool objectPublic;
-  dynamic value;
-
-  Datum({
-    required this.objectPublic,
-    this.value,
-  });
-
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        objectPublic: json["objectPublic"],
-        value: json["value"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "objectPublic": objectPublic,
-        "value": value,
       };
 }
 
@@ -234,11 +403,11 @@ class Location {
     }
 
     return Location(
-      link: json["link"],
+      link: json["link"] ?? "",
       address: json["address"] ?? '',
-      locationDetails: json["locationDetails"] ?? '',
-      latlng: json["latlng"],
-      placeIds: json["placeIds"],
+      locationDetails: json["locationDetails"] ?? "",
+      latlng: json["latlng"] ?? "",
+      placeIds: json["placeIds"] ?? "",
     );
   }
 
@@ -249,6 +418,25 @@ class Location {
         "latlng": latlng,
         "placeIds": placeIds,
       };
+}
+
+class MobilePhone {
+  bool? objectPublic;
+  String? value;
+
+  MobilePhone({this.objectPublic, this.value});
+
+  MobilePhone.fromJson(Map<String, dynamic> json) {
+    objectPublic = json['objectPublic'] ?? false;
+    value = json['value'] ?? "";
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['objectPublic'] = objectPublic;
+    data['value'] = value;
+    return data;
+  }
 }
 
 class ProductTypeDatum {
@@ -272,13 +460,13 @@ class ProductTypeDatum {
 
   factory ProductTypeDatum.fromJson(Map<String, dynamic> json) =>
       ProductTypeDatum(
-        totalNumberOfTickets: json["totalNumberOfTickets"],
-        ticketPrice: json["ticketPrice"],
-        ticketType: json["ticketType"],
-        ticketsSold: json["ticketsSold"],
-        sale: json["sale"],
-        minTicketBuy: json["minTicketBuy"],
-        maxTicketBuy: json["maxTicketBuy"],
+        totalNumberOfTickets: json["totalNumberOfTickets"] ?? "",
+        ticketPrice: json["ticketPrice"] ?? "",
+        ticketType: json["ticketType"] ?? "",
+        ticketsSold: json["ticketsSold"] ?? 0,
+        sale: json["sale"] ?? "",
+        minTicketBuy: json["minTicketBuy"] ?? 0,
+        maxTicketBuy: json["maxTicketBuy"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {

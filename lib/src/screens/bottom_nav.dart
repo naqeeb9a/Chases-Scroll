@@ -1,3 +1,4 @@
+import 'package:chases_scroll/src/screens/expore_screens/explore_main_view.dart';
 import 'package:chases_scroll/src/screens/home/home.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/extract_first_letter.dart';
@@ -67,9 +68,7 @@ class _BottomNavState extends State<BottomNav> {
   int selectedIndex = 0;
   final List<Widget> _widgets = [
     const HomeScreen(),
-    const Center(
-      child: Text("Option 2"),
-    ),
+    const ExploreMainView(),
     const Center(
       child: Text("Option 3"),
     ),

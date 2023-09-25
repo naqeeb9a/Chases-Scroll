@@ -1,13 +1,17 @@
+import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SuggestionView extends StatefulWidget {
-  const SuggestionView({super.key});
+  final Content? users;
+
+  const SuggestionView({super.key, this.users});
 
   @override
   State<SuggestionView> createState() => _SuggestionViewState();
@@ -58,22 +62,34 @@ class _SuggestionViewState extends State<SuggestionView> {
                         topLeft: Radius.circular(40),
                         topRight: Radius.circular(0),
                       ),
+                      border: Border.all(color: AppColors.primary),
                       color: Colors.grey.shade300,
-                      // image: DecorationImage(
-                      //   fit: BoxFit.cover,
-                      //   image: NetworkImage(content.data!.imgMain == null
-                      //       ? ""
-                      //       : "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content.data!.imgMain!.value.toString()}"),
-                      // ),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(
+                            "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.users!.data!.imgMain!.value.toString()}"),
+                      ),
+                    ),
+                    child: Center(
+                      child: customText(
+                          text: widget.users!.data!.imgMain!.objectPublic ==
+                                  false
+                              ? widget.users!.firstName!.isEmpty
+                                  ? ""
+                                  : "${widget.users!.firstName![0]}${widget.users!.lastName![0]}"
+                              : "",
+                          fontSize: 14,
+                          textColor: AppColors.deepPrimary,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
                 customText(
-                    text: "Dami GGod",
+                    text: "${widget.users!.firstName}",
                     fontSize: 12,
                     textColor: AppColors.primary,
                     fontWeight: FontWeight.w500),
-                heightSpace(1),
+                heightSpace(0.7),
                 customText(
                     text: "Shared Affilations",
                     fontSize: 12,
@@ -84,11 +100,17 @@ class _SuggestionViewState extends State<SuggestionView> {
                   child: ChasescrollButton(
                     hasIcon: false,
                     iconWidget: SvgPicture.asset(AppImages.appleIcon),
-                    buttonText: "Connect",
+                    buttonText: widget.users!.joinStatus == "CONNECTED"
+                        ? "Connected"
+                        : widget.users!.joinStatus == "NOT_CONNECTED"
+                            ? "Connect"
+                            : widget.users!.joinStatus == "FRIEND_REQUEST_SENT"
+                                ? "Pending"
+                                : "",
                     hasBorder: false,
                     borderColor: AppColors.grey,
                     textColor: AppColors.white,
-                    height: 40,
+                    height: 4.h,
                   ),
                 ),
                 // connectToFriendRequestFunction(
@@ -96,46 +118,6 @@ class _SuggestionViewState extends State<SuggestionView> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class MainButton extends StatelessWidget {
-  const MainButton({
-    super.key,
-    this.title,
-    this.buttonColor,
-    this.TextColor,
-  });
-
-  final String? title;
-  final Color? buttonColor;
-  final Color? TextColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // connectToFriendRequestFunction(
-        //   content.userId ?? "",
-        //   content.username ?? "",
-        //   context,
-        // );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.deepPrimary,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-          child: customText(
-              text: "Connect",
-              fontSize: 11,
-              textColor: AppColors.white,
-              fontWeight: FontWeight.w400),
         ),
       ),
     );

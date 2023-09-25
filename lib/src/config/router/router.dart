@@ -80,11 +80,11 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.suggestionFriendMore,
         name: AppRoutes.suggestionFriendMore,
-        builder: (_, __) => const SuggestionFriendMore(), //SearchExploreView
+        builder: (_, __) => SuggestionFriendMore(), //SearchExploreView
       ),
       GoRoute(
         path: AppRoutes.searchExploreView,
         name: AppRoutes.searchExploreView,
-        builder: (_, __) => const SearchExploreView(),
+        builder: (_, __) => SearchExploreView(),
       ),
     ]);

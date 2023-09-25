@@ -31,6 +31,7 @@ dependencies:
   go_router: ^8.2.0
   shared_preferences: ^2.0.15
   google_fonts: ^5.1.0
+  intl: ^0.18.1
   flutter_page_view_indicator: ^0.0.5
   shimmer: ^3.0.0
   flutter_hooks:

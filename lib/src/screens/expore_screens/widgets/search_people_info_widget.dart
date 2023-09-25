@@ -9,13 +9,19 @@ class SearchPeopleWidget extends StatelessWidget {
     super.key,
     this.fullName,
     this.username,
+    this.image,
   });
 
   final String? fullName;
   final String? username;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
+    //to add initails when there is no image on people profile
+    // String n = fullName.toString();
+    // List<String> words = n.split(' ');
+    // String initials = words.map((word) => word[0]).join('');
     return Container(
       padding: EdgeInsets.only(top: 8, bottom: 8),
       margin: EdgeInsets.only(right: 15, bottom: 5),
@@ -35,14 +41,18 @@ class SearchPeopleWidget extends StatelessWidget {
                 topRight: Radius.circular(0),
               ),
               color: Colors.grey.shade300,
-              // image: DecorationImage(
-              //   fit: BoxFit.cover,
-              //   image: NetworkImage(content!
-              //               .data!.imgMain ==
-              //           null
-              //       ? ""
-              //       : "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content.data!.imgMain!.value.toString()}"),
-              // ),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(
+                    "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image"),
+              ),
+            ),
+            child: Center(
+              child: customText(
+                  text: image!.isEmpty ? fullName![0] : "",
+                  fontSize: 14,
+                  textColor: AppColors.deepPrimary,
+                  fontWeight: FontWeight.w500),
             ),
           ),
           widthSpace(2),
