@@ -11,4 +11,6 @@ class AppRoutes {
   static const String newPassword = "/new-password";
   static const String successPassword = "/success-password";
   static const String bottomNav = "/bottom-nav";
+  static const String suggestionFriendMore = "/suggestionFriendMore";
+  static const String searchExploreView = "/searchExploreView";
 }

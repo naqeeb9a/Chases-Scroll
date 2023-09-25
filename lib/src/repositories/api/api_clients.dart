@@ -129,10 +129,12 @@ class ApiClient {
     return result;
   }
 
-  static Future post(String endpoint,
-      {required dynamic body,
-      bool useToken = true,
-      Function(int, int)? onSendProgress}) async {
+  static Future post(
+    String endpoint, {
+    required dynamic body,
+    bool useToken = true,
+    Function(int, int)? onSendProgress,
+  }) async {
     final result = await _makeRequest(
       () async {
         final header = _defaultHeader;
@@ -158,10 +160,12 @@ class ApiClient {
     return result;
   }
 
-  static Future postImage(String endpoint,
-      {required dynamic body,
-      bool useToken = true,
-      Function(int, int)? onSendProgress}) async {
+  static Future postImage(
+    String endpoint, {
+    required dynamic body,
+    bool useToken = true,
+    Function(int, int)? onSendProgress,
+  }) async {
     final header = _defaultHeader;
 
     if (useToken) {
@@ -237,6 +241,7 @@ class ApiClient {
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         // locator<GoRouter>().push(AppRoutes.login);
       }
+      log(e.response.toString());
       log(e.response!.data.toString());
       OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
       if (e.response?.data is String) {

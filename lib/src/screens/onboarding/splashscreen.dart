@@ -1,4 +1,7 @@
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +17,7 @@ class _SplashScreenViewState extends State<SplashScreenView>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   Animation<double>? _animation;
-
+  final storage = locator<LocalStorageService>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +35,16 @@ class _SplashScreenViewState extends State<SplashScreenView>
         ),
       ),
     );
+  }
+
+  checkForOnBoarding() {
+    bool firstInstall = storage.getDataFromDisk(AppKeys.firstInstall) ?? true;
+
+    if (firstInstall) {
+      context.push(AppRoutes.onboarding);
+      return;
+    }
+    // checkForLogin();
   }
 
   @override
@@ -52,7 +65,7 @@ class _SplashScreenViewState extends State<SplashScreenView>
               .forward()
               .then((value) => _controller.reverse().then((value) => _controller
                   .forward()
-                  .then((value) => context.push(AppRoutes.explore))))),
+                  .then((value) => context.push(AppRoutes.emailScreen))))),
         );
   }
 }

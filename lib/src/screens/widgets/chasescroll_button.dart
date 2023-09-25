@@ -13,6 +13,7 @@ class ChasescrollButton extends StatelessWidget {
   final bool isButtonEnabled;
   final bool hasBorder;
   final double? height;
+  final double? width;
   final Color? borderColor;
   const ChasescrollButton(
       {Key? key,
@@ -25,7 +26,8 @@ class ChasescrollButton extends StatelessWidget {
       this.isButtonEnabled = true,
       this.hasBorder = false,
       this.height = 50,
-      this.borderColor})
+      this.borderColor,
+      this.width})
       : super(key: key);
 
   @override
@@ -35,10 +37,10 @@ class ChasescrollButton extends StatelessWidget {
       onTap: isButtonEnabled ? onTap : null,
       child: Container(
         height: height,
-        width: double.infinity,
+        width: width ?? double.infinity,
         decoration: BoxDecoration(
           color: !hasBorder ? color : null,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
           border: hasBorder
               ? Border.all(color: borderColor!)
               : Border.all(width: 0, color: color),
@@ -57,8 +59,10 @@ class ChasescrollButton extends StatelessWidget {
                 buttonText!,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: textColor ?? AppColors.white),
+                  fontWeight: FontWeight.w500,
+                  color: textColor ?? AppColors.white,
+                  fontSize: 12,
+                ),
               ),
             ),
             const SizedBox(

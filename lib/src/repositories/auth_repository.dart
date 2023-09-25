@@ -19,12 +19,14 @@ class AuthRepository {
         body: data, useToken: false);
 
     if (response.status == 200 || response.status == 201) {
+      log("this is response");
+      log(response.toString());
       return true;
     }
     return false;
   }
 
-  Future<bool> login(String username, String password) async {
+  Future<dynamic> login(String username, String password) async {
     final data = {
       "username": username,
       "password": password,

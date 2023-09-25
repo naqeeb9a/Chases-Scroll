@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/images.dart';
+import '../expore_screens/explore_main_view.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -16,7 +17,17 @@ class _BottomNavState extends State<BottomNav> {
   final List<Widget> _widgets = [
     const Center(
       child: Text("Option 1"),
-    )
+    ),
+    const ExploreMainView(),
+    const Center(
+      child: Text("Option 1"),
+    ),
+    const Center(
+      child: Text("Option 1"),
+    ),
+    const Center(
+      child: Text("Option 1"),
+    ),
   ];
 
   @override
@@ -55,7 +66,7 @@ class _BottomNavState extends State<BottomNav> {
               label: '',
             ),
             BottomNavigationBarItem(
-                icon: selectedIndex == 2
+                icon: selectedIndex == 3
                     ? SvgPicture.asset(
                         AppImages.userIcon,
                         color: AppColors.primary,
@@ -66,7 +77,7 @@ class _BottomNavState extends State<BottomNav> {
                       ),
                 label: ""),
             BottomNavigationBarItem(
-                icon: selectedIndex == 3
+                icon: selectedIndex == 4
                     ? SvgPicture.asset(
                         AppImages.userIcon,
                         color: AppColors.primary,
