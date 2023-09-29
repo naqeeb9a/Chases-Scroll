@@ -24,4 +24,5 @@ class AppImages {
   static const String bookmark = "assets/svgs/Bookmark.svg";
   static const String bookmarkFilled = "assets/svgs/Bookmark-filled.svg";
   static const String favouriteFilled = "assets/svgs/favorite-filled.svg";
+  static const String sentOutline = "assets/svgs/send-outline.svg";
 }

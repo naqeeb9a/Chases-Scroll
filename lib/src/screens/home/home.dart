@@ -1,10 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/post_model.dart';
 import 'package:chases_scroll/src/models/user_model.dart';
+import 'package:chases_scroll/src/repositories/endpoints.dart';
 import 'package:chases_scroll/src/repositories/post_repository.dart';
 import 'package:chases_scroll/src/repositories/user_repository.dart';
+import 'package:chases_scroll/src/screens/home/add_video_modal.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_shape.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
@@ -16,6 +19,7 @@ import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -33,6 +37,7 @@ class HomeScreen extends HookWidget {
     final postModel = useState<PostModel?>(null);
     final userModel = useState<UserModel?>(null);
     final imageList = useState<List<File>>([]);
+    final videoFile = useState<File>(File(''));
     final imageToUpload = useState<List<String>>([]);
     final likedCount = useState<int>(0);
     final hasLiked = useState<bool>(false);
@@ -98,6 +103,32 @@ class HomeScreen extends HookWidget {
         log("###########");
         log(imageName);
         imageToUpload.value.add(imageName);
+      }
+    }
+
+    showModalForVideo() {
+      showModalBottomSheet(
+          context: context,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          backgroundColor: Colors.white,
+          builder: (context) {
+            return AddVideoModal(
+              video: videoFile.value,
+            );
+          });
+    }
+
+    Future uploadVideo() async {
+      final video = await picker.pickVideo(
+          source: ImageSource.gallery,
+          maxDuration: const Duration(seconds: 30));
+      if (video != null) {
+        videoFile.value = File(video.path);
+
+        log(videoFile.value.path);
+        showModalForVideo();
       }
     }
 
@@ -223,10 +254,15 @@ class HomeScreen extends HookWidget {
                             ),
                           ),
                           widthSpace(3),
-                          SvgPicture.asset(
-                            AppImages.videoIcon,
-                            height: 20,
-                            width: 20,
+                          InkWell(
+                            onTap: () {
+                              uploadVideo();
+                            },
+                            child: SvgPicture.asset(
+                              AppImages.videoIcon,
+                              height: 20,
+                              width: 20,
+                            ),
                           ),
                           widthSpace(3),
                           customText(
@@ -314,26 +350,48 @@ class HomeScreen extends HookWidget {
                                                   textColor: AppColors.black),
                                               heightSpace(2),
                                               if (e.mediaRef != null)
-                                                Container(
+                                                SizedBox(
                                                   height: 200,
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color: AppColors
-                                                              .textFormColor,
-                                                          width: 1),
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .only(
-                                                        bottomLeft:
-                                                            Radius.circular(20),
-                                                        bottomRight:
-                                                            Radius.circular(20),
-                                                        topLeft:
-                                                            Radius.circular(20),
-                                                        topRight:
-                                                            Radius.circular(0),
-                                                      )),
+                                                  child: ListView.builder(
+                                                      itemCount: e
+                                                          .multipleMediaRef
+                                                          ?.length,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        log('${Endpoints.displayImages}/${e.multipleMediaRef![index]}');
+                                                        return Container(
+                                                          height: 200,
+                                                          width:
+                                                              double.infinity,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  image: DecorationImage(
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      image: NetworkImage(
+                                                                          '${Endpoints.displayImages}/${e.multipleMediaRef![index]}')),
+                                                                  border: Border.all(
+                                                                      color: AppColors
+                                                                          .textFormColor,
+                                                                      width: 1),
+                                                                  borderRadius:
+                                                                      const BorderRadius
+                                                                          .only(
+                                                                    bottomLeft:
+                                                                        Radius.circular(
+                                                                            20),
+                                                                    bottomRight:
+                                                                        Radius.circular(
+                                                                            20),
+                                                                    topLeft: Radius
+                                                                        .circular(
+                                                                            20),
+                                                                    topRight: Radius
+                                                                        .circular(
+                                                                            0),
+                                                                  )),
+                                                        );
+                                                      }),
                                                 ),
                                               Row(
                                                 mainAxisAlignment:
@@ -403,31 +461,40 @@ class HomeScreen extends HookWidget {
                                                               .textGrey)
                                                     ],
                                                   ),
-                                                  Column(
-                                                    children: [
-                                                      heightSpace(2),
-                                                      Row(
-                                                        children: [
-                                                          SvgPicture.asset(
-                                                              AppImages
-                                                                  .comment),
-                                                          widthSpace(1),
-                                                          customText(
-                                                              text:
-                                                                  "${e.commentCount}",
-                                                              fontSize: 11,
-                                                              textColor:
-                                                                  AppColors
-                                                                      .black)
-                                                        ],
-                                                      ),
-                                                      heightSpace(1),
-                                                      customText(
-                                                          text: "Comments",
-                                                          fontSize: 10,
-                                                          textColor: AppColors
-                                                              .textGrey)
-                                                    ],
+                                                  InkWell(
+                                                    onTap: () => context.push(
+                                                        AppRoutes.comment,
+                                                        extra: {
+                                                          "userModel":
+                                                              userModel.value,
+                                                          "postId": e.id
+                                                        }),
+                                                    child: Column(
+                                                      children: [
+                                                        heightSpace(2),
+                                                        Row(
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                                AppImages
+                                                                    .comment),
+                                                            widthSpace(1),
+                                                            customText(
+                                                                text:
+                                                                    "${e.commentCount}",
+                                                                fontSize: 11,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .black)
+                                                          ],
+                                                        ),
+                                                        heightSpace(1),
+                                                        customText(
+                                                            text: "Comments",
+                                                            fontSize: 10,
+                                                            textColor: AppColors
+                                                                .textGrey)
+                                                      ],
+                                                    ),
                                                   ),
                                                   Column(
                                                     children: [

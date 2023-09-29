@@ -13,4 +13,5 @@ class AppRoutes {
   static const String bottomNav = "/bottom-nav";
   static const String suggestionFriendMore = "/suggestionFriendMore";
   static const String searchExploreView = "/searchExploreView";
+  static const String comment = "/comment";
 }

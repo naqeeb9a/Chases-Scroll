@@ -16,80 +16,111 @@ class Chronology {
   }
 }
 
+class CommentModel {
+  List<Content>? content;
+  Pageable? pageable;
+  int? totalPages;
+  int? totalElements;
+  bool? last;
+  int? size;
+  int? number;
+  Sort? sort;
+  bool? first;
+  int? numberOfElements;
+  bool? empty;
+
+  CommentModel(
+      {this.content,
+      this.pageable,
+      this.totalPages,
+      this.totalElements,
+      this.last,
+      this.size,
+      this.number,
+      this.sort,
+      this.first,
+      this.numberOfElements,
+      this.empty});
+
+  CommentModel.fromJson(Map<String, dynamic> json) {
+    if (json['content'] != null) {
+      content = <Content>[];
+      json['content'].forEach((v) {
+        content!.add(Content.fromJson(v));
+      });
+    }
+    pageable =
+        json['pageable'] != null ? Pageable.fromJson(json['pageable']) : null;
+    totalPages = json['totalPages'];
+    totalElements = json['totalElements'];
+    last = json['last'];
+    size = json['size'];
+    number = json['number'];
+    sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
+    first = json['first'];
+    numberOfElements = json['numberOfElements'];
+    empty = json['empty'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (content != null) {
+      data['content'] = content!.map((v) => v.toJson()).toList();
+    }
+    if (pageable != null) {
+      data['pageable'] = pageable!.toJson();
+    }
+    data['totalPages'] = totalPages;
+    data['totalElements'] = totalElements;
+    data['last'] = last;
+    data['size'] = size;
+    data['number'] = number;
+    if (sort != null) {
+      data['sort'] = sort!.toJson();
+    }
+    data['first'] = first;
+    data['numberOfElements'] = numberOfElements;
+    data['empty'] = empty;
+    return data;
+  }
+}
+
 class Content {
   String? id;
   Time? time;
-  String? text;
-  String? sourceId;
-  String? type;
+  String? postID;
+  String? comment;
   User? user;
-  bool? isGroupFeed;
-  String? mediaRef;
-  List<dynamic>? multipleMediaRef;
-  int? viewCount;
-  int? commentCount;
-  int? videoLength;
-  String? shareWith;
-  bool? publicPost;
-  String? postType;
   int? likeCount;
-  int? shareCount;
-  String? shareID;
-  String? data;
-  String? viewStatus;
+  dynamic data;
   String? likeStatus;
-  PostModel? comments;
+  SubComments? subComments;
   int? timeInMilliseconds;
 
   Content(
       {this.id,
       this.time,
-      this.text,
-      this.sourceId,
-      this.type,
+      this.postID,
+      this.comment,
       this.user,
-      this.isGroupFeed,
-      this.mediaRef,
-      this.multipleMediaRef,
-      this.viewCount,
-      this.commentCount,
-      this.videoLength,
-      this.shareWith,
-      this.publicPost,
-      this.postType,
       this.likeCount,
-      this.shareCount,
-      this.shareID,
       this.data,
-      this.viewStatus,
       this.likeStatus,
-      this.comments,
+      this.subComments,
       this.timeInMilliseconds});
 
   Content.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     time = json['time'] != null ? Time.fromJson(json['time']) : null;
-    text = json['text'];
-    sourceId = json['sourceId'];
-    type = json['type'];
+    postID = json['postID'];
+    comment = json['comment'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
-    isGroupFeed = json['isGroupFeed'];
-    mediaRef = json['mediaRef'];
-    multipleMediaRef = json['multipleMediaRef'];
-    viewCount = json['viewCount'];
-    commentCount = json['commentCount'];
-    videoLength = json['videoLength'];
-    shareWith = json['shareWith'];
-    publicPost = json['publicPost'];
-    postType = json['postType'];
     likeCount = json['likeCount'];
-    shareCount = json['shareCount'];
-    shareID = json['shareID'];
     data = json['data'];
-    viewStatus = json['viewStatus'];
     likeStatus = json['likeStatus'];
-    comments =
-        json['comments'] != null ? PostModel.fromJson(json['comments']) : null;
+    subComments = json['subComments'] != null
+        ? SubComments.fromJson(json['subComments'])
+        : null;
     timeInMilliseconds = json['timeInMilliseconds'];
   }
 
@@ -99,29 +130,16 @@ class Content {
     if (time != null) {
       data['time'] = time!.toJson();
     }
-    data['text'] = text;
-    data['sourceId'] = sourceId;
-    data['type'] = type;
+    data['postID'] = postID;
+    data['comment'] = comment;
     if (user != null) {
       data['user'] = user!.toJson();
     }
-    data['isGroupFeed'] = isGroupFeed;
-    data['mediaRef'] = mediaRef;
-    data['multipleMediaRef'] = multipleMediaRef;
-    data['viewCount'] = viewCount;
-    data['commentCount'] = commentCount;
-    data['videoLength'] = videoLength;
-    data['shareWith'] = shareWith;
-    data['publicPost'] = publicPost;
-    data['postType'] = postType;
     data['likeCount'] = likeCount;
-    data['shareCount'] = shareCount;
-    data['shareID'] = shareID;
     data['data'] = this.data;
-    data['viewStatus'] = viewStatus;
     data['likeStatus'] = likeStatus;
-    if (comments != null) {
-      data['comments'] = comments!.toJson();
+    if (subComments != null) {
+      data['subComments'] = subComments!.toJson();
     }
     data['timeInMilliseconds'] = timeInMilliseconds;
     return data;
@@ -130,7 +148,7 @@ class Content {
 
 class Country {
   bool? objectPublic;
-  String? value;
+  dynamic value;
 
   Country({this.objectPublic, this.value});
 
@@ -307,75 +325,6 @@ class Pageable {
   }
 }
 
-class PostModel {
-  List<Content>? content;
-  Pageable? pageable;
-  int? totalPages;
-  int? totalElements;
-  bool? last;
-  int? size;
-  int? number;
-  Sort? sort;
-  bool? first;
-  int? numberOfElements;
-  bool? empty;
-
-  PostModel(
-      {this.content,
-      this.pageable,
-      this.totalPages,
-      this.totalElements,
-      this.last,
-      this.size,
-      this.number,
-      this.sort,
-      this.first,
-      this.numberOfElements,
-      this.empty});
-
-  PostModel.fromJson(Map<String, dynamic> json) {
-    if (json['content'] != null) {
-      content = <Content>[];
-      json['content'].forEach((v) {
-        content!.add(Content.fromJson(v));
-      });
-    }
-    pageable =
-        json['pageable'] != null ? Pageable.fromJson(json['pageable']) : null;
-    totalPages = json['totalPages'];
-    totalElements = json['totalElements'];
-    last = json['last'];
-    size = json['size'];
-    number = json['number'];
-    sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
-    first = json['first'];
-    numberOfElements = json['numberOfElements'];
-    empty = json['empty'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (content != null) {
-      data['content'] = content!.map((v) => v.toJson()).toList();
-    }
-    if (pageable != null) {
-      data['pageable'] = pageable!.toJson();
-    }
-    data['totalPages'] = totalPages;
-    data['totalElements'] = totalElements;
-    data['last'] = last;
-    data['size'] = size;
-    data['number'] = number;
-    if (sort != null) {
-      data['sort'] = sort!.toJson();
-    }
-    data['first'] = first;
-    data['numberOfElements'] = numberOfElements;
-    data['empty'] = empty;
-    return data;
-  }
-}
-
 class Sort {
   bool? sorted;
   bool? unsorted;
@@ -399,7 +348,7 @@ class Sort {
 }
 
 class SubComments {
-  List<String>? content;
+  List<dynamic>? content;
   Pageable? pageable;
   int? totalPages;
   int? totalElements;
@@ -426,9 +375,9 @@ class SubComments {
 
   SubComments.fromJson(Map<String, dynamic> json) {
     if (json['content'] != null) {
-      content = <String>[];
+      content = <Null>[];
       json['content'].forEach((v) {
-        content!.add((v));
+        content!.add(v);
       });
     }
     pageable =
@@ -447,7 +396,7 @@ class SubComments {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (content != null) {
-      data['content'] = content!.map((v) => v).toList();
+      data['content'] = content!.map((v) => v.toJson()).toList();
     }
     if (pageable != null) {
       data['pageable'] = pageable!.toJson();

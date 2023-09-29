@@ -9,6 +9,7 @@ import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
 import 'package:chases_scroll/src/screens/bottom_nav.dart';
+import 'package:chases_scroll/src/screens/home/comment/comment.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
@@ -80,11 +81,18 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.suggestionFriendMore,
         name: AppRoutes.suggestionFriendMore,
-        builder: (_, __) => SuggestionFriendMore(), //SearchExploreView
+        builder: (_, __) => const SuggestionFriendMore(), //SearchExploreView
       ),
       GoRoute(
         path: AppRoutes.searchExploreView,
         name: AppRoutes.searchExploreView,
-        builder: (_, __) => SearchExploreView(),
+        builder: (_, __) => const SearchExploreView(),
+      ),
+      GoRoute(
+        path: AppRoutes.comment,
+        name: AppRoutes.comment,
+        builder: (_, __) => Comment(
+          commentData: __.extra as Map<dynamic, dynamic>,
+        ),
       ),
     ]);

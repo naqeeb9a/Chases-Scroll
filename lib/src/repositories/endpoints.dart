@@ -6,9 +6,9 @@ class Endpoints {
   static const String port82 = ":8082";
   static const String port88 = ":8088";
   static const String port89 = ":8089";
-  static const String port80 = ":8088";
+  static const String port80 = ":8080";
   static const String port90 = ":8090";
-
+  static const String displayImages = '$baseUrl$port80/resource-api/download';
   static const String login = '$port81/auth/signin';
   static const String signup = '$port81/auth/signup';
   static const String verifyEmail =
@@ -21,6 +21,8 @@ class Endpoints {
   static const String getUserProfile = '$port82/user/privateprofile';
   static const String createPost = '$port89/feed/create-post';
   static const String uploadImage = '$port90/resource-api/upload-image';
+  static const String addComment = '$port89/feed/add-comment';
+  static const String getPostComment = '$port89/feed/get-all-comments';
 
   //------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//

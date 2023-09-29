@@ -1,7 +1,10 @@
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/screens/onboarding/data.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
@@ -18,6 +21,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  final _storage = locator<LocalStorageService>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +77,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             heightSpace(3),
             ChasescrollButton(
-                onTap: () => context.push(AppRoutes.signupone),
+                onTap: () {
+                  context.push(AppRoutes.signupone);
+                },
                 buttonText: "Sign Up"),
             heightSpace(2),
             Row(
@@ -133,5 +139,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  initState() {
+    super.initState();
+    _storage.saveDataToDisk(AppKeys.firstInstall, false);
   }
 }
