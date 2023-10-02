@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
+import 'package:chases_scroll/src/screens/expore_screens/widgets/event_container_tranform_view.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/suggestions_view.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
@@ -125,32 +126,38 @@ class ExploreMainView extends HookWidget {
                       Expanded(
                         child: Container(
                           //color: Colors.amber,
-                          child: PageView.builder(
-                            controller: pageController,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: eventModel.value.length,
-                            onPageChanged: (int pageIndex) {
-                              currentPageValue.value = pageIndex.toDouble();
-                            },
-                            itemBuilder: (BuildContext context, int index) {
-                              return topEventShimmerWithlength(
-                                count: 1,
-                                width: 80.w,
-                                height: 30.h,
-                              );
-                              // return eventLoading.value
-                              //     ? const Icon(
-                              //         Icons.error,
-                              //         size: 40,
-                              //         color: Colors.red,
-                              //       )
-                              //     : EventContainerTransformView(
-                              //         index: index,
-                              //         currentPageValue: currentPageValue.value,
-                              //         scaleFactor: scaleFactor,
-                              //         event: eventModel.value[index],
-                              //       );
-                            },
+                          child: Column(
+                            children: [
+                              eventLoading.value
+                                  ? topEventShimmerWithlength(
+                                      count: 1,
+                                      width: 90.w,
+                                      height: 30.h,
+                                    )
+                                  : Expanded(
+                                      child: Container(
+                                        child: PageView.builder(
+                                          controller: pageController,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: eventModel.value.length,
+                                          onPageChanged: (int pageIndex) {
+                                            currentPageValue.value =
+                                                pageIndex.toDouble();
+                                          },
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return EventContainerTransformView(
+                                              index: index,
+                                              currentPageValue:
+                                                  currentPageValue.value,
+                                              scaleFactor: scaleFactor,
+                                              event: eventModel.value[index],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                            ],
                           ),
                         ),
                       ),
@@ -192,38 +199,55 @@ class ExploreMainView extends HookWidget {
               Expanded(
                 flex: 2,
                 child: Container(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: usersModel.value.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Content? friend = usersModel.value[index];
-                      return usersLoading.value
-                          ? const Center(
-                              child: Icon(
-                                Icons.error,
-                                size: 60,
-                                color: Colors.red,
-                              ),
+                  child: Column(
+                    children: [
+                      usersLoading.value
+                          ? usersShimmerWithlength(
+                              count: 2,
                             )
-                          : SuggestionView(
-                              users: usersModel.value[index],
-                              function: () async {
-                                final result = await _exploreRepository
-                                    .connectWithFriend(friendID: friend.userId);
-                                if (result['updated'] == true) {
-                                  // Trigger a refresh of the events data
-                                  refreshSuggestedUsers();
-                                  ToastResp.toastMsgSuccess(
-                                      resp: result['message']);
-                                  log(result.toString());
-                                  //refreshEventProvider(context.read);
-                                } else {
-                                  ToastResp.toastMsgError(
-                                      resp: result['message']);
-                                }
-                              },
-                            );
-                    },
+                          : Expanded(
+                              child: SizedBox(
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: usersModel.value.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    Content? friend = usersModel.value[index];
+
+                                    return usersLoading.value
+                                        ? const Center(
+                                            child: Icon(
+                                              Icons.error,
+                                              size: 60,
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        : SuggestionView(
+                                            users: usersModel.value[index],
+                                            function: () async {
+                                              final result =
+                                                  await _exploreRepository
+                                                      .connectWithFriend(
+                                                          friendID:
+                                                              friend.userId);
+                                              if (result['updated'] == true) {
+                                                // Trigger a refresh of the events data
+                                                refreshSuggestedUsers();
+                                                ToastResp.toastMsgSuccess(
+                                                    resp: result['message']);
+                                                log(result.toString());
+                                                //refreshEventProvider(context.read);
+                                              } else {
+                                                ToastResp.toastMsgError(
+                                                    resp: result['message']);
+                                              }
+                                            },
+                                          );
+                                  },
+                                ),
+                              ),
+                            ),
+                    ],
                   ),
                 ),
               )

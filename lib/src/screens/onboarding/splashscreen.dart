@@ -52,7 +52,7 @@ class _SplashScreenViewState extends State<SplashScreenView>
               .forward()
               .then((value) => _controller.reverse().then((value) => _controller
                   .forward()
-                  .then((value) => context.push(AppRoutes.explore))))),
+                  .then((value) => context.push(AppRoutes.eventView))))),
         );
   }
 }

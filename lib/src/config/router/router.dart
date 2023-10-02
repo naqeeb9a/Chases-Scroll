@@ -9,6 +9,9 @@ import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
 import 'package:chases_scroll/src/screens/body/bottom_nav.dart';
+import 'package:chases_scroll/src/screens/event_screens/add_event_Views/add_event_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
@@ -80,11 +83,26 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.suggestionFriendMore,
         name: AppRoutes.suggestionFriendMore,
-        builder: (_, __) => SuggestionFriendMore(), //SearchExploreView
+        builder: (_, __) => const SuggestionFriendMore(), //SearchExploreView
       ),
       GoRoute(
         path: AppRoutes.searchExploreView,
         name: AppRoutes.searchExploreView,
-        builder: (_, __) => SearchExploreView(),
+        builder: (_, __) => const SearchExploreView(),
+      ),
+      GoRoute(
+        path: AppRoutes.addEventView,
+        name: AppRoutes.addEventView,
+        builder: (_, __) => const AddEventView(),
+      ),
+      GoRoute(
+        path: AppRoutes.eventView,
+        name: AppRoutes.eventView,
+        builder: (_, __) => const EventMainView(),
+      ),
+      GoRoute(
+        path: AppRoutes.eventDetailMainView,
+        name: AppRoutes.eventDetailMainView,
+        builder: (_, __) => const EventDetailsMainView(),
       ),
     ]);

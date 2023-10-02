@@ -28,6 +28,73 @@ Widget boxShimmerWithSize(double height) {
       ));
 }
 
+//-------------------------- Search Users Shimmer --------------------------------//
+Widget eventExploreShimmer() {
+  return Shimmer.fromColors(
+    baseColor: const Color.fromARGB(255, 233, 233, 233),
+    highlightColor: const Color.fromARGB(255, 255, 251, 251),
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Row(
+        children: [
+          Container(
+              width: 60,
+              height: 60,
+              decoration: const BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(0),
+                  ))),
+          widthSpace(1.3),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 70.w,
+                height: 1.5.h,
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 255, 251, 251),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(0),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
+                  ),
+                ),
+              ),
+              heightSpace(0.9),
+              Container(
+                width: 50.w,
+                height: 1.5.h,
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 255, 251, 251),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(0),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+eventExploreShimmerWithlength({int? count}) {
+  final List<Widget> widget =
+      List.generate(count!, (index) => searchUsersShimmer());
+  return Column(
+    children: widget,
+  );
+}
+
 Widget listShimmer() {
   return Padding(
     padding: const EdgeInsets.all(8.0),
@@ -69,6 +136,73 @@ Widget listShimmer() {
 
 Widget listTileShimmer(int count) {
   final List<Widget> widget = List.generate(count, (index) => listShimmer());
+  return Column(
+    children: widget,
+  );
+}
+
+//-------------------------- Search Users Shimmer --------------------------------//
+Widget searchUsersShimmer() {
+  return Shimmer.fromColors(
+    baseColor: const Color.fromARGB(255, 233, 233, 233),
+    highlightColor: const Color.fromARGB(255, 255, 251, 251),
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Row(
+        children: [
+          Container(
+              width: 60,
+              height: 60,
+              decoration: const BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(0),
+                  ))),
+          widthSpace(1.3),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 70.w,
+                height: 1.5.h,
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 255, 251, 251),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(0),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
+                  ),
+                ),
+              ),
+              heightSpace(0.9),
+              Container(
+                width: 50.w,
+                height: 1.5.h,
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 255, 251, 251),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(0),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+searchUsersShimmerWithlength({int? count}) {
+  final List<Widget> widget =
+      List.generate(count!, (index) => searchUsersShimmer());
   return Column(
     children: widget,
   );
@@ -147,41 +281,71 @@ shopShimmerWithlength(int count) {
   );
 }
 
+//-------------------------- Suggested users Horizonatal --------------------------------//
+Widget suggestedUserHoriShimmer() {
+  return Shimmer.fromColors(
+    baseColor: const Color.fromARGB(255, 233, 233, 233),
+    highlightColor: const Color.fromARGB(255, 255, 251, 251),
+    child: Container(
+        margin: const EdgeInsets.fromLTRB(5, 20, 15, 10),
+        width: double.infinity,
+        height: 7.h,
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 255, 251, 251),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(0),
+            bottomRight: Radius.circular(0),
+            topLeft: Radius.circular(0),
+            topRight: Radius.circular(0),
+          ),
+        ),
+        child: Container()),
+  );
+}
+
+//-------------------------- Suggested users --------------------------------//
+Widget suggestedUserShimmer() {
+  return Shimmer.fromColors(
+    baseColor: const Color.fromARGB(255, 233, 233, 233),
+    highlightColor: const Color.fromARGB(255, 255, 251, 251),
+    child: Container(
+        margin: const EdgeInsets.fromLTRB(5, 20, 15, 10),
+        width: 36.w,
+        height: 20.h,
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 255, 251, 251),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(40),
+            bottomRight: Radius.circular(40),
+            topLeft: Radius.circular(40),
+            topRight: Radius.circular(0),
+          ),
+        ),
+        child: Container()),
+  );
+}
+
 //-------------------------- Top Event --------------------------------//
 Widget topEventShimmer(double height, double width) {
   return Shimmer.fromColors(
     baseColor: const Color.fromARGB(255, 233, 233, 233),
     highlightColor: const Color.fromARGB(255, 255, 251, 251),
-    child: Container(
-      width: width,
-      height: height,
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 255, 251, 251),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(0),
-        ),
-      ),
-      child: Stack(
+    child: SingleChildScrollView(
+      child: Row(
         children: [
-          Positioned(
-            bottom: 0,
-            child: Container(
-              height: 8.h,
-              width: double.infinity,
+          Container(
+              width: width,
+              height: height,
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 184, 134, 134),
+                color: Color.fromARGB(255, 255, 251, 251),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(40),
                   bottomRight: Radius.circular(40),
-                  topLeft: Radius.circular(0),
+                  topLeft: Radius.circular(40),
                   topRight: Radius.circular(0),
                 ),
               ),
-            ),
-          ),
+              child: Container()),
         ],
       ),
     ),
@@ -195,5 +359,21 @@ topEventShimmerWithlength({int? count, double? height, double? width}) {
     child: Row(
       children: widget,
     ),
+  );
+}
+
+usersHoriShimmerWithlength({int? count}) {
+  final List<Widget> widget =
+      List.generate(count!, (index) => suggestedUserHoriShimmer());
+  return Column(
+    children: widget,
+  );
+}
+
+usersShimmerWithlength({int? count, double? height, double? width}) {
+  final List<Widget> widget =
+      List.generate(count!, (index) => suggestedUserShimmer());
+  return Row(
+    children: widget,
   );
 }

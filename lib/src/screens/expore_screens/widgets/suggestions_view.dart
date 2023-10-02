@@ -65,7 +65,7 @@ class _SuggestionViewState extends State<SuggestionView> {
                         topRight: Radius.circular(0),
                       ),
                       border: Border.all(color: AppColors.primary),
-                      color: Colors.grey.shade300,
+                      color: Colors.grey.shade100,
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: NetworkImage(

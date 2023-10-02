@@ -1,3 +1,4 @@
+import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -19,9 +20,7 @@ class _BottomNavState extends State<BottomNav> {
       child: Text("Option 1"),
     ),
     const ExploreMainView(),
-    const Center(
-      child: Text("Option 1"),
-    ),
+    const EventMainView(),
     const Center(
       child: Text("Option 1"),
     ),

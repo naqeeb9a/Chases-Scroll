@@ -9,6 +9,7 @@ import 'package:chases_scroll/src/screens/expore_screens/widgets/search_communit
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_event_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_people_info_widget.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
+import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
@@ -265,19 +266,35 @@ class SearchExploreView extends HookWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       //----------first page view ------------------
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                        width: double.infinity,
-                        child: ListView.builder(
-                          itemCount: foundUsers.value.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            Content user = foundUsers.value[index];
-                            return SearchPeopleWidget(
-                              fullName: "${user.firstName} ${user.lastName}",
-                              username: "${user.username}",
-                              image: user.data!.imgMain!.value,
-                            );
-                          },
+                      Expanded(
+                        child: Column(
+                          children: [
+                            usersLoading.value
+                                ? searchUsersShimmerWithlength(
+                                    count: 6,
+                                  )
+                                : Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.fromLTRB(
+                                          15, 0, 15, 0),
+                                      width: double.infinity,
+                                      child: ListView.builder(
+                                        itemCount: foundUsers.value.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          Content user =
+                                              foundUsers.value[index];
+                                          return SearchPeopleWidget(
+                                            fullName:
+                                                "${user.firstName} ${user.lastName}",
+                                            username: "${user.username}",
+                                            image: user.data!.imgMain!.value,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                          ],
                         ),
                       ),
 

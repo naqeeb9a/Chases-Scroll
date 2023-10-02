@@ -34,6 +34,8 @@ dependencies:
   flutter_page_view_indicator: ^0.0.5
   flutter_hooks: ^0.20.1
   shimmer: ^3.0.0
+  dropdown_button2: 
+  modal_bottom_sheet: ^3.0.0-pre
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +53,7 @@ flutter:
   assets:
     - assets/svgs/
     - assets/pngs/
+    - assets/jpegs/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
