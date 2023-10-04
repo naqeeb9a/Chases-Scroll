@@ -1,4 +1,5 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
@@ -13,9 +14,26 @@ import '../../widgets/custom_fonts.dart';
 class EventBigCard extends StatefulWidget {
   final double? width;
 
+  final String? eventName;
+  final String? image;
+  final String? date;
+  final String? location;
+  final double? price;
+  final bool isSaved;
+  final ContentEvent? eventDetails;
+  final Function()? onSave;
+
   const EventBigCard(
     this.width, {
     super.key,
+    this.eventName,
+    this.image,
+    this.date,
+    this.location,
+    this.price,
+    required this.isSaved,
+    this.onSave,
+    this.eventDetails,
   });
 
   @override
@@ -28,7 +46,7 @@ class _EventBigCardState extends State<EventBigCard> {
     bool isSaved = false;
     return GestureDetector(
       onTap: () {
-        context.push(AppRoutes.eventDetailMainView);
+        context.push(AppRoutes.eventDetailMainView, extra: widget.eventDetails);
       },
       child: Container(
         padding: PAD_ALL_10,
@@ -67,11 +85,12 @@ class _EventBigCardState extends State<EventBigCard> {
                     topRight: Radius.circular(0),
                   ),
                   color: Colors.grey.shade200,
-                  // image: DecorationImage(
-                  //   fit: BoxFit.cover,
-                  //   image: NetworkImage(
-                  //       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${event['currentPicUrl'].toString()}"),
-                  // ),
+                  image: DecorationImage(
+                    scale: 1.0,
+                    fit: BoxFit.fill,
+                    image: NetworkImage(
+                        "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.image}"),
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +109,7 @@ class _EventBigCardState extends State<EventBigCard> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               customText(
-                                text: "Oct. 10",
+                                text: widget.date.toString(),
                                 fontSize: 11,
                                 textColor: AppColors.black,
                                 fontWeight: FontWeight.w400,
@@ -112,7 +131,7 @@ class _EventBigCardState extends State<EventBigCard> {
                   child: Container(
                     //color: Colors.cyan,
                     child: customText(
-                        text: "Event Name Here",
+                        text: widget.eventName.toString(),
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.w700,
@@ -121,7 +140,7 @@ class _EventBigCardState extends State<EventBigCard> {
                 ),
                 widthSpace(1.5),
                 customText(
-                  text: "2000.0",
+                  text: widget.price.toString(),
                   fontSize: 14,
                   textColor: AppColors.deepPrimary,
                   fontWeight: FontWeight.w500,
@@ -150,7 +169,7 @@ class _EventBigCardState extends State<EventBigCard> {
                 widthSpace(1),
                 Flexible(
                   child: customText(
-                    text: "Event location here location here location here",
+                    text: widget.location.toString(),
                     fontSize: 12,
                     textColor: AppColors.searchTextGrey,
                     fontWeight: FontWeight.w400,
@@ -240,9 +259,9 @@ class _EventBigCardState extends State<EventBigCard> {
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: GestureDetector(
-                    //onTap: widget.onSave,
+                    onTap: widget.onSave,
                     child: Container(
-                      child: isSaved == true
+                      child: widget.isSaved == true
                           ? SvgPicture.asset(
                               AppImages.bookmarkFilled,
                               height: 2.4.h,

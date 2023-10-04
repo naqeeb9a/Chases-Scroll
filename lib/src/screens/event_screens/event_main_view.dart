@@ -51,7 +51,7 @@ class EventMainView extends HookWidget {
                         ),
                       );
                     }).toList(),
-                    value: currentPageIndex.value,
+                    value: currentPage.value,
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(25),
                       bottomRight: Radius.circular(25),
@@ -77,19 +77,6 @@ class EventMainView extends HookWidget {
                   ),
                   GestureDetector(
                     onTap: () => context.push(AppRoutes.addEventView),
-                    // onTap: () {
-                    //   showMaterialModalBottomSheet(
-                    //     context: context,
-                    //     enableDrag: false,
-                    //     builder: (context) => StatefulBuilder(
-                    //         builder: (BuildContext context, StateSetter state) {
-                    //       return SizedBox(
-                    //         height: 90.h,
-                    //         child: const AddEventView(),
-                    //       );
-                    //     }),
-                    //   );
-                    // },
                     child: SvgPicture.asset(
                       AppImages.addEvents,
                       height: 30,

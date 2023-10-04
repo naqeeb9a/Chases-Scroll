@@ -482,4 +482,8 @@ class ProductTypeDatum {
         "minTicketBuy": minTicketBuy,
         "maxTicketBuy": maxTicketBuy,
       };
+  @override
+  String toString() {
+    return '{totalNumberOfTickets: $totalNumberOfTickets,ticketPrice: $ticketPrice, ticketType: $ticketType, ticketsSold: $ticketsSold, sale: $sale, minTicketBuy: $minTicketBuy, maxTicketBuy: $maxTicketBuy,}';
+  }
 }

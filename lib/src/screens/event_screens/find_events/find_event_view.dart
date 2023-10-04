@@ -7,7 +7,6 @@ import 'package:chases_scroll/src/screens/event_screens/find_events/fundraising_
 import 'package:chases_scroll/src/screens/event_screens/find_events/pop_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/religious_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/social_event_view.dart';
-import 'package:chases_scroll/src/screens/event_screens/find_events/trending_event.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/virtual_event_view.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/row_texts_widget.dart';
@@ -128,9 +127,11 @@ class FindEventsScreenView extends HookWidget {
               width: MediaQuery.of(context).size.width,
               child: PageView(
                 controller: pageController,
+                onPageChanged: (value) {
+                  currentPageIndex.value = value;
+                },
                 children: [
                   FindAllEventCardView(),
-                  FindTrendingEvents(),
                   FindCorporateEventView(),
                   FindSocialEventsView(),
                   FindCollegeEvents(),

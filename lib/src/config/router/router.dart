@@ -1,4 +1,5 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/screens/auth_screens/data.dart';
 import 'package:chases_scroll/src/screens/auth_screens/email_screen.dart';
 import 'package:chases_scroll/src/screens/auth_screens/forgot_password.dart';
@@ -103,6 +104,8 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.eventDetailMainView,
         name: AppRoutes.eventDetailMainView,
-        builder: (_, __) => const EventDetailsMainView(),
+        builder: (_, __) => EventDetailsMainView(
+          eventDetails: __.extra as ContentEvent,
+        ),
       ),
     ]);

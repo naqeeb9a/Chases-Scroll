@@ -36,6 +36,7 @@ dependencies:
   shimmer: ^3.0.0
   dropdown_button2: 
   modal_bottom_sheet: ^3.0.0-pre
+  url_launcher: ^6.1.11
 
 dev_dependencies:
   flutter_test:

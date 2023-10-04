@@ -1,73 +1,3 @@
-class CommunityModel {
-  List<CommContent>? content;
-  Pageable? pageable;
-  int? totalElements;
-  bool? last;
-  int? totalPages;
-  int? size;
-  int? number;
-  Sort? sort;
-  bool? first;
-  int? numberOfElements;
-  bool? empty;
-
-  CommunityModel(
-      {this.content,
-      this.pageable,
-      this.totalElements,
-      this.last,
-      this.totalPages,
-      this.size,
-      this.number,
-      this.sort,
-      this.first,
-      this.numberOfElements,
-      this.empty});
-
-  CommunityModel.fromJson(Map<String, dynamic> json) {
-    if (json['content'] != null) {
-      content = <CommContent>[];
-      json['content'].forEach((v) {
-        content!.add(new CommContent.fromJson(v));
-      });
-    }
-    pageable = json['pageable'] != null
-        ? new Pageable.fromJson(json['pageable'])
-        : null;
-    totalElements = json['totalElements'];
-    last = json['last'];
-    totalPages = json['totalPages'];
-    size = json['size'];
-    number = json['number'];
-    sort = json['sort'] != null ? new Sort.fromJson(json['sort']) : null;
-    first = json['first'];
-    numberOfElements = json['numberOfElements'];
-    empty = json['empty'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.content != null) {
-      data['content'] = this.content!.map((v) => v.toJson()).toList();
-    }
-    if (this.pageable != null) {
-      data['pageable'] = this.pageable!.toJson();
-    }
-    data['totalElements'] = this.totalElements;
-    data['last'] = this.last;
-    data['totalPages'] = this.totalPages;
-    data['size'] = this.size;
-    data['number'] = this.number;
-    if (this.sort != null) {
-      data['sort'] = this.sort!.toJson();
-    }
-    data['first'] = this.first;
-    data['numberOfElements'] = this.numberOfElements;
-    data['empty'] = this.empty;
-    return data;
-  }
-}
-
 class CommContent {
   String? id;
   int? createdOn;
@@ -101,21 +31,109 @@ class CommContent {
         creator:
             json['creator'] != null ? Creator.fromJson(json['creator']) : null,
         joinStatus: json['joinStatus'] ?? "",
-        data: json['data'] != null ? new Datas.fromJson(json['data']) : null,
+        data: json['data'] != null ? Datas.fromJson(json['data']) : null,
       );
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdOn'] = this.createdOn;
-    if (this.creator != null) {
-      data['creator'] = this.creator!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdOn'] = createdOn;
+    if (creator != null) {
+      data['creator'] = creator!.toJson();
     }
-    data['active'] = this.active;
-    data['joinStatus'] = this.joinStatus;
+    data['active'] = active;
+    data['joinStatus'] = joinStatus;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
+    return data;
+  }
+}
+
+class CommunityModel {
+  List<CommContent>? content;
+  Pageable? pageable;
+  int? totalElements;
+  bool? last;
+  int? totalPages;
+  int? size;
+  int? number;
+  Sort? sort;
+  bool? first;
+  int? numberOfElements;
+  bool? empty;
+
+  CommunityModel(
+      {this.content,
+      this.pageable,
+      this.totalElements,
+      this.last,
+      this.totalPages,
+      this.size,
+      this.number,
+      this.sort,
+      this.first,
+      this.numberOfElements,
+      this.empty});
+
+  CommunityModel.fromJson(Map<String, dynamic> json) {
+    if (json['content'] != null) {
+      content = <CommContent>[];
+      json['content'].forEach((v) {
+        content!.add(CommContent.fromJson(v));
+      });
+    }
+    pageable =
+        json['pageable'] != null ? Pageable.fromJson(json['pageable']) : null;
+    totalElements = json['totalElements'];
+    last = json['last'];
+    totalPages = json['totalPages'];
+    size = json['size'];
+    number = json['number'];
+    sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
+    first = json['first'];
+    numberOfElements = json['numberOfElements'];
+    empty = json['empty'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (content != null) {
+      data['content'] = content!.map((v) => v.toJson()).toList();
+    }
+    if (pageable != null) {
+      data['pageable'] = pageable!.toJson();
+    }
+    data['totalElements'] = totalElements;
+    data['last'] = last;
+    data['totalPages'] = totalPages;
+    data['size'] = size;
+    data['number'] = number;
+    if (sort != null) {
+      data['sort'] = sort!.toJson();
+    }
+    data['first'] = first;
+    data['numberOfElements'] = numberOfElements;
+    data['empty'] = empty;
+    return data;
+  }
+}
+
+class Country {
+  bool? objectPublic;
+  String? value;
+
+  Country({this.objectPublic, this.value});
+
+  Country.fromJson(Map<String, dynamic> json) {
+    objectPublic = json['objectPublic'];
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['objectPublic'] = objectPublic;
+    data['value'] = value;
     return data;
   }
 }
@@ -148,18 +166,18 @@ class Creator {
     dob = json['dob'];
     publicProfile = json['publicProfile'];
     joinStatus = json['joinStatus'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userId'] = this.userId;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['username'] = this.username;
-    data['dob'] = this.dob;
-    data['publicProfile'] = this.publicProfile;
-    data['joinStatus'] = this.joinStatus;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userId'] = userId;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['username'] = username;
+    data['dob'] = dob;
+    data['publicProfile'] = publicProfile;
+    data['joinStatus'] = joinStatus;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -198,71 +216,127 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     mobilePhone = json['mobilePhone'] != null
-        ? new MobilePhone.fromJson(json['mobilePhone'])
+        ? MobilePhone.fromJson(json['mobilePhone'])
         : null;
     country =
-        json['country'] != null ? new Country.fromJson(json['country']) : null;
+        json['country'] != null ? Country.fromJson(json['country']) : null;
     imgMain =
-        json['imgMain'] != null ? new Country.fromJson(json['imgMain']) : null;
-    images =
-        json['images'] != null ? new Country.fromJson(json['images']) : null;
-    gender =
-        json['gender'] != null ? new Country.fromJson(json['gender']) : null;
-    city = json['city'] != null ? new Country.fromJson(json['city']) : null;
+        json['imgMain'] != null ? Country.fromJson(json['imgMain']) : null;
+    images = json['images'] != null ? Country.fromJson(json['images']) : null;
+    gender = json['gender'] != null ? Country.fromJson(json['gender']) : null;
+    city = json['city'] != null ? Country.fromJson(json['city']) : null;
     webAddress = json['webAddress'] != null
-        ? new Country.fromJson(json['webAddress'])
+        ? Country.fromJson(json['webAddress'])
         : null;
-    work = json['work'] != null ? new Country.fromJson(json['work']) : null;
-    about = json['about'] != null ? new Country.fromJson(json['about']) : null;
-    state = json['state'] != null ? new Country.fromJson(json['state']) : null;
+    work = json['work'] != null ? Country.fromJson(json['work']) : null;
+    about = json['about'] != null ? Country.fromJson(json['about']) : null;
+    state = json['state'] != null ? Country.fromJson(json['state']) : null;
     userSchool = json['userSchool'] != null
-        ? new Country.fromJson(json['userSchool'])
+        ? Country.fromJson(json['userSchool'])
         : null;
     maritalStatus = json['maritalStatus'] != null
-        ? new Country.fromJson(json['maritalStatus'])
+        ? Country.fromJson(json['maritalStatus'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.mobilePhone != null) {
-      data['mobilePhone'] = this.mobilePhone!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (mobilePhone != null) {
+      data['mobilePhone'] = mobilePhone!.toJson();
     }
-    if (this.country != null) {
-      data['country'] = this.country!.toJson();
+    if (country != null) {
+      data['country'] = country!.toJson();
     }
-    if (this.imgMain != null) {
-      data['imgMain'] = this.imgMain!.toJson();
+    if (imgMain != null) {
+      data['imgMain'] = imgMain!.toJson();
     }
-    if (this.images != null) {
-      data['images'] = this.images!.toJson();
+    if (images != null) {
+      data['images'] = images!.toJson();
     }
-    if (this.gender != null) {
-      data['gender'] = this.gender!.toJson();
+    if (gender != null) {
+      data['gender'] = gender!.toJson();
     }
-    if (this.city != null) {
-      data['city'] = this.city!.toJson();
+    if (city != null) {
+      data['city'] = city!.toJson();
     }
-    if (this.webAddress != null) {
-      data['webAddress'] = this.webAddress!.toJson();
+    if (webAddress != null) {
+      data['webAddress'] = webAddress!.toJson();
     }
-    if (this.work != null) {
-      data['work'] = this.work!.toJson();
+    if (work != null) {
+      data['work'] = work!.toJson();
     }
-    if (this.about != null) {
-      data['about'] = this.about!.toJson();
+    if (about != null) {
+      data['about'] = about!.toJson();
     }
-    if (this.state != null) {
-      data['state'] = this.state!.toJson();
+    if (state != null) {
+      data['state'] = state!.toJson();
     }
-    if (this.userSchool != null) {
-      data['userSchool'] = this.userSchool!.toJson();
+    if (userSchool != null) {
+      data['userSchool'] = userSchool!.toJson();
     }
-    if (this.maritalStatus != null) {
-      data['maritalStatus'] = this.maritalStatus!.toJson();
+    if (maritalStatus != null) {
+      data['maritalStatus'] = maritalStatus!.toJson();
     }
 
     return data;
+  }
+}
+
+class Datas {
+  String? address;
+  String? contactNumber;
+  String? email;
+  String? name;
+  String? password;
+  String? joinSetting;
+  bool? isPublic;
+  int? memberCount;
+  String? imgSrc;
+  String? description;
+
+  Datas(
+      {this.address,
+      this.contactNumber,
+      this.email,
+      this.name,
+      this.password,
+      this.joinSetting,
+      this.isPublic,
+      this.memberCount,
+      this.imgSrc,
+      this.description});
+
+  factory Datas.fromJson(Map<String, dynamic> json) => Datas(
+        address: json['address'] ?? "",
+        contactNumber: json['contactNumber'],
+        email: json['email'],
+        name: json['name'],
+        password: json['password'],
+        joinSetting: json['join_setting'],
+        isPublic: json['isPublic'],
+        memberCount: json['memberCount'],
+        imgSrc: json['imgSrc'],
+        description: json['description'],
+      );
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['address'] = address;
+    data['contactNumber'] = contactNumber;
+    data['email'] = email;
+    data['name'] = name;
+    data['password'] = password;
+    data['join_setting'] = joinSetting;
+    data['isPublic'] = isPublic;
+    data['memberCount'] = memberCount;
+    data['imgSrc'] = imgSrc;
+    data['description'] = description;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return '{address: $address, contactNumber: $contactNumber, email: $email, name: $name, password: $password, joinSetting: $joinSetting, isPublic: $isPublic, memberCount: $memberCount, imgSrc: $imgSrc, description: $description}';
   }
 }
 
@@ -278,112 +352,12 @@ class MobilePhone {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['objectPublic'] = this.objectPublic;
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['objectPublic'] = objectPublic;
+    data['value'] = value;
     return data;
   }
 }
-
-class Country {
-  bool? objectPublic;
-  String? value;
-
-  Country({this.objectPublic, this.value});
-
-  Country.fromJson(Map<String, dynamic> json) {
-    objectPublic = json['objectPublic'];
-    value = json['value'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['objectPublic'] = this.objectPublic;
-    data['value'] = this.value;
-    return data;
-  }
-}
-
-class Datas {
-  String? address;
-  String? contactNumber;
-  String? email;
-  String? name;
-  String? password;
-  String? joinSetting;
-  bool? isPublic;
-  int? memberCount;
-  List<String>? picUrls;
-  String? imgSrc;
-  String? description;
-
-  Datas(
-      {this.address,
-      this.contactNumber,
-      this.email,
-      this.name,
-      this.password,
-      this.joinSetting,
-      this.isPublic,
-      this.memberCount,
-      this.picUrls,
-      this.imgSrc,
-      this.description});
-
-  factory Datas.fromJson(Map<String, dynamic> json) => Datas(
-        address: json['address'] ?? "",
-        contactNumber: json['contactNumber'],
-        email: json['email'],
-        name: json['name'],
-        password: json['password'],
-        joinSetting: json['join_setting'],
-        isPublic: json['isPublic'],
-        memberCount: json['memberCount'],
-        picUrls: json['picUrls'].cast<String>(),
-        imgSrc: json['imgSrc'],
-        description: json['description'],
-      );
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['address'] = this.address;
-    data['contactNumber'] = this.contactNumber;
-    data['email'] = this.email;
-    data['name'] = this.name;
-    data['password'] = this.password;
-    data['join_setting'] = this.joinSetting;
-    data['isPublic'] = this.isPublic;
-    data['memberCount'] = this.memberCount;
-    data['picUrls'] = this.picUrls;
-    data['imgSrc'] = this.imgSrc;
-    data['description'] = this.description;
-    return data;
-  }
-
-  @override
-  String toString() {
-    return '{address: $address, contactNumber: $contactNumber, email: $email, name: $name, password: $password, joinSetting: $joinSetting, isPublic: $isPublic, memberCount: $memberCount, picUrls: $picUrls, imgSrc: $imgSrc, description: $description}';
-  }
-}
-
-// class Favorites {
-//   String? typeID;
-//   String? type;
-
-//   Favorites({this.typeID, this.type});
-
-//   Favorites.fromJson(Map<String, dynamic> json) {
-//     typeID = json['typeID'];
-//     type = json['type'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['typeID'] = this.typeID;
-//     data['type'] = this.type;
-//     return data;
-//   }
-// }
 
 class Pageable {
   Sort? sort;
@@ -402,7 +376,7 @@ class Pageable {
       this.unpaged});
 
   Pageable.fromJson(Map<String, dynamic> json) {
-    sort = json['sort'] != null ? new Sort.fromJson(json['sort']) : null;
+    sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
     offset = json['offset'];
     pageNumber = json['pageNumber'];
     pageSize = json['pageSize'];
@@ -411,15 +385,15 @@ class Pageable {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.sort != null) {
-      data['sort'] = this.sort!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (sort != null) {
+      data['sort'] = sort!.toJson();
     }
-    data['offset'] = this.offset;
-    data['pageNumber'] = this.pageNumber;
-    data['pageSize'] = this.pageSize;
-    data['paged'] = this.paged;
-    data['unpaged'] = this.unpaged;
+    data['offset'] = offset;
+    data['pageNumber'] = pageNumber;
+    data['pageSize'] = pageSize;
+    data['paged'] = paged;
+    data['unpaged'] = unpaged;
     return data;
   }
 }
@@ -438,10 +412,10 @@ class Sort {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['sorted'] = this.sorted;
-    data['unsorted'] = this.unsorted;
-    data['empty'] = this.empty;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['sorted'] = sorted;
+    data['unsorted'] = unsorted;
+    data['empty'] = empty;
     return data;
   }
 }
