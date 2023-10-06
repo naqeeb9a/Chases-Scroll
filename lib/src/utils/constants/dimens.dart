@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const PAD_ALL_10 = EdgeInsets.all(10);
 
+const PAD_ALL_11 = EdgeInsets.all(10);
 const PAD_ALL_13 = EdgeInsets.all(13);
 const PAD_ALL_15 = EdgeInsets.all(15);
 const PAD_ALL_18 = EdgeInsets.all(18);

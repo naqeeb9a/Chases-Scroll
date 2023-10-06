@@ -22,8 +22,8 @@ class PasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     void login() async {
       if (_formKey.currentState!.validate()) {
-        bool result = await _authRepository.login(email, password.text);
-        if (result) {
+        dynamic result = await _authRepository.login(email, password.text);
+        if (result != false) {
           if (context.mounted) {
             context.push(AppRoutes.bottomNav);
           }
@@ -49,6 +49,7 @@ class PasswordScreen extends StatelessWidget {
                     textColor: AppColors.primary),
                 heightSpace(2),
                 AppTextFormField(
+                  isPassword: true,
                   textEditingController: password,
                   validator: passwordValidation,
                   label: "Enter your password",

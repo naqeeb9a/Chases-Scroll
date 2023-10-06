@@ -249,6 +249,7 @@ class ApiClient {
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         // locator<GoRouter>().push(AppRoutes.login);
       }
+      log(e.response.toString());
       log(e.response!.data.toString());
       OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
       if (e.response?.data is String) {

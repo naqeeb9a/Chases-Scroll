@@ -11,11 +11,13 @@ class Endpoints {
       locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
 
   static const String port81 = ":8081";
-  static const String port88 = ":8088";
-  static const String port80 = ":8088";
   static const String port82 = ":8082";
+  static const String port88 = ":8088";
+  static const String port89 = ":8089";
+  static const String port80 = ":8088";
   static const String port83 = ":8083";
   static const String port84 = ":8084";
+  static const String port90 = ":8090";
 
   static const String login = '$port81/auth/signin';
   static const String signup = '$port81/auth/signup';
@@ -25,6 +27,10 @@ class Endpoints {
   static const String sendEmail = '$port88/chasescroll/verification/send-email';
   static const String changePassword =
       '$port88/chasescroll/verification/change-password';
+  static const String getPost = '$port89/feed/get-user-and-friends-posts';
+  static const String getUserProfile = '$port82/user/privateprofile';
+  static const String createPost = '$port89/feed/create-post';
+  static const String uploadImage = '$port90/resource-api/upload-image';
 
   //-------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//

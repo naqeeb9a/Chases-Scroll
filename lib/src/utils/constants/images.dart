@@ -13,6 +13,16 @@ class AppImages {
   static const String searchIcon = "assets/svgs/search-icon.svg";
   static const String calendarIcon = "assets/svgs/calendar-icon.svg";
   static const String userIcon = "assets/svgs/user-icon.svg";
+  static const String homeSelected = "assets/svgs/home-selected.svg";
+  static const String notificationBell = 'assets/svgs/notification.svg';
+  static const String messageIcon = "assets/svgs/message-icon.svg";
+  static const String galleryIcon = "assets/svgs/gallery-add.svg";
+  static const String videoIcon = "assets/svgs/video-icon.svg";
+  static const String sendIcon = "assets/svgs/send-icon.svg";
+  static const String verticalThreeDot = "assets/svgs/vertical-dots.svg";
+  static const String like = "assets/svgs/like.svg";
+  static const String comment = "assets/svgs/comment.svg";
+  static const String share = "assets/svgs/share.svg";
   static const String suggestionGrid = "assets/svgs/grid_suggestion.svg";
   static const String location = "assets/svgs/Location.svg";
   static const String bookmark = "assets/svgs/Bookmark.svg";
@@ -23,4 +33,5 @@ class AppImages {
   static const String navigation = "assets/svgs/navigation.svg";
   static const String calendarAdd = "assets/svgs/calendar-add.svg";
   static const String ticket = "assets/svgs/ticket.svg";
+  static const String favouriteFilled = "assets/svgs/favorite-filled.svg";
 }

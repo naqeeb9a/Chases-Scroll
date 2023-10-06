@@ -10,6 +10,8 @@ import '../../utils/constants/colors.dart';
 class AppTextFormField extends StatefulWidget {
   final TextEditingController? textEditingController;
   final bool hasPrefixConstraint;
+  final bool? hasBorder;
+
   final bool isAddress;
   final String? label;
   final String? hintText;
@@ -39,6 +41,7 @@ class AppTextFormField extends StatefulWidget {
     this.inputFormatters,
     this.onChanged,
     this.hintText,
+    this.hasBorder,
     this.error,
     this.prefixIcon,
     this.keyboardType = TextInputType.text,
