@@ -5,16 +5,16 @@ import '../../../utils/constants/spacer.dart';
 import '../../widgets/custom_fonts.dart';
 
 class SearchPeopleWidget extends StatelessWidget {
+  final String? fullName;
+
+  final String? username;
+  final String? image;
   const SearchPeopleWidget({
     super.key,
     this.fullName,
     this.username,
     this.image,
   });
-
-  final String? fullName;
-  final String? username;
-  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class SearchPeopleWidget extends StatelessWidget {
     // List<String> words = n.split(' ');
     // String initials = words.map((word) => word[0]).join('');
     return Container(
-      padding: EdgeInsets.only(top: 8, bottom: 8),
-      margin: EdgeInsets.only(right: 15, bottom: 5),
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      margin: const EdgeInsets.only(right: 15, bottom: 5),
 
       ///color: AppColors.blue,
       child: Row(
@@ -40,7 +40,8 @@ class SearchPeopleWidget extends StatelessWidget {
                 topLeft: Radius.circular(40),
                 topRight: Radius.circular(0),
               ),
-              color: Colors.grey.shade300,
+              color: Colors.grey.shade100,
+              border: Border.all(color: AppColors.primary),
               image: DecorationImage(
                 fit: BoxFit.cover,
                 image: NetworkImage(

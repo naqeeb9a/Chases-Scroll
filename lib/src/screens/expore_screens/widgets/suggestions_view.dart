@@ -10,8 +10,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SuggestionView extends StatefulWidget {
   final Content? users;
+  final Function()? function;
 
-  const SuggestionView({super.key, this.users});
+  const SuggestionView({super.key, this.users, this.function});
 
   @override
   State<SuggestionView> createState() => _SuggestionViewState();
@@ -49,12 +50,13 @@ class _SuggestionViewState extends State<SuggestionView> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: Container(
-                    height: 70,
-                    width: 70,
+                    height: 6.h,
+                    width: 15.w,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(40),
@@ -63,7 +65,7 @@ class _SuggestionViewState extends State<SuggestionView> {
                         topRight: Radius.circular(0),
                       ),
                       border: Border.all(color: AppColors.primary),
-                      color: Colors.grey.shade300,
+                      color: Colors.grey.shade100,
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: NetworkImage(
@@ -96,7 +98,7 @@ class _SuggestionViewState extends State<SuggestionView> {
                     textColor: AppColors.lightGrey,
                     fontWeight: FontWeight.w400),
                 Padding(
-                  padding: const EdgeInsets.only(top: 5.0, right: 15, left: 15),
+                  padding: const EdgeInsets.only(top: 9.0, right: 15, left: 15),
                   child: ChasescrollButton(
                     hasIcon: false,
                     iconWidget: SvgPicture.asset(AppImages.appleIcon),
@@ -111,6 +113,8 @@ class _SuggestionViewState extends State<SuggestionView> {
                     borderColor: AppColors.grey,
                     textColor: AppColors.white,
                     height: 4.h,
+                    width: 28.w,
+                    onTap: widget.function,
                   ),
                 ),
                 // connectToFriendRequestFunction(

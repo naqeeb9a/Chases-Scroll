@@ -8,6 +8,7 @@ const PAD_ALL_15 = EdgeInsets.all(15);
 const PAD_ALL_18 = EdgeInsets.all(18);
 const PAD_ALL_20 = EdgeInsets.all(20);
 const PAD_ALL_5 = EdgeInsets.all(5);
+const PAD_ALL_8 = EdgeInsets.all(8);
 const PAD_ALL_GENERAL = EdgeInsets.fromLTRB(20, 20, 20, 8);
 const PAD_ALL_TopBottomDiff = EdgeInsets.fromLTRB(20, 10, 20, 10);
 const PAD_ASYM_H15_V10 = EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0);

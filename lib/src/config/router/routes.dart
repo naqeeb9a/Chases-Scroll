@@ -13,4 +13,7 @@ class AppRoutes {
   static const String bottomNav = "/bottom-nav";
   static const String suggestionFriendMore = "/suggestionFriendMore";
   static const String searchExploreView = "/searchExploreView";
+  static const String eventView = "/eventView";
+  static const String eventDetailMainView = "/eventDetailMainView";
+  static const String addEventView = "/addEventView";
 }

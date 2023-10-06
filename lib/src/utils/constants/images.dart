@@ -1,6 +1,10 @@
 class AppImages {
   static const String logo = "assets/pngs/logo-main.png";
   static const String onboarding = "assets/pngs/onboarding.png";
+  static const String map = "assets/pngs/map.PNG";
+
+  //jpegs
+  static const String mapPic = "assets/jpegs/map_pic.jpg";
 
   //svgs
   static const String googleIcon = "assets/svgs/google-icon.svg";
@@ -23,5 +27,11 @@ class AppImages {
   static const String location = "assets/svgs/Location.svg";
   static const String bookmark = "assets/svgs/Bookmark.svg";
   static const String bookmarkFilled = "assets/svgs/Bookmark-filled.svg";
+  static const String addEvents = "assets/svgs/add-square.svg";
+  static const String imageAdd = "assets/svgs/gallery-add.svg";
+  static const String eventFolder = "assets/svgs/folder.svg";
+  static const String navigation = "assets/svgs/navigation.svg";
+  static const String calendarAdd = "assets/svgs/calendar-add.svg";
+  static const String ticket = "assets/svgs/ticket.svg";
   static const String favouriteFilled = "assets/svgs/favorite-filled.svg";
 }

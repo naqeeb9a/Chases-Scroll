@@ -14,6 +14,10 @@ class AppColors {
 
   static const Color deepPrimary = Color(0xff1732F7);
   static const Color backgroundGrey = Color(0xffF5F5F5);
+  static const Color green = Colors.green;
+  static const Color iconGrey = Color(0xffD0D4EB);
+  static const Color subtitleColors = Color(0xff6B6B6B);
+
   static OutlineInputBorder errorBorder = const OutlineInputBorder(
       borderSide: BorderSide(
         color: red,

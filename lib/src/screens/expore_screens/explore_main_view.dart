@@ -1,17 +1,27 @@
+import 'dart:developer';
+
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/event_container_tranform_view.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/suggestions_view.dart';
+import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../utils/constants/spacer.dart';
 import '../widgets/custom_fonts.dart';
+
+final eventDataProvider = FutureProvider<List<ContentEvent>>((ref) async {
+  return ExploreRepository().getTopEvents();
+});
 
 class ExploreMainView extends HookWidget {
   static final ExploreRepository _exploreRepository = ExploreRepository();
@@ -48,6 +58,11 @@ class ExploreMainView extends HookWidget {
       });
     }
 
+    void refreshSuggestedUsers() {
+      usersLoading.value = false; // Set loading state back to true
+      getSuggestedUsers(); // Trigger the API call again
+    }
+
     useEffect(() {
       getEvents();
       getSuggestedUsers();
@@ -73,7 +88,7 @@ class ExploreMainView extends HookWidget {
                   padding: PAD_ALL_13,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      width: 1.2,
+                      width: 1.1,
                       color: AppColors.primary,
                     ),
                     borderRadius: BorderRadius.circular(10),
@@ -82,12 +97,12 @@ class ExploreMainView extends HookWidget {
                     children: [
                       SvgPicture.asset(
                         'assets/svgs/search-chase.svg',
-                        height: 20,
+                        height: 15,
                       ),
                       widthSpace(2),
                       customText(
                         text: "Search for users, event or...",
-                        fontSize: 14,
+                        fontSize: 12,
                         textColor: AppColors.searchTextGrey,
                         fontWeight: FontWeight.w400,
                       ),
@@ -111,27 +126,38 @@ class ExploreMainView extends HookWidget {
                       Expanded(
                         child: Container(
                           //color: Colors.amber,
-                          child: PageView.builder(
-                            controller: pageController,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: eventModel.value.length,
-                            onPageChanged: (int pageIndex) {
-                              currentPageValue.value = pageIndex.toDouble();
-                            },
-                            itemBuilder: (BuildContext context, int index) {
-                              return eventLoading.value
-                                  ? const Icon(
-                                      Icons.error,
-                                      size: 40,
-                                      color: Colors.red,
+                          child: Column(
+                            children: [
+                              eventLoading.value
+                                  ? topEventShimmerWithlength(
+                                      count: 1,
+                                      width: 90.w,
+                                      height: 30.h,
                                     )
-                                  : EventContainerTransformView(
-                                      index: index,
-                                      currentPageValue: currentPageValue.value,
-                                      scaleFactor: scaleFactor,
-                                      event: eventModel.value[index],
-                                    );
-                            },
+                                  : Expanded(
+                                      child: Container(
+                                        child: PageView.builder(
+                                          controller: pageController,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: eventModel.value.length,
+                                          onPageChanged: (int pageIndex) {
+                                            currentPageValue.value =
+                                                pageIndex.toDouble();
+                                          },
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return EventContainerTransformView(
+                                              index: index,
+                                              currentPageValue:
+                                                  currentPageValue.value,
+                                              scaleFactor: scaleFactor,
+                                              event: eventModel.value[index],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                            ],
                           ),
                         ),
                       ),
@@ -173,22 +199,55 @@ class ExploreMainView extends HookWidget {
               Expanded(
                 flex: 2,
                 child: Container(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: usersModel.value.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return usersLoading.value
-                          ? const Center(
-                              child: Icon(
-                                Icons.error,
-                                size: 60,
-                                color: Colors.red,
-                              ),
+                  child: Column(
+                    children: [
+                      usersLoading.value
+                          ? usersShimmerWithlength(
+                              count: 2,
                             )
-                          : SuggestionView(
-                              users: usersModel.value[index],
-                            );
-                    },
+                          : Expanded(
+                              child: SizedBox(
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: usersModel.value.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    Content? friend = usersModel.value[index];
+
+                                    return usersLoading.value
+                                        ? const Center(
+                                            child: Icon(
+                                              Icons.error,
+                                              size: 60,
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        : SuggestionView(
+                                            users: usersModel.value[index],
+                                            function: () async {
+                                              final result =
+                                                  await _exploreRepository
+                                                      .connectWithFriend(
+                                                          friendID:
+                                                              friend.userId);
+                                              if (result['updated'] == true) {
+                                                // Trigger a refresh of the events data
+                                                refreshSuggestedUsers();
+                                                ToastResp.toastMsgSuccess(
+                                                    resp: result['message']);
+                                                log(result.toString());
+                                                //refreshEventProvider(context.read);
+                                              } else {
+                                                ToastResp.toastMsgError(
+                                                    resp: result['message']);
+                                              }
+                                            },
+                                          );
+                                  },
+                                ),
+                              ),
+                            ),
+                    ],
                   ),
                 ),
               )

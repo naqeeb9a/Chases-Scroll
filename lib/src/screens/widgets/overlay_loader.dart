@@ -14,17 +14,19 @@ class AppHelper {
     return _navigatorKey?.currentState?.context;
   }
 
-  static void showOverlayLoader() {
+  static void showOverlayLoader({Color? backgroundColor, Widget? widget}) {
     showOverlay(
       (context, t) {
         overlayContext = context;
         return Container(
-          color:
+          color: backgroundColor ??
               Color.lerp(Colors.transparent, Colors.black.withOpacity(0.9), t),
           child: FractionalTranslation(
             translation:
                 Offset.lerp(const Offset(0, -1), const Offset(0, 0), t)!,
-            child: const Center(child: CircularProgressIndicator()),
+            child: Center(
+              child: widget ?? const CircularProgressIndicator(),
+            ),
           ),
         );
       },

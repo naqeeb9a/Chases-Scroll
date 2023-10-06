@@ -28,6 +28,7 @@ class AppTextFormField extends StatefulWidget {
   final int? maxLines;
   final bool? isEnabled;
   final int? maxLength;
+  final String? initialValue;
   final bool? showPasswordRequirementContainer;
   const AppTextFormField({
     super.key,
@@ -51,6 +52,7 @@ class AppTextFormField extends StatefulWidget {
     this.validator,
     this.onSubmitted,
     this.showPasswordRequirementContainer,
+    this.initialValue,
   });
 
   @override
@@ -69,7 +71,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
               text: '${widget.label}',
               fontSize: 14,
               textColor: AppColors.black),
-        heightSpace(2),
+        heightSpace(1),
         TextFormField(
           maxLines: widget.maxLines ?? 1,
           inputFormatters: widget.inputFormatters,
@@ -83,6 +85,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
           obscureText: isPasswordShow ? false : widget.isPassword,
           validator: widget.validator,
           style: const TextStyle(fontSize: 14),
+          initialValue: widget.initialValue,
           decoration: InputDecoration(
               prefixIconConstraints: const BoxConstraints(
                 minWidth: 10,
