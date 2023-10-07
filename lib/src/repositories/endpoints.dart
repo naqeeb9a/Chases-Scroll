@@ -23,6 +23,12 @@ class Endpoints {
   static const String uploadImage = '$port90/resource-api/upload-image';
   static const String addComment = '$port89/feed/add-comment';
   static const String getPostComment = '$port89/feed/get-all-comments';
+  static const String uploadVideo = '$port90/resource-api/upload-video';
+  static const String likePost = '$port89/feed/like-post';
+  static const String suggest = '$port80/user/suggest-connections';
+  static const String sharePost = '$port89/feed/share-post';
+  static const String removePost = '$port89/feed/remove-post';
+  static const String editPost = '$port89/feed/edit-post';
 
   //------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//

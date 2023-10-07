@@ -6,7 +6,8 @@ import 'custom_fonts.dart';
 
 class ChaseScrollContainer extends StatelessWidget {
   final String name;
-  const ChaseScrollContainer({super.key, required this.name});
+  final String? imageUrl;
+  const ChaseScrollContainer({super.key, required this.name, this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
