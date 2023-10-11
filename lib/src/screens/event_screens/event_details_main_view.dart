@@ -33,6 +33,7 @@ class EventDetailsMainView extends StatefulWidget {
 }
 
 class _EventDetailsMainViewState extends State<EventDetailsMainView> {
+  //TicketSummaryModel? eventTicketmodel;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -206,6 +207,16 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                         spacing: 12,
                         children: widget.eventDetails.productTypeData.map((e) {
                           ProductTypeDatum ticket = e;
+                          // eventTicketmodel = TicketSummaryModel(
+                          //   currency: "",
+                          //   eventId: "",
+                          //   image: "",
+                          //   location: "",
+                          //   name: "",
+                          //   numberOfTickets: 0,
+                          //   price: 0,
+                          //   ticketType: "",
+                          // );
                           return IntrinsicWidth(
                             child: Container(
                               margin: const EdgeInsets.only(bottom: 7),
@@ -277,7 +288,10 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                     heightSpace(2),
                     ChasescrollButton(
                       buttonText: "Buy Ticket",
-                      onTap: () {},
+                      onTap: () {
+                        // ref.read(myDataProvider).state = updatedModel;
+                        //context.push(AppRoutes.ticketSummary);
+                      },
                     ),
                   ],
                 ),
