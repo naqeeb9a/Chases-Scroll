@@ -20,7 +20,7 @@ class FindCollegeEvents extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myCollegeLoading = useState<bool>(true);
-    final myCollegeModel = useState<List<ContentEvent>>([]);
+    final myCollegeModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getCollegeEvents().then((value) {

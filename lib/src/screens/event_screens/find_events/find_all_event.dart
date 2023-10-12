@@ -24,9 +24,9 @@ class FindAllEventCardView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final allEventLoading = useState<bool>(true);
-    final allEventModel = useState<List<ContentEvent>>([]);
+    final allEventModel = useState<List<Content>>([]);
     final topEventLoading = useState<bool>(true);
-    final topEventModel = useState<List<ContentEvent>>([]);
+    final topEventModel = useState<List<Content>>([]);
     final currentPageValue = useValueNotifier(0);
 
     getAllEvents() {
@@ -72,19 +72,19 @@ class FindAllEventCardView extends HookWidget {
                 itemCount: allEventModel.value.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
-                  ContentEvent allEvent = allEventModel.value[index];
+                  Content allEvent = allEventModel.value[index];
                   //for formatted time
-                  int startTimeInMillis = allEvent.startTime;
+                  int? startTimeInMillis = allEvent.startTime;
                   DateTime startTime =
                       DateTimeUtils.convertMillisecondsToDateTime(
-                          startTimeInMillis);
+                          startTimeInMillis!);
                   String formattedDate = DateUtilss.formatDateTime(startTime);
                   return EventBigCard(
                     80.w,
                     eventDetails: allEvent,
                     eventName: allEvent.eventName,
                     date: formattedDate,
-                    location: allEvent.location.address,
+                    location: allEvent.location!.address,
                     image: allEvent.currentPicUrl,
                     price: allEvent.minPrice,
                     isSaved: allEvent.isSaved!,
@@ -117,9 +117,9 @@ class FindAllEventCardView extends HookWidget {
                 itemCount: topEventModel.value.length,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (BuildContext context, int index) {
-                  ContentEvent topEvent = topEventModel.value[index];
+                  Content topEvent = topEventModel.value[index];
                   //for formatted time
-                  int startTimeInMillis = topEvent.startTime;
+                  int startTimeInMillis = topEvent.startTime!;
                   DateTime startTime =
                       DateTimeUtils.convertMillisecondsToDateTime(
                           startTimeInMillis);
@@ -128,7 +128,7 @@ class FindAllEventCardView extends HookWidget {
                   return EventSmallCard(
                     eventName: topEvent.eventName,
                     date: formattedDate,
-                    location: topEvent.location.address,
+                    location: topEvent.location!.address,
                     image: topEvent.currentPicUrl,
                     price: topEvent.minPrice,
                     isSaved: topEvent.isSaved!,

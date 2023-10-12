@@ -20,7 +20,7 @@ class FindPopupEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myPopupLoading = useState<bool>(true);
-    final myPopuplModel = useState<List<ContentEvent>>([]);
+    final myPopuplModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getReligiousEvents().then((value) {

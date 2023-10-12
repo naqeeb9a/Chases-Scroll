@@ -7,96 +7,122 @@ import 'package:flutter/material.dart';
 
 class EventRepository {
   //this is to get all events
-  List<ContentEvent> allEventList = [];
+  List<Content> allEventList = [];
 
   //this is to get all events
-  List<ContentEvent> trendingEventList = [];
+  List<Content> trendingEventList = [];
 
   //this is to get all events
-  List<ContentEvent> myEventList = [];
+  List<Content> myEventList = [];
 
   //this is to get all events
-  List<ContentEvent> savedEventList = [];
+  List<Content> savedEventList = [];
 
   //this is to get all events
-  List<ContentEvent> pastEventList = [];
+  List<Content> pastEventList = [];
 
   //to get top events
-  List<ContentEvent> eventList = [];
+  List<Content> eventList = [];
 
   //to get corporateList events
-  List<ContentEvent> corporateList = [];
+  List<Content> corporateList = [];
 
   //to get socialList events
-  List<ContentEvent> socialList = [];
+  List<Content> socialList = [];
 
   //to get collegeList events
-  List<ContentEvent> collegeList = [];
+  List<Content> collegeList = [];
 
   //to get virtualList events
-  List<ContentEvent> virtualList = [];
+  List<Content> virtualList = [];
 
   //to get religiousList events
-  List<ContentEvent> religiousList = [];
+  List<Content> religiousList = [];
 
   //to get popupList events
-  List<ContentEvent> popupList = [];
+  List<Content> popupList = [];
 
   //to get fundraisingList events
-  List<ContentEvent> fundraisingList = [];
+  List<Content> fundraisingList = [];
 
   //to get festivalList events
-  List<ContentEvent> festivalList = [];
+  List<Content> festivalList = [];
 
   //to get communityList events
-  List<ContentEvent> communityList = [];
+  List<Content> communityList = [];
 
-  Future<List<ContentEvent>> getAllEvents() async {
+  //to create event ticket
+  Future<dynamic> createTicket({
+    final int? numberOfTickets,
+    final String? eventID,
+    final String? ticketType,
+  }) async {
+    final data = {
+      "eventID": eventID,
+      "ticketType": ticketType,
+      "numberOfTickets": numberOfTickets
+    };
+    final response = await ApiClient.post(Endpoints.createEventTicket,
+        body: data,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    if (response.status == 200 || response.status == 201) {
+      log("createTicket ======> ${response.message}");
+      return response.message;
+    }
+    return response.message;
+  }
+
+  Future<List<Content>> getAllEvents() async {
     final response =
         await ApiClient.get(Endpoints.getAllEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      allEventList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      allEventList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return allEventList;
     } else {
       return [];
     }
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
   }
 
   //getCollegeEvents events
-  Future<List<ContentEvent>> getCollegeEvents() async {
+  Future<List<Content>> getCollegeEvents() async {
     final response =
         await ApiClient.get(Endpoints.corporateEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      allEventList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      collegeList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
-      return allEventList;
+      return collegeList;
     } else {
       return [];
     }
   }
 
   //Community events
-  Future<List<ContentEvent>> getCommunityEvents() async {
+  Future<List<Content>> getCommunityEvents() async {
     final response =
         await ApiClient.get(Endpoints.communityEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      communityList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      communityList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return communityList;
     } else {
@@ -105,16 +131,15 @@ class EventRepository {
   }
 
   //corporate events
-  Future<List<ContentEvent>> getCorporateEvents() async {
+  Future<List<Content>> getCorporateEvents() async {
     final response =
         await ApiClient.get(Endpoints.corporateEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      corporateList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      corporateList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return corporateList;
     } else {
@@ -123,16 +148,15 @@ class EventRepository {
   }
 
   //Festival events
-  Future<List<ContentEvent>> getFestivalEvents() async {
+  Future<List<Content>> getFestivalEvents() async {
     final response =
         await ApiClient.get(Endpoints.festivalEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      festivalList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      festivalList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return festivalList;
     } else {
@@ -141,16 +165,15 @@ class EventRepository {
   }
 
   //Fundraising events
-  Future<List<ContentEvent>> getFundraisingEvents() async {
+  Future<List<Content>> getFundraisingEvents() async {
     final response =
         await ApiClient.get(Endpoints.fundraisingEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      fundraisingList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      fundraisingList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return fundraisingList;
     } else {
@@ -158,15 +181,14 @@ class EventRepository {
     }
   }
 
-  Future<List<ContentEvent>> getMyEvents() async {
+  Future<List<Content>> getMyEvents() async {
     final response = await ApiClient.get(Endpoints.myEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       log(allEvents.toString());
-      myEventList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      myEventList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return myEventList;
     } else {
@@ -174,15 +196,14 @@ class EventRepository {
     }
   }
 
-  Future<List<ContentEvent>> getPastEvents() async {
+  Future<List<Content>> getPastEvents() async {
     final response = await ApiClient.get(Endpoints.pastEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      pastEventList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      pastEventList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return pastEventList;
     } else {
@@ -191,15 +212,14 @@ class EventRepository {
   }
 
   //popup events
-  Future<List<ContentEvent>> getPopupEvents() async {
+  Future<List<Content>> getPopupEvents() async {
     final response = await ApiClient.get(Endpoints.popupEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      popupList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      popupList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return popupList;
     } else {
@@ -208,16 +228,15 @@ class EventRepository {
   }
 
   //Religious events
-  Future<List<ContentEvent>> getReligiousEvents() async {
+  Future<List<Content>> getReligiousEvents() async {
     final response =
         await ApiClient.get(Endpoints.religiousEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      religiousList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      religiousList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return religiousList;
     } else {
@@ -225,15 +244,14 @@ class EventRepository {
     }
   }
 
-  Future<List<ContentEvent>> getSavedEvents() async {
+  Future<List<Content>> getSavedEvents() async {
     final response = await ApiClient.get(Endpoints.savedEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      savedEventList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      savedEventList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return savedEventList;
     } else {
@@ -242,16 +260,15 @@ class EventRepository {
   }
 
   //getSocialEvents events
-  Future<List<ContentEvent>> getSocialEvents() async {
+  Future<List<Content>> getSocialEvents() async {
     final response =
         await ApiClient.get(Endpoints.socialEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      socialList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      socialList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return socialList;
     } else {
@@ -259,16 +276,15 @@ class EventRepository {
     }
   }
 
-  Future<List<ContentEvent>> getTopEvents() async {
+  Future<List<Content>> getTopEvents() async {
     final response =
         await ApiClient.get(Endpoints.getTopEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> topEvents = response.message['content'];
       //log(topEvents.toString());
-      eventList = topEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      eventList =
+          topEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return eventList;
     } else {
@@ -276,16 +292,15 @@ class EventRepository {
     }
   }
 
-  Future<List<ContentEvent>> getTrendingEvents() async {
+  Future<List<Content>> getTrendingEvents() async {
     final response =
         await ApiClient.get(Endpoints.getAllEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      allEventList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      allEventList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return allEventList;
     } else {
@@ -294,16 +309,15 @@ class EventRepository {
   }
 
   //virtual events
-  Future<List<ContentEvent>> getVirtualEvents() async {
+  Future<List<Content>> getVirtualEvents() async {
     final response =
         await ApiClient.get(Endpoints.virtualEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      virtualList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      virtualList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return virtualList;
     } else {

@@ -19,7 +19,7 @@ class FindVirtualEvents extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myVirtualLoading = useState<bool>(true);
-    final myVirtualModel = useState<List<ContentEvent>>([]);
+    final myVirtualModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getVirtualEvents().then((value) {

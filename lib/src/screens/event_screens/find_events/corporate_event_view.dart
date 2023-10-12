@@ -19,7 +19,7 @@ class FindCorporateEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myCorporateLoading = useState<bool>(true);
-    final myCorporateModel = useState<List<ContentEvent>>([]);
+    final myCorporateModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getCorporateEvents().then((value) {

@@ -19,7 +19,7 @@ class FindReligiousEvents extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myReligiousLoading = useState<bool>(true);
-    final myReligiouslModel = useState<List<ContentEvent>>([]);
+    final myReligiouslModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getReligiousEvents().then((value) {

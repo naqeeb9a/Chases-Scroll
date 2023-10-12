@@ -66,4 +66,5 @@ class Endpoints {
   static String festivalEvents = "$port84/events/events?eventType=Festival";
   static String communityEvents =
       "$port84/events/events?eventType=Community_Event";
+  static String createEventTicket = "$port84/events/create-ticket";
 }

@@ -1,4 +1,9 @@
+import 'dart:developer';
+
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
+import 'package:chases_scroll/src/models/ticket_summary_model.dart';
+import 'package:chases_scroll/src/providers/event_statenotifier.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_detail_map_locationCard.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_details_iconText.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
@@ -8,13 +13,25 @@ import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/luncher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/images.dart';
 import '../../utils/constants/spacer.dart';
+
+// final selectPriceIndexNotifier =
+//     StateNotifierProvider<SelectPriceIndexNotifier, int>(
+//   (_) => SelectPriceIndexNotifier(20),
+// );
+
+final selectPriceIndexNotifier =
+    AutoDisposeStateNotifierProvider<SelectPriceIndexNotifier, int>((ref) {
+  return SelectPriceIndexNotifier(20);
+});
 
 List<String> wrapTicketTypeList = [
   "Free \$0.0",
@@ -23,35 +40,34 @@ List<String> wrapTicketTypeList = [
   "Superior \$1000",
 ];
 
-class EventDetailsMainView extends StatefulWidget {
-  final ContentEvent eventDetails;
+class EventDetailsMainView extends ConsumerWidget {
+  final Content eventDetails;
 
   const EventDetailsMainView({super.key, required this.eventDetails});
 
   @override
-  State<EventDetailsMainView> createState() => _EventDetailsMainViewState();
-}
-
-class _EventDetailsMainViewState extends State<EventDetailsMainView> {
-  //TicketSummaryModel? eventTicketmodel;
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    // ref.read(selectPriceIndexNotifier.notifier).resetState();
 
-    dynamic sDate = DateTimeUtils.convertMillisecondsToDateTime(
-        widget.eventDetails.startDate);
+    final notifier = ref.read(ticketSummaryProvider.notifier);
+    final selectedIndex = ref.watch(selectPriceIndexNotifier);
+    log(selectedIndex.toString());
+
+    dynamic sDate =
+        DateTimeUtils.convertMillisecondsToDateTime(eventDetails.startDate!);
     String startDate = DateFormat('MMM d, y').format(sDate);
-    dynamic eDate = DateTimeUtils.convertMillisecondsToDateTime(
-        widget.eventDetails.endDate);
+    dynamic eDate =
+        DateTimeUtils.convertMillisecondsToDateTime(eventDetails.endDate!);
     String endDate = DateFormat('MMM d, y').format(eDate);
 
-    DateTime startTime = DateTimeUtils.convertMillisecondsToDateTime(
-        widget.eventDetails.startTime);
+    DateTime startTime =
+        DateTimeUtils.convertMillisecondsToDateTime(eventDetails.startTime!);
     String formattedStartTime = DateFormat('hh:mm a').format(startTime);
 
-    DateTime endTime = DateTimeUtils.convertMillisecondsToDateTime(
-        widget.eventDetails.endTime);
+    DateTime endTime =
+        DateTimeUtils.convertMillisecondsToDateTime(eventDetails.endTime!);
     String formattedEndTime = DateFormat('hh:mm a').format(startTime);
     return Scaffold(
       appBar: appBar(
@@ -95,13 +111,13 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                           scale: 1.0,
                           fit: BoxFit.fill,
                           image: NetworkImage(
-                              "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.eventDetails.currentPicUrl}"),
+                              "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${eventDetails.currentPicUrl}"),
                         ),
                       ),
                     ),
                     heightSpace(1.2),
                     customText(
-                      text: widget.eventDetails.eventName.toString(),
+                      text: eventDetails.eventName.toString(),
                       fontSize: 16,
                       textColor: AppColors.black,
                       lines: 1,
@@ -112,7 +128,7 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                       children: [
                         customText(
                           text:
-                              "${widget.eventDetails.minPrice.toString()} - ${widget.eventDetails.maxPrice.toString()}",
+                              "${eventDetails.minPrice.toString()} - ${eventDetails.maxPrice.toString()}",
                           fontSize: 12,
                           textColor: AppColors.black,
                           lines: 2,
@@ -168,7 +184,7 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                                   child: Center(
                                     child: customText(
                                       text:
-                                          "+${widget.eventDetails.memberCount.toString()}",
+                                          "+${eventDetails.memberCount.toString()}",
                                       fontSize: 6,
                                       textColor: AppColors.white,
                                       fontWeight: FontWeight.w500,
@@ -191,9 +207,8 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                     heightSpace(1),
                     EventDetailsIconText(
                       iconString: AppImages.location,
-                      title: widget.eventDetails.location.address.toString(),
-                      subTitle: widget.eventDetails.location.locationDetails
-                          .toString(),
+                      title: "${eventDetails.location!.address}",
+                      subTitle: "${eventDetails.location!.locationDetails}",
                     ),
                     heightSpace(2),
                     const EventDetailsIconText(
@@ -205,53 +220,74 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                       width: double.infinity,
                       child: Wrap(
                         spacing: 12,
-                        children: widget.eventDetails.productTypeData.map((e) {
-                          ProductTypeDatum ticket = e;
-                          // eventTicketmodel = TicketSummaryModel(
-                          //   currency: "",
-                          //   eventId: "",
-                          //   image: "",
-                          //   location: "",
-                          //   name: "",
-                          //   numberOfTickets: 0,
-                          //   price: 0,
-                          //   ticketType: "",
-                          // );
-                          return IntrinsicWidth(
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 7),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(
-                                  width: 1.5,
-                                  color: AppColors.primary,
+                        children: eventDetails.productTypeData!
+                            .asMap()
+                            .entries
+                            .map((e) {
+                          int index = e.key;
+                          ProductTypeData ticket = e.value;
+
+                          return GestureDetector(
+                            onTap: () {
+                              ref
+                                  .read(selectPriceIndexNotifier.notifier)
+                                  .updateIndex(index);
+                              log(e.value.ticketType!);
+                              log(e.value.ticketPrice.toString());
+
+                              notifier.updateTicketSummary(
+                                currency: eventDetails.currency,
+                                eventId: eventDetails.id,
+                                image: eventDetails.currentPicUrl,
+                                location: eventDetails.location!.address,
+                                name: eventDetails.eventName,
+                                numberOfTickets: 0,
+                                price: e.value.ticketPrice,
+                                ticketType: e.value.ticketType,
+                              );
+                            },
+                            child: IntrinsicWidth(
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 7),
+                                decoration: BoxDecoration(
+                                  color: selectedIndex == index
+                                      ? AppColors.primary
+                                      : Colors.white,
+                                  border: Border.all(
+                                    width: 1.5,
+                                    color: AppColors.primary,
+                                  ),
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10),
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                  ),
                                 ),
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
-                                  topLeft: Radius.circular(10),
-                                  topRight: Radius.circular(10),
-                                ),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: PAD_ALL_10,
-                                  child: Row(
-                                    children: [
-                                      customText(
-                                        text: ticket.ticketType.toString(),
-                                        fontSize: 12,
-                                        textColor: AppColors.deepPrimary,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                      widthSpace(0.5),
-                                      customText(
-                                        text: ticket.ticketPrice.toString(),
-                                        fontSize: 12,
-                                        textColor: AppColors.deepPrimary,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ],
+                                child: Center(
+                                  child: Padding(
+                                    padding: PAD_ALL_10,
+                                    child: Row(
+                                      children: [
+                                        customText(
+                                          text: ticket.ticketType.toString(),
+                                          fontSize: 12,
+                                          textColor: selectedIndex == index
+                                              ? AppColors.white
+                                              : AppColors.deepPrimary,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        widthSpace(0.5),
+                                        customText(
+                                          text: ticket.ticketPrice.toString(),
+                                          fontSize: 12,
+                                          textColor: selectedIndex == index
+                                              ? AppColors.white
+                                              : AppColors.deepPrimary,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -269,7 +305,7 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                     ),
                     heightSpace(1),
                     customText(
-                      text: widget.eventDetails.eventDescription.toString(),
+                      text: eventDetails.eventDescription.toString(),
                       fontSize: 12,
                       textColor: AppColors.black,
                       fontWeight: FontWeight.w400,
@@ -281,7 +317,7 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                       width: width,
                       function: () {
                         MapUtils.launchMapOnAddress(
-                          widget.eventDetails.location.address.toString(),
+                          eventDetails.location!.address!,
                         );
                       },
                     ),
@@ -289,8 +325,11 @@ class _EventDetailsMainViewState extends State<EventDetailsMainView> {
                     ChasescrollButton(
                       buttonText: "Buy Ticket",
                       onTap: () {
-                        // ref.read(myDataProvider).state = updatedModel;
-                        //context.push(AppRoutes.ticketSummary);
+                        ref
+                            .read(selectPriceIndexNotifier.notifier)
+                            .resetState();
+                        //log(notifier.state.name.toString());
+                        context.push(AppRoutes.eventTicketSummaryScreen);
                       },
                     ),
                   ],

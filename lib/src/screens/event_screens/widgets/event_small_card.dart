@@ -15,7 +15,7 @@ class EventSmallCard extends StatefulWidget {
   final String? eventName;
 
   final String? image;
-  final ContentEvent? eventDetails;
+  final Content? eventDetails;
   final String? date;
   final String? location;
   final double? price;

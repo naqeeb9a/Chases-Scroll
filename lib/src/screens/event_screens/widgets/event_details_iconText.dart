@@ -2,6 +2,7 @@ import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class EventDetailsIconText extends StatelessWidget {
@@ -36,28 +37,42 @@ class EventDetailsIconText extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customText(
-              text: title.toString(),
-              fontSize: 13,
-              textColor: AppColors.deepPrimary,
-              fontWeight: FontWeight.w700,
+            SizedBox(
+              width: 75.w,
+              //color: Colors.cyan,
+              child: customText(
+                text: title.toString(),
+                fontSize: 13,
+                textColor: AppColors.deepPrimary,
+                fontWeight: FontWeight.w700,
+                textAlignment: TextAlign.left,
+                lines: 1,
+              ),
             ),
             Visibility(
               visible: subTitle == null ? false : true,
-              child: customText(
-                text: subTitle.toString(),
-                fontSize: 11,
-                textColor: AppColors.subtitleColors,
-                fontWeight: FontWeight.w400,
+              child: SizedBox(
+                width: 80.w,
+                child: customText(
+                  text: subTitle.toString(),
+                  fontSize: 11,
+                  textColor: AppColors.subtitleColors,
+                  fontWeight: FontWeight.w400,
+                  lines: 1,
+                ),
               ),
             ),
             Visibility(
               visible: subTitle2 != null ? true : false,
-              child: customText(
-                text: subTitle2.toString(),
-                fontSize: 11,
-                textColor: AppColors.subtitleColors,
-                fontWeight: FontWeight.w400,
+              child: SizedBox(
+                width: 80.w,
+                child: customText(
+                  text: subTitle2.toString(),
+                  fontSize: 11,
+                  textColor: AppColors.subtitleColors,
+                  fontWeight: FontWeight.w400,
+                  lines: 1,
+                ),
               ),
             ),
           ],

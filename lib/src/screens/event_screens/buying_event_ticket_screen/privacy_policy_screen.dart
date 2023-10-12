@@ -1,9 +1,14 @@
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/ticket_summary_model.dart';
 import 'package:chases_scroll/src/providers/event_statenotifier.dart';
+import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
+import 'package:chases_scroll/src/screens/widgets/success_screen.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
@@ -12,21 +17,41 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 
-final counterProvider =
-    AutoDisposeStateNotifierProvider<PriceNumberNotifier, int>((ref) {
-  return PriceNumberNotifier();
+import '../../../services/storage_service.dart';
+
+final policyStateProvider =
+    AutoDisposeStateNotifierProvider<SelectPolicyStateNotifier, bool>((ref) {
+  return SelectPolicyStateNotifier();
 });
 
-class EventTicketSummaryScreen extends ConsumerWidget {
-  const EventTicketSummaryScreen({
+class EventTicketPrivacyPolicyScreen extends ConsumerWidget {
+  final EventRepository _eventRepository = EventRepository();
+
+  EventTicketPrivacyPolicyScreen({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final counter = ref.watch(counterProvider);
+    final policyState = ref.watch(policyStateProvider);
     final notifier = ref.read(ticketSummaryProvider.notifier);
     final state = notifier.state;
+    final storage = locator<LocalStorageService>();
+
+    void onTapFreeSuccess() {
+      context.push(
+        AppRoutes.threeLoadingDotsScreen,
+        extra: const EventSuccessScreenView(
+          widgetScreenString: AppRoutes.refundBoughtDetailScreen,
+        ),
+      );
+    }
+
+    void onTapPaidSuccess() {
+      context.push(
+        AppRoutes.paymentMethodScreen,
+      );
+    }
 
     return Scaffold(
         backgroundColor: AppColors.backgroundSummaryScreen,
@@ -76,7 +101,7 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                               children: [
                                 Flexible(
                                   child: customText(
-                                      text: state.name!,
+                                      text: state.name.toString(),
                                       fontSize: 15,
                                       textColor: AppColors.black,
                                       fontWeight: FontWeight.w700,
@@ -85,7 +110,7 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                                 heightSpace(0.5),
                                 Flexible(
                                   child: customText(
-                                      text: state.location!,
+                                      text: state.location.toString(),
                                       fontSize: 12,
                                       textColor: AppColors.black,
                                       fontWeight: FontWeight.w500,
@@ -98,7 +123,7 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  heightSpace(2),
+                  heightSpace(0.5),
                   Container(
                     width: 95.w,
                     decoration: BoxDecoration(
@@ -109,78 +134,79 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                     ),
                     child: Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: 7.h, horizontal: 10.w),
+                          EdgeInsets.symmetric(vertical: 4.h, horizontal: 6.w),
                       child: Column(
                         children: [
+                          Center(
+                            child: customText(
+                              text: "Chasescroll Refund\nPolicy",
+                              fontSize: 16,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w500,
+                              lines: 2,
+                              textAlignment: TextAlign.center,
+                            ),
+                          ),
                           heightSpace(2),
                           customText(
-                              text: "Number of Tickets",
-                              fontSize: 12,
-                              textColor: AppColors.searchTextGrey,
-                              fontWeight: FontWeight.w500,
-                              lines: 2),
-                          heightSpace(1),
+                            text:
+                                "Payment has been debited from your account but would be credited to the Organizers account after a 3 days wait  period. You would have the Right to cancel payment/Ticket only within this wait period. Your barcode would be added to your ticket after the wait period.",
+                            fontSize: 14,
+                            textColor: AppColors.black.withOpacity(0.5),
+                            fontWeight: FontWeight.w400,
+                            lines: 15,
+                            textAlignment: TextAlign.center,
+                          ),
+                          heightSpace(1.5),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               GestureDetector(
-                                onTap: () => ref
-                                    .read(counterProvider.notifier)
-                                    .decrementNumber(),
+                                onTap: () {
+                                  if (policyState == false) {
+                                    ref
+                                        .read(policyStateProvider.notifier)
+                                        .changeTrue();
+                                  } else {
+                                    ref
+                                        .read(policyStateProvider.notifier)
+                                        .changeFalse();
+                                  }
+                                },
                                 child: Container(
-                                  height: 40,
-                                  width: 40,
+                                  height: 25,
+                                  width: 25,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
-                                      color: Colors.black87,
-                                      width: 2,
+                                      width: 1.3,
+                                      color: policyState == true
+                                          ? AppColors.deepPrimary
+                                          : Colors.grey.shade400,
                                     ),
                                   ),
                                   child: Center(
-                                    child: customText(
-                                        text: "-",
-                                        fontSize: 16,
-                                        textColor: AppColors.searchTextGrey,
-                                        fontWeight: FontWeight.w500,
-                                        lines: 2),
+                                    child: Icon(
+                                      Icons.check,
+                                      size: 15,
+                                      color: policyState
+                                          ? AppColors.deepPrimary
+                                          : Colors.transparent,
+                                    ),
                                   ),
                                 ),
                               ),
-                              widthSpace(4),
-                              customText(
-                                  text: counter.toString(),
-                                  fontSize: 18,
-                                  textColor: AppColors.black,
+                              widthSpace(1),
+                              Expanded(
+                                child: customText(
+                                  text:
+                                      "Accept. By clicking Continue, you hereby accept the Chasescroll Refund policy",
+                                  fontSize: 12,
+                                  textColor: AppColors.searchTextGrey,
                                   fontWeight: FontWeight.w500,
-                                  lines: 2),
-                              widthSpace(4),
-                              GestureDetector(
-                                onTap: () {
-                                  ref
-                                      .read(counterProvider.notifier)
-                                      .incrementNumber();
-                                },
-                                child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: customText(
-                                        text: "+",
-                                        fontSize: 16,
-                                        textColor: AppColors.black,
-                                        fontWeight: FontWeight.w500,
-                                        lines: 1),
-                                  ),
+                                  lines: 3,
+                                  textAlignment: TextAlign.center,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ],
@@ -190,21 +216,32 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                   const Spacer(),
                   ChasescrollButton(
                     buttonText: "Pay Now",
-                    color: counter == 0
+                    color: policyState == false
                         ? AppColors.primary.withOpacity(0.2)
                         : AppColors.deepPrimary,
-                    onTap: () {
-                      notifier.updateTicketSummary(
-                        currency: state.currency,
-                        eventId: state.eventId,
-                        image: state.image,
-                        location: state.location,
-                        name: state.name,
-                        price: state.price,
+                    onTap: () async {
+                      final result = await _eventRepository.createTicket(
+                        eventID: state.eventId,
+                        numberOfTickets: state.numberOfTickets,
                         ticketType: state.ticketType,
-                        numberOfTickets: counter,
                       );
-                      context.push(AppRoutes.eventTicketPrivacyPolicyScreen);
+
+                      if (result['updated'] == true) {
+                        //to get the ordercode &V orderID from resposnse
+                        storage.saveDataToDisk<String>(
+                            AppKeys.orderCode, result['content']['orderCode']);
+                        storage.saveDataToDisk<String>(
+                            AppKeys.orderID, result['content']['orderId']);
+
+                        if (state.price == 0.0 || state.price == 0) {
+                          onTapFreeSuccess();
+                        } else {
+                          onTapPaidSuccess();
+                        }
+                      } else {
+                        ToastResp.toastMsgError(
+                            resp: result['Could not create ticket']);
+                      }
                     },
                   ),
                   heightSpace(4),

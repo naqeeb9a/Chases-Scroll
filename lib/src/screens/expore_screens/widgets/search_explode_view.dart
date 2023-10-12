@@ -44,10 +44,10 @@ class SearchExploreView extends HookWidget {
     //------------------------------------------------------------------------//
     //-------------------This is for Events -----------------------------------//
     final allEventLoading = useState<bool>(true);
-    final allEventModel = useState<List<ContentEvent>>([]);
+    final allEventModel = useState<List<Content>>([]);
     //final currentPageValue = useState<double>(0);
-    final allEvents = useState<List<ContentEvent>>([]);
-    final foundEvents = useState<List<ContentEvent>>([]);
+    final allEvents = useState<List<Content>>([]);
+    final foundEvents = useState<List<Content>>([]);
     final currentPageValue = useValueNotifier(0);
 
     getAllEvents() {
@@ -72,7 +72,7 @@ class SearchExploreView extends HookWidget {
         foundEvents.value = allEvents.value;
       } else {
         final found = allEvents.value
-            .where((event) => event.eventName
+            .where((event) => event.eventName!
                 .toLowerCase()
                 .contains(enteredKeyword.toLowerCase()))
             .toList();
@@ -84,9 +84,9 @@ class SearchExploreView extends HookWidget {
     //------------------------------------------------------------------------//
     //-------------------This is for Users -----------------------------------//
     final usersLoading = useState<bool>(true);
-    final usersModel = useState<List<Content>>([]);
-    final allUsers = useState<List<Content>>([]);
-    final foundUsers = useState<List<Content>>([]);
+    final usersModel = useState<List<ContentUser>>([]);
+    final allUsers = useState<List<ContentUser>>([]);
+    final foundUsers = useState<List<ContentUser>>([]);
 
     getSuggestedUsers() {
       _exploreRepository.getSuggestedUsers().then((value) {
@@ -282,7 +282,7 @@ class SearchExploreView extends HookWidget {
                                         itemCount: foundUsers.value.length,
                                         itemBuilder:
                                             (BuildContext context, int index) {
-                                          Content user =
+                                          ContentUser user =
                                               foundUsers.value[index];
                                           return SearchPeopleWidget(
                                             fullName:
@@ -305,10 +305,10 @@ class SearchExploreView extends HookWidget {
                         child: ListView.builder(
                           itemCount: foundEvents.value.length,
                           itemBuilder: (BuildContext context, int index) {
-                            ContentEvent event = foundEvents.value[index];
+                            Content event = foundEvents.value[index];
 
                             //for formatted time
-                            int startTimeInMillis = event.startTime;
+                            int startTimeInMillis = event.startTime!;
                             DateTime startTime =
                                 DateTimeUtils.convertMillisecondsToDateTime(
                                     startTimeInMillis);
@@ -317,7 +317,7 @@ class SearchExploreView extends HookWidget {
                             return SearchEventWidget(
                               eventName: event.eventName,
                               date: formattedDate,
-                              location: event.location.address,
+                              location: event.location!.address,
                               image: event.currentPicUrl,
                               price: event.minPrice,
                               isSaved: event.isSaved!,

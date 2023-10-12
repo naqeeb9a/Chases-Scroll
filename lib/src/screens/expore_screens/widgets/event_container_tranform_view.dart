@@ -5,17 +5,17 @@ import 'package:flutter/material.dart';
 import '../../widgets/custom_fonts.dart';
 
 class EventContainerTransformView extends StatefulWidget {
+  final int? index;
+
+  final double? currentPageValue;
+  final double? scaleFactor;
+  final Content? event;
   const EventContainerTransformView(
       {super.key,
       this.index,
       this.currentPageValue,
       this.scaleFactor,
       this.event});
-
-  final int? index;
-  final double? currentPageValue;
-  final double? scaleFactor;
-  final ContentEvent? event;
 
   @override
   State<EventContainerTransformView> createState() =>
@@ -114,7 +114,7 @@ class _EventContainerTransformViewState
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(0),
                           bottomRight: Radius.circular(0),
                           topLeft: Radius.circular(40),
@@ -123,7 +123,7 @@ class _EventContainerTransformViewState
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                            "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.event!.currentPicUrl.toString()}",
+                            "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.event!.currentPicUrl}",
                           ),
                         ),
                       ),
@@ -134,8 +134,8 @@ class _EventContainerTransformViewState
               Expanded(
                 child: Container(
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(40),
                         bottomRight: Radius.circular(40),
                         topLeft: Radius.circular(0),
@@ -146,7 +146,7 @@ class _EventContainerTransformViewState
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18),
                       child: customText(
-                        text: widget.event!.eventName,
+                        text: widget.event!.eventName!,
                         fontSize: 11,
                         textColor: AppColors.white,
                         fontWeight: FontWeight.w400,

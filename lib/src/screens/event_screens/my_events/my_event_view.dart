@@ -23,7 +23,7 @@ class MyEventView extends HookWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final myEventLoading = useState<bool>(true);
-    final myEventModel = useState<List<ContentEvent>>([]);
+    final myEventModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getMyEvents().then((value) {
@@ -92,21 +92,20 @@ class MyEventView extends HookWidget {
                               itemCount: myEventModel.value.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
-                                ContentEvent myEvent =
-                                    myEventModel.value[index];
+                                Content myEvent = myEventModel.value[index];
                                 //for formatted time
-                                int startTimeInMillis = myEvent.startTime;
+                                int startTimeInMillis = myEvent.startTime!;
                                 DateTime startTime =
                                     DateTimeUtils.convertMillisecondsToDateTime(
                                         startTimeInMillis);
                                 String formattedDate =
                                     DateUtilss.formatDateTime(startTime);
                                 String eventTypeString =
-                                    myEvent.eventType.replaceAll("_", " ");
+                                    myEvent.eventType!.replaceAll("_", " ");
                                 return EventSmallTitleCard(
                                   eventName: myEvent.eventName,
                                   date: formattedDate,
-                                  location: myEvent.location.address,
+                                  location: myEvent.location!.address,
                                   image: myEvent.currentPicUrl,
                                   price: myEvent.minPrice,
                                   eventDetails: myEvent,

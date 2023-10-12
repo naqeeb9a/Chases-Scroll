@@ -16,4 +16,11 @@ class AppRoutes {
   static const String eventView = "/eventView";
   static const String eventDetailMainView = "/eventDetailMainView";
   static const String addEventView = "/addEventView";
+  static const String eventTicketSummaryScreen = "/eventTicketSummaryScreen";
+  static const String eventTicketPrivacyPolicyScreen =
+      "/eventTicketPrivacyPolicyScreen";
+  static const String threeLoadingDotsScreen = "/threeLoadingDotsScreen";
+  static const String eventSuccessScreen = "/eventSuccessScreen";
+  static const String paymentMethodScreen = "/paymentMethodScreen";
+  static const String refundBoughtDetailScreen = "/refundBoughtDetailScreen";
 }

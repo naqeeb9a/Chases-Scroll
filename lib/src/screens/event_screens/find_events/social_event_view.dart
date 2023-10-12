@@ -20,7 +20,7 @@ class FindSocialEventsView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final mySocialLoading = useState<bool>(true);
-    final mySocialModel = useState<List<ContentEvent>>([]);
+    final mySocialModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getSocialEvents().then((value) {

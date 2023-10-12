@@ -9,7 +9,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SuggestionView extends StatefulWidget {
-  final Content? users;
+  final ContentUser? users;
   final Function()? function;
 
   const SuggestionView({super.key, this.users, this.function});

@@ -17,6 +17,7 @@ class AppColors {
   static const Color green = Colors.green;
   static const Color iconGrey = Color(0xffD0D4EB);
   static const Color subtitleColors = Color(0xff6B6B6B);
+  static const Color backgroundSummaryScreen = Color(0xffF1F2F9);
 
   static OutlineInputBorder errorBorder = const OutlineInputBorder(
       borderSide: BorderSide(

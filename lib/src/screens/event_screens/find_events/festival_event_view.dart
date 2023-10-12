@@ -20,7 +20,7 @@ class FindFestivalEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myFestivalLoading = useState<bool>(true);
-    final myFestivallModel = useState<List<ContentEvent>>([]);
+    final myFestivallModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getFestivalEvents().then((value) {

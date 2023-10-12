@@ -20,7 +20,7 @@ class EventBigCard extends StatefulWidget {
   final String? location;
   final double? price;
   final bool isSaved;
-  final ContentEvent? eventDetails;
+  final Content? eventDetails;
   final Function()? onSave;
 
   const EventBigCard(

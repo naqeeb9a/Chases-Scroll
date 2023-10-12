@@ -2,6 +2,7 @@ class AppImages {
   static const String logo = "assets/pngs/logo-main.png";
   static const String onboarding = "assets/pngs/onboarding.png";
   static const String map = "assets/pngs/map.PNG";
+  static const String successImage = "assets/pngs/success-jump.png";
 
   //jpegs
   static const String mapPic = "assets/jpegs/map_pic.jpg";

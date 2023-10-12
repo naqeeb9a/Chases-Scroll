@@ -3,7 +3,9 @@
 //formatter from Time of Day to String
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
+import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 import '../spacer.dart';
@@ -31,6 +33,49 @@ String getAcronym(String name) {
   }
 
   return acronym;
+}
+
+GestureDetector payMethodContainerGesture(
+    String title, String iconstring, VoidCallback function,
+    {Widget? icon}) {
+  return GestureDetector(
+    onTap: function,
+    child: Container(
+      decoration: BoxDecoration(
+          color: const Color(0xffD0D4EB).withOpacity(0.3),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.primary.withOpacity(.2))),
+      child: Padding(
+        padding: PAD_ASYM_H15_V35,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(
+                  iconstring,
+                  height: 25,
+                  width: 25,
+                  color: Colors.black87,
+                ),
+                widthSpace(2),
+                customText(
+                    text: title,
+                    fontSize: 14,
+                    textColor: AppColors.black,
+                    fontWeight: FontWeight.w700,
+                    lines: 2),
+              ],
+            ),
+            Container(
+              child: icon,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 Future<dynamic> showDialogBoard(BuildContext context) {
@@ -79,4 +124,40 @@ Future<dynamic> showDialogBoard(BuildContext context) {
       );
     },
   );
+}
+
+class PlaceHolderTitle extends StatelessWidget {
+  final String title;
+
+  final String? star;
+  final Color? color;
+  const PlaceHolderTitle({
+    Key? key,
+    required this.title,
+    this.star,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        customText(
+          text: title,
+          fontSize: 12,
+          textColor: color ?? Colors.black87,
+          fontWeight: FontWeight.w600,
+          lines: 2,
+        ),
+        const SizedBox(width: 5),
+        customText(
+          text: star ?? '',
+          fontSize: 18,
+          textColor: AppColors.red,
+          fontWeight: FontWeight.w600,
+          lines: 2,
+        ),
+      ],
+    );
+  }
 }

@@ -20,7 +20,7 @@ class FindFundraisingEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myFundraisingLoading = useState<bool>(true);
-    final myFundraisinglModel = useState<List<ContentEvent>>([]);
+    final myFundraisinglModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getFundraisingEvents().then((value) {

@@ -21,7 +21,7 @@ class SuggestionFriendMore extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final usersModel = useState<List<Content>>([]);
+    final usersModel = useState<List<ContentUser>>([]);
     final usersLoading = useState<bool>(true);
 
     getSuggestedUsers() {
@@ -65,7 +65,7 @@ class SuggestionFriendMore extends HookWidget {
                           itemCount: usersModel.value.length,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (BuildContext context, int index) {
-                            Content? content = usersModel.value[index];
+                            ContentUser? content = usersModel.value[index];
                             return Container(
                               margin: const EdgeInsets.only(bottom: 15),
                               padding: PAD_ALL_10,

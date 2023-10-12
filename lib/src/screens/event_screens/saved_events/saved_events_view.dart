@@ -22,7 +22,7 @@ class SavedEventsView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final mySaveEventLoading = useState<bool>(true);
-    final mySaveEventModel = useState<List<ContentEvent>>([]);
+    final mySaveEventModel = useState<List<Content>>([]);
 
     getSaveMyEvents() {
       _eventRepository.getSavedEvents().then((value) {
@@ -91,21 +91,21 @@ class SavedEventsView extends HookWidget {
                               itemCount: mySaveEventModel.value.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
-                                ContentEvent mySavedEvent =
+                                Content mySavedEvent =
                                     mySaveEventModel.value[index];
                                 //for formatted time
-                                int startTimeInMillis = mySavedEvent.startTime;
+                                int startTimeInMillis = mySavedEvent.startTime!;
                                 DateTime startTime =
                                     DateTimeUtils.convertMillisecondsToDateTime(
                                         startTimeInMillis);
                                 String formattedDate =
                                     DateUtilss.formatDateTime(startTime);
-                                String eventTypeString =
-                                    mySavedEvent.eventType.replaceAll("_", " ");
+                                String eventTypeString = mySavedEvent.eventType!
+                                    .replaceAll("_", " ");
                                 return EventSmallCard(
                                   eventName: mySavedEvent.eventName,
                                   date: formattedDate,
-                                  location: mySavedEvent.location.address,
+                                  location: mySavedEvent.location!.address,
                                   image: mySavedEvent.currentPicUrl,
                                   price: mySavedEvent.minPrice,
                                   eventDetails: mySavedEvent,

@@ -11,17 +11,12 @@ import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../utils/constants/spacer.dart';
 import '../widgets/custom_fonts.dart';
-
-final eventDataProvider = FutureProvider<List<ContentEvent>>((ref) async {
-  return ExploreRepository().getTopEvents();
-});
 
 class ExploreMainView extends HookWidget {
   static final ExploreRepository _exploreRepository = ExploreRepository();
@@ -36,7 +31,7 @@ class ExploreMainView extends HookWidget {
     const double scaleFactor = 0.8;
 
     final eventLoading = useState<bool>(true);
-    final eventModel = useState<List<ContentEvent>>([]);
+    final eventModel = useState<List<Content>>([]);
     final currentPageValue = useState<double>(currentPageValue0);
 
     getEvents() {
@@ -49,7 +44,7 @@ class ExploreMainView extends HookWidget {
     //------------------------------------------------------------------------//
     //------------------------------------------------------------------------//
     final usersLoading = useState<bool>(true);
-    final usersModel = useState<List<Content>>([]);
+    final usersModel = useState<List<ContentUser>>([]);
 
     getSuggestedUsers() {
       _exploreRepository.getSuggestedUsers().then((value) {
@@ -212,7 +207,8 @@ class ExploreMainView extends HookWidget {
                                   itemCount: usersModel.value.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    Content? friend = usersModel.value[index];
+                                    ContentUser? friend =
+                                        usersModel.value[index];
 
                                     return usersLoading.value
                                         ? const Center(

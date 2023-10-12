@@ -23,7 +23,7 @@ class PastEventView extends HookWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final pastEventLoading = useState<bool>(true);
-    final pastEventModel = useState<List<ContentEvent>>([]);
+    final pastEventModel = useState<List<Content>>([]);
 
     getPastEvents() {
       _eventRepository.getPastEvents().then((value) {
@@ -93,21 +93,21 @@ class PastEventView extends HookWidget {
                               itemCount: pastEventModel.value.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
-                                ContentEvent myPastEvent =
+                                Content myPastEvent =
                                     pastEventModel.value[index];
                                 //for formatted time
-                                int startTimeInMillis = myPastEvent.startTime;
+                                int startTimeInMillis = myPastEvent.startTime!;
                                 DateTime startTime =
                                     DateTimeUtils.convertMillisecondsToDateTime(
                                         startTimeInMillis);
                                 String formattedDate =
                                     DateUtilss.formatDateTime(startTime);
                                 String eventTypeString =
-                                    myPastEvent.eventType.replaceAll("_", " ");
+                                    myPastEvent.eventType!.replaceAll("_", " ");
                                 return EventSmallTitleCard(
                                   eventName: myPastEvent.eventName,
                                   date: formattedDate,
-                                  location: myPastEvent.location.address,
+                                  location: myPastEvent.location!.address,
                                   image: myPastEvent.currentPicUrl,
                                   price: myPastEvent.minPrice,
                                   eventDetails: myPastEvent,

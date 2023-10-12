@@ -20,7 +20,7 @@ class FindCommunityEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myCommunityLoading = useState<bool>(true);
-    final myCommunitylModel = useState<List<ContentEvent>>([]);
+    final myCommunitylModel = useState<List<Content>>([]);
 
     getMyEvents() {
       _eventRepository.getCommunityEvents().then((value) {

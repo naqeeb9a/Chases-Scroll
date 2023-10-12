@@ -9,15 +9,22 @@ import 'package:chases_scroll/src/screens/auth_screens/pincode.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
-import 'package:chases_scroll/src/screens/body/bottom_nav.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/add_event_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/privacy_policy_screen.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
+import 'package:chases_scroll/src/screens/widgets/success_screen.dart';
+import 'package:chases_scroll/src/screens/widgets/three_dots_loading.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../screens/bottom_nav.dart';
+import '../../screens/event_screens/buying_event_ticket_screen/event_ticket_summary.dart';
+import '../../screens/event_screens/buying_event_ticket_screen/payment_method_screen.dart';
+import '../../screens/event_screens/buying_event_ticket_screen/refund_ticket_detail_screen.dart';
 import '../../screens/expore_screens/widgets/search_explode_view.dart';
 import '../../screens/expore_screens/widgets/suggestion_more_view.dart';
 
@@ -102,10 +109,44 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         builder: (_, __) => const EventMainView(),
       ),
       GoRoute(
+        path: AppRoutes.eventTicketSummaryScreen,
+        name: AppRoutes.eventTicketSummaryScreen,
+        builder: (_, __) => const EventTicketSummaryScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.eventDetailMainView,
         name: AppRoutes.eventDetailMainView,
         builder: (_, __) => EventDetailsMainView(
-          eventDetails: __.extra as ContentEvent,
+          eventDetails: __.extra as Content,
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.eventTicketPrivacyPolicyScreen,
+        name: AppRoutes.eventTicketPrivacyPolicyScreen,
+        builder: (_, __) => EventTicketPrivacyPolicyScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.threeLoadingDotsScreen,
+        name: AppRoutes.threeLoadingDotsScreen,
+        builder: (_, __) => ThreeLoadingDotsScreen(
+          screen: __.extra as Widget,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.eventSuccessScreen,
+        name: AppRoutes.eventSuccessScreen,
+        builder: (_, __) => EventSuccessScreenView(
+          widgetScreenString: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.paymentMethodScreen,
+        name: AppRoutes.paymentMethodScreen,
+        builder: (_, __) => const PaymentMethodScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.refundBpughtDetailScreen,
+        name: AppRoutes.refundBpughtDetailScreen,
+        builder: (_, __) => const RefundTicketDetailScreen(),
       ),
     ]);
