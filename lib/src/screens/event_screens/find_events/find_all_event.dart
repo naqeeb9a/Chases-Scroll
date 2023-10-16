@@ -132,6 +132,7 @@ class FindAllEventCardView extends HookWidget {
                     image: topEvent.currentPicUrl,
                     price: topEvent.minPrice,
                     isSaved: topEvent.isSaved!,
+                    eventDetails: topEvent,
                     onSave: () async {
                       final result = await _eventRepository.saveEvent(
                         eventID: topEvent.id,

@@ -13,9 +13,9 @@ import '../../../utils/constants/colors.dart';
 
 class FindFestivalEventView extends HookWidget {
   static final EventRepository _eventRepository = EventRepository();
-  bool isSaved = false;
+  final bool isSaved = false;
 
-  FindFestivalEventView({super.key});
+  const FindFestivalEventView({super.key});
 
   @override
   Widget build(BuildContext context) {

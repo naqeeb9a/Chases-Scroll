@@ -1,27 +1,27 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/models/ticket_summary_model.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
+import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-class RefundTicketDetailScreen extends StatefulWidget {
-  const RefundTicketDetailScreen({Key? key}) : super(key: key);
+class RefundTicketDetailScreen extends ConsumerWidget {
+  const RefundTicketDetailScreen({super.key});
 
   @override
-  State<RefundTicketDetailScreen> createState() =>
-      _RefundTicketDetailScreenState();
-}
-
-class _RefundTicketDetailScreenState extends State<RefundTicketDetailScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final notifier = ref.read(ticketSummaryProvider.notifier);
+    final state = notifier.state;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundSummaryScreen,
@@ -41,14 +41,49 @@ class _RefundTicketDetailScreenState extends State<RefundTicketDetailScreen> {
                       fontSize: 14,
                       textColor: AppColors.black,
                     ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: customText(
-                        text: "Cancel Ticket",
-                        fontSize: 14,
-                        textColor: AppColors.red,
-                      ),
-                    ),
+                    ChasescrollButton(
+                      width: 100,
+                      buttonText: "Cancel Ticket",
+                      color: AppColors.red,
+                      textColor: AppColors.white,
+                      onTap: () {
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (BuildContext context) {
+                        //     return AlertDialog(
+                        //       //actionsAlignment: MainAxisAlignment.center,
+                        //       title: font18Tx700(
+                        //         "Do you want to allow\n“Chasescroll” cancel ticket?",
+                        //         Colors.black87,
+                        //       ),
+                        //       content: font14Tx500(
+                        //           "Are you sure you want to cancel ticket payment",
+                        //           Colors.black87),
+                        //       actions: [
+                        //         TextButton(
+                        //           onPressed: () {
+                        //             Navigator.of(context).push(
+                        //               MaterialPageRoute(
+                        //                 builder: (context) =>
+                        //                     const CancelTicketOptionScreenView(),
+                        //               ),
+                        //             );
+                        //           },
+                        //           child: const Text('Yes'),
+                        //         ),
+                        //         TextButton(
+                        //           onPressed: () {
+                        //             Navigator.pop(context);
+                        //           },
+                        //           child: const Text('No'),
+                        //         ),
+                        //       ],
+                        //     );
+                        //   },
+                        // );
+                        context.push(AppRoutes.bottomNav);
+                      },
+                    )
                   ],
                 ),
                 heightSpace(3),
@@ -65,46 +100,46 @@ class _RefundTicketDetailScreenState extends State<RefundTicketDetailScreen> {
                       children: [
                         Container(
                           height: 100,
-                          width: 130,
+                          width: 150,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(30),
-                              bottomRight: Radius.circular(30),
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(0),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
                             ),
                             color: Colors.grey.shade200,
-                            // image: DecorationImage(
-                            //   scale: 1.0,
-                            //   fit: BoxFit.cover,
-                            //   image: NetworkImage(
-                            //     "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image!",
-                            //   ),
-                            // ),
+                            image: DecorationImage(
+                              scale: 1.0,
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${state.image}",
+                              ),
+                            ),
                           ),
                         ),
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 5, 5),
+                            padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     SizedBox(
-                                      height: 40,
-                                      width: width / 2,
-                                      //color: Colors.amber,
+                                      width: 45.w,
                                       child: customText(
-                                        text: "Event Name",
+                                        text: state.name!.toUpperCase(),
                                         fontSize: 14,
                                         textColor: AppColors.black,
+                                        fontWeight: FontWeight.w600,
+                                        lines: 2,
                                       ),
                                     ),
                                     customText(
-                                      text: "",
+                                      text: state.location ?? "",
                                       fontSize: 14,
                                       textColor: AppColors.primary,
                                     ),
@@ -114,7 +149,7 @@ class _RefundTicketDetailScreenState extends State<RefundTicketDetailScreen> {
                                 SizedBox(
                                   width: width / 2,
                                   child: customText(
-                                    text: "location Here",
+                                    text: state.location ?? "",
                                     fontSize: 14,
                                     textColor: AppColors.primary,
                                   ),
@@ -144,13 +179,15 @@ class _RefundTicketDetailScreenState extends State<RefundTicketDetailScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              containerTitleSub("Place", "location"),
+                              containerTitleSub("Place", state.location ?? ""),
                               heightSpace(2),
-                              containerTitleSub("Order ID", "orderId"),
+                              containerTitleSub(
+                                  "Order ID", state.location ?? ""),
                               heightSpace(2),
-                              containerTitleSub("Date", "sDate - eDate"),
+                              containerTitleSub(
+                                  "Ticket Type", state.ticketType ?? ""),
                               heightSpace(2),
-                              containerTitleSub("Ticket Fee", "fees"),
+                              containerTitleSub("Ticket Fee", "${state.price}"),
                             ],
                           ),
                         ),
@@ -174,10 +211,10 @@ class _RefundTicketDetailScreenState extends State<RefundTicketDetailScreen> {
                                   ),
                                 ),
                               ),
+                              heightSpace(4),
+                              containerTitleSub("Name", "userID"),
                               heightSpace(2),
-                              containerTitleSub("Name", "user"),
-                              heightSpace(2),
-                              containerTitleSub("Time", "sTime - eTime"),
+                              containerTitleSub("Time", state.time ?? ""),
                             ],
                           ),
                         ),
@@ -196,7 +233,7 @@ class _RefundTicketDetailScreenState extends State<RefundTicketDetailScreen> {
                     child: Column(
                       children: [
                         SvgPicture.asset(
-                          "assets/icons/hidden-bar.svg",
+                          AppImages.hiddenBar,
                           width: width,
                         ),
                         heightSpace(2),

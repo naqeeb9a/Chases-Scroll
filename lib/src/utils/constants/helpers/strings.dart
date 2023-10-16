@@ -10,6 +10,37 @@ import 'package:intl/intl.dart';
 
 import '../spacer.dart';
 
+GestureDetector cardPaymentContainerGesture(String title, String iconstring,
+    VoidCallback function, double heightWidth) {
+  return GestureDetector(
+    onTap: function,
+    child: Container(
+      decoration: BoxDecoration(
+          color: const Color(0xffD0D4EB).withOpacity(0.3),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.deepPrimary.withOpacity(.2))),
+      child: Padding(
+        padding: PAD_ASYM_H15_V35,
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              iconstring,
+              height: heightWidth,
+              width: heightWidth,
+            ),
+            widthSpace(2),
+            customText(
+              text: title,
+              fontSize: 14,
+              textColor: AppColors.black,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 String formatTimeOfDay(TimeOfDay timeOfDay) {
   final now = DateTime.now();
   final dateTime =

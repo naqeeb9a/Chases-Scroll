@@ -85,7 +85,7 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                                 heightSpace(0.5),
                                 Flexible(
                                   child: customText(
-                                      text: state.location!,
+                                      text: state.location ?? "",
                                       fontSize: 12,
                                       textColor: AppColors.black,
                                       fontWeight: FontWeight.w500,

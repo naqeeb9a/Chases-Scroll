@@ -235,6 +235,8 @@ class EventDetailsMainView extends ConsumerWidget {
                               log(e.value.ticketType!);
                               log(e.value.ticketPrice.toString());
 
+                              log(formattedStartTime);
+
                               notifier.updateTicketSummary(
                                 currency: eventDetails.currency,
                                 eventId: eventDetails.id,
@@ -244,6 +246,7 @@ class EventDetailsMainView extends ConsumerWidget {
                                 numberOfTickets: 0,
                                 price: e.value.ticketPrice,
                                 ticketType: e.value.ticketType,
+                                time: formattedStartTime,
                               );
                             },
                             child: IntrinsicWidth(

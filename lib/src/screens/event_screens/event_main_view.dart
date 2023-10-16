@@ -110,8 +110,19 @@ class EventMainView extends HookWidget {
 }
 
 class WideEventCards extends StatelessWidget {
+  final String? image;
+
+  final String? name;
+  final double? price;
+  final String? location;
+  final int? users;
   const WideEventCards({
     super.key,
+    this.image,
+    this.name,
+    this.price,
+    this.location,
+    this.users,
   });
 
   @override
@@ -152,11 +163,11 @@ class WideEventCards extends StatelessWidget {
                 topRight: Radius.circular(0),
               ),
               color: Colors.grey.shade200,
-              // image: DecorationImage(
-              //   fit: BoxFit.cover,
-              //   image: NetworkImage(
-              //       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${event['currentPicUrl'].toString()}"),
-              // ),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(
+                    "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image"),
+              ),
             ),
           ),
           heightSpace(0.7),
@@ -167,7 +178,7 @@ class WideEventCards extends StatelessWidget {
                 child: Container(
                   //color: Colors.cyan,
                   child: customText(
-                      text: "Event Name Here",
+                      text: name!,
                       fontSize: 14,
                       textColor: AppColors.black,
                       fontWeight: FontWeight.w700,
@@ -176,7 +187,7 @@ class WideEventCards extends StatelessWidget {
               ),
               widthSpace(1.5),
               customText(
-                text: "2000.0",
+                text: price.toString(),
                 fontSize: 14,
                 textColor: AppColors.deepPrimary,
                 fontWeight: FontWeight.w500,
@@ -205,7 +216,7 @@ class WideEventCards extends StatelessWidget {
               widthSpace(1),
               Flexible(
                 child: customText(
-                  text: "Event location here location here location here",
+                  text: location!,
                   fontSize: 12,
                   textColor: AppColors.searchTextGrey,
                   fontWeight: FontWeight.w400,
@@ -271,7 +282,7 @@ class WideEventCards extends StatelessWidget {
                             ),
                             child: Center(
                               child: customText(
-                                text: "+100",
+                                text: "+${users!}",
                                 fontSize: 5,
                                 textColor: AppColors.white,
                                 fontWeight: FontWeight.w500,

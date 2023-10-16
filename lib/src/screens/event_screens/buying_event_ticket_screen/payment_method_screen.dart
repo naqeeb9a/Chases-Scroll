@@ -1,8 +1,11 @@
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
+import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class PaymentMethodScreenView extends StatefulWidget {
   const PaymentMethodScreenView({
@@ -29,13 +32,15 @@ class _PaymentMethodScreenViewState extends State<PaymentMethodScreenView> {
             children: [
               payMethodContainerGesture(
                 "Pay With Card",
-                "assets/icons-pack/card.svg",
-                () {},
+                AppImages.card,
+                () {
+                  context.push(AppRoutes.currencyPaymentScreen);
+                },
               ),
               heightSpace(3),
               payMethodContainerGesture(
                 "Pay With Wallet",
-                "assets/icons-pack/wallet-2.svg",
+                AppImages.wallet,
                 () {},
               ),
             ],

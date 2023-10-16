@@ -9,6 +9,12 @@ class Endpoints {
   //USERID
   static String userId =
       locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+  //orderID
+  static String orderID =
+      locator<LocalStorageService>().getDataFromDisk(AppKeys.orderID);
+  //orderID
+  static String orderCode =
+      locator<LocalStorageService>().getDataFromDisk(AppKeys.orderCode);
 
   static const String port81 = ":8081";
   static const String port82 = ":8082";
@@ -18,6 +24,7 @@ class Endpoints {
   static const String port83 = ":8083";
   static const String port84 = ":8084";
   static const String port90 = ":8090";
+  static const String port94 = ":8094";
 
   static const String login = '$port81/auth/signin';
   static const String signup = '$port81/auth/signup';
@@ -67,4 +74,12 @@ class Endpoints {
   static String communityEvents =
       "$port84/events/events?eventType=Community_Event";
   static String createEventTicket = "$port84/events/create-ticket";
+  static String createWebUrlPaystack =
+      "$port94/payments/payWithPaystack?orderCode=$orderCode&email=jken04680@gmail.com";
+  static String createWebUrlStripe =
+      "8094/payments/payWithStripe?orderId=$orderID";
+  static String verifyPaymentPS =
+      "$port94/payments/verifyPaystackTx?orderCode=$orderCode";
+  static String verifyPaymentST =
+      "$port94/payments/stripePaySuccess?orderId=$orderID";
 }

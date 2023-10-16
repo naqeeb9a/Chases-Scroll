@@ -1,3 +1,4 @@
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/college_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/community_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/corporate_event_view.dart';
@@ -15,6 +16,7 @@ import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../utils/constants/spacer.dart';
 
@@ -43,7 +45,7 @@ class FindEventsScreenView extends HookWidget {
       child: Column(
         children: [
           GestureDetector(
-            //onTap: () => context.push(AppRoutes.searchExploreView),
+            onTap: () => context.push(AppRoutes.allEventView),
             child: Container(
               padding: PAD_ALL_13,
               margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -139,7 +141,7 @@ class FindEventsScreenView extends HookWidget {
                   FindReligiousEvents(),
                   FindPopupEventView(),
                   FindFundraisingEventView(),
-                  FindFestivalEventView(),
+                  const FindFestivalEventView(),
                   FindCommunityEventView(),
                 ],
               ),

@@ -14,6 +14,7 @@ class TicketSummaryModel {
   String? location;
   String? image;
   String? currency;
+  String? time;
   int? numberOfTickets;
 
   TicketSummaryModel(
@@ -24,6 +25,7 @@ class TicketSummaryModel {
       this.location,
       this.image,
       this.currency,
+      this.time,
       this.numberOfTickets});
 
   factory TicketSummaryModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class TicketSummaryModel {
       location: json['location'],
       image: json['image'],
       currency: json['currency'],
+      time: json['time'],
       numberOfTickets: json['numberOfTickets'],
     );
   }
@@ -47,6 +50,7 @@ class TicketSummaryModel {
     String? location,
     String? image,
     String? currency,
+    String? time,
     int? numberOfTickets,
   }) {
     return TicketSummaryModel(
@@ -57,6 +61,7 @@ class TicketSummaryModel {
       location: location,
       image: image,
       currency: currency,
+      time: time,
       numberOfTickets: numberOfTickets,
     );
   }
@@ -70,6 +75,7 @@ class TicketSummaryModel {
     data['location'] = location;
     data['image'] = image;
     data['currency'] = currency;
+    data['time'] = time;
     data['numberOfTickets'] = numberOfTickets;
     return data;
   }
@@ -84,6 +90,7 @@ class TicketSummaryModel {
         'location: $location, '
         'image: $image, '
         'currency: $currency, '
+        'time: $time, '
         'numberOfTickets: $numberOfTickets}';
   }
 }
@@ -99,6 +106,7 @@ class TicketSummaryModelNotifier extends StateNotifier<TicketSummaryModel> {
           location: 'Initial Location',
           image: 'Initial Image URL',
           currency: 'Initial Currency',
+          time: "initail Time",
           numberOfTickets: 0,
         ));
 
@@ -110,6 +118,7 @@ class TicketSummaryModelNotifier extends StateNotifier<TicketSummaryModel> {
       String? location,
       String? image,
       String? currency,
+      String? time,
       int? numberOfTickets}) {
     state = state.copyWith(
       eventId: eventId,
@@ -119,6 +128,7 @@ class TicketSummaryModelNotifier extends StateNotifier<TicketSummaryModel> {
       location: location,
       image: image,
       currency: currency,
+      time: time,
       numberOfTickets: numberOfTickets,
     );
   }

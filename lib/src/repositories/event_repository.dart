@@ -69,7 +69,31 @@ class EventRepository {
         widget: Container());
 
     if (response.status == 200 || response.status == 201) {
-      log("createTicket ======> ${response.message}");
+      return response.message;
+    }
+    return response.message;
+  }
+
+  //to create event ticket
+  Future<Map<String, dynamic>> createWebUrlPayStack() async {
+    final data = {};
+    final response = await ApiClient.post(Endpoints.createWebUrlPaystack,
+        body: data, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      log("webUrlPaystack ======> ${response.message}");
+      return response.message;
+    }
+    return response.message;
+  }
+
+  Future<Map<String, dynamic>> createWebUrlStripe() async {
+    final data = {};
+    final response = await ApiClient.post(Endpoints.createWebUrlStripe,
+        body: data, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      log("webUrlStripe ======> ${response.message}");
       return response.message;
     }
     return response.message;
@@ -89,11 +113,6 @@ class EventRepository {
     } else {
       return [];
     }
-
-    if (response.status == 200 || response.status == 201) {
-      return response.message;
-    }
-    return response.message;
   }
 
   //getCollegeEvents events

@@ -10,6 +10,7 @@ import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/add_event_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/event_webview_screens.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/privacy_policy_screen.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
@@ -24,7 +25,9 @@ import 'package:go_router/go_router.dart';
 import '../../screens/bottom_nav.dart';
 import '../../screens/event_screens/buying_event_ticket_screen/event_ticket_summary.dart';
 import '../../screens/event_screens/buying_event_ticket_screen/payment_method_screen.dart';
+import '../../screens/event_screens/buying_event_ticket_screen/payment_service_screen.dart';
 import '../../screens/event_screens/buying_event_ticket_screen/refund_ticket_detail_screen.dart';
+import '../../screens/event_screens/find_events/all_event_view.dart';
 import '../../screens/expore_screens/widgets/search_explode_view.dart';
 import '../../screens/expore_screens/widgets/suggestion_more_view.dart';
 
@@ -109,6 +112,11 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         builder: (_, __) => const EventMainView(),
       ),
       GoRoute(
+        path: AppRoutes.allEventView,
+        name: AppRoutes.allEventView,
+        builder: (_, __) => const FindAllEventsView(),
+      ),
+      GoRoute(
         path: AppRoutes.eventTicketSummaryScreen,
         name: AppRoutes.eventTicketSummaryScreen,
         builder: (_, __) => const EventTicketSummaryScreen(),
@@ -145,8 +153,20 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         builder: (_, __) => const PaymentMethodScreenView(),
       ),
       GoRoute(
-        path: AppRoutes.refundBpughtDetailScreen,
-        name: AppRoutes.refundBpughtDetailScreen,
+        path: AppRoutes.refundBoughtDetailScreen,
+        name: AppRoutes.refundBoughtDetailScreen,
         builder: (_, __) => const RefundTicketDetailScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.currencyPaymentScreen,
+        name: AppRoutes.currencyPaymentScreen,
+        builder: (_, __) => const CardCurrencyScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.webEventPayStack,
+        name: AppRoutes.webEventPayStack,
+        builder: (_, __) => PaymentPaystackView(
+          url: __.extra as String,
+        ),
       ),
     ]);
