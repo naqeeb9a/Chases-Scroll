@@ -1,11 +1,21 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/api/api_clients.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/getmime.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 
 class EventRepository {
+  //USERID
+  static String userId =
+      locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
   //this is to get all events
   List<Content> allEventList = [];
 
@@ -50,6 +60,31 @@ class EventRepository {
 
   //to get communityList events
   List<Content> communityList = [];
+
+  //create event add image
+  Future<String> addImage(
+    File image,
+  ) async {
+    String endpoint = "${Endpoints.uploadImage}/$userId";
+    String photoType1 = getMimeType(image.path.split("/").last);
+    var formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(image.path,
+          filename: image.path.split('/').last,
+          contentType: MediaType.parse(photoType1)),
+    });
+    final response =
+        await ApiClient.post(endpoint, useToken: true, body: formData);
+    log(response.status.toString());
+    if (response.status == 200) {
+      log("this request was successfull");
+      String image = response.message["fileName"];
+      log(image);
+      return image;
+    } else {
+      log("something went wrong");
+      return "";
+    }
+  }
 
   //to create event ticket
   Future<dynamic> createTicket({

@@ -2,11 +2,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chases_scroll/src/models/list_model.dart';
+import 'package:chases_scroll/src/repositories/post_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/checkbox_widget_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/community_widget_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/drop_down_widget_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/dropdown_list_string_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/emptyImage_container_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/pageview_animate_text.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/radio_button_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/set_date_time_view.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
@@ -21,37 +23,9 @@ import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../models/product_data_type.dart';
-
-class AddEventExtendedTextLeft extends StatelessWidget {
-  final Function()? function;
-  final String? title;
-  final Alignment? alignment;
-  const AddEventExtendedTextLeft({
-    super.key,
-    required this.function,
-    required this.title,
-    this.alignment,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: function,
-      child: Container(
-        child: Align(
-          alignment: alignment ?? Alignment.centerLeft,
-          child: customText(
-              text: title!,
-              fontSize: 14,
-              textColor: AppColors.black,
-              fontWeight: FontWeight.w600),
-        ),
-      ),
-    );
-  }
-}
 
 class AddEventView extends StatefulWidget {
   const AddEventView({super.key});
@@ -90,6 +64,8 @@ class _AddEventViewState extends State<AddEventView> {
   static final location = TextEditingController();
   static final link = TextEditingController();
   static final desc = TextEditingController();
+  static final ImagePicker picker = ImagePicker();
+  static final PostRepository _postRepository = PostRepository();
   PageController pageController = PageController(viewportFraction: 1);
   final _scrollController = ScrollController();
 
@@ -147,6 +123,7 @@ class _AddEventViewState extends State<AddEventView> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
