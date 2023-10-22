@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 class CommunityWidgetView extends StatelessWidget {
-  const CommunityWidgetView({super.key});
+  final String? name;
+
+  final String? imageString;
+  final String? desc;
+  const CommunityWidgetView(
+      {super.key, this.name, this.imageString, this.desc});
 
   @override
   Widget build(BuildContext context) {
@@ -72,17 +77,17 @@ class CommunityWidgetView extends StatelessWidget {
                         topRight: Radius.circular(0),
                       ),
                       color: Colors.grey.shade200,
-                      // image: DecorationImage(
-                      //   image: NetworkImage(
-                      //     "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${commFunnel[0].imageString}",
-                      //   ),
-                      //   scale: 1.0,
-                      //   fit: BoxFit.cover,
-                      // ),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$imageString",
+                        ),
+                        scale: 1.0,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     child: Center(
                       child: customText(
-                          text: getAcronym("Redemmer School"),
+                          text: getAcronym(name!),
                           fontSize: 11,
                           fontWeight: FontWeight.w400,
                           textColor: AppColors.black),
@@ -96,14 +101,14 @@ class CommunityWidgetView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               customText(
-                  text: "RCCG Rejoice Night",
+                  text: name!,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   textColor: AppColors.black),
               heightSpace(0.1),
               Flexible(
                 child: customText(
-                    text: "24k Members",
+                    text: desc!,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     textColor: AppColors.searchTextGrey),

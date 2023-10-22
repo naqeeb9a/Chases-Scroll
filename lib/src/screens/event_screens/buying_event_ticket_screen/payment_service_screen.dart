@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:chases_scroll/src/config/router/routes.dart';
-import 'package:chases_scroll/src/models/ticket_summary_model.dart';
+import 'package:chases_scroll/src/providers/eventicket_provider.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';

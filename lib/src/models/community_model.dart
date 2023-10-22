@@ -340,6 +340,61 @@ class Datas {
   }
 }
 
+class EventCommunityFunnel {
+  String? commName;
+  String? commDesc;
+  String? commImage;
+  String? id;
+
+  EventCommunityFunnel({
+    this.commName,
+    this.commDesc,
+    this.commImage,
+    this.id,
+  });
+
+  factory EventCommunityFunnel.fromJson(Map<String, dynamic> json) {
+    return EventCommunityFunnel(
+      commName: json['commName'],
+      commDesc: json['commDesc'],
+      commImage: json['commImage'],
+      id: json['id'],
+    );
+  }
+
+  EventCommunityFunnel copyWith({
+    String? commName,
+    String? commDesc,
+    String? commImage,
+    String? id,
+  }) {
+    return EventCommunityFunnel(
+      commName: commName,
+      commDesc: commDesc,
+      commImage: commImage,
+      id: id,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['commName'] = commName;
+    data['commDesc'] = commDesc;
+    data['commImage'] = commImage;
+    data['id'] = id;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'EventCommunityFunnel{'
+        'id: $id, '
+        'commName: $commName, '
+        'commDesc: $commDesc, '
+        'commImage: $commImage}';
+  }
+}
+
 class MobilePhone {
   bool? objectPublic;
   String? value;

@@ -69,7 +69,14 @@ class FindFestivalEventView extends HookWidget {
                     itemCount: myFestivallModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      return const WideEventCards();
+                      Content event = myFestivallModel.value[index];
+                      return WideEventCards(
+                        image: event.currentPicUrl,
+                        location: event.location!.address,
+                        name: event.eventName,
+                        price: event.minPrice,
+                        users: event.memberCount,
+                      );
                     },
                   ),
                 ),

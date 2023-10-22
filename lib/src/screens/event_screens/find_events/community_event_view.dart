@@ -69,7 +69,14 @@ class FindCommunityEventView extends HookWidget {
                     itemCount: myCommunitylModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      return const WideEventCards();
+                      Content event = myCommunitylModel.value[index];
+                      return WideEventCards(
+                        image: event.currentPicUrl,
+                        location: event.location!.address,
+                        name: event.eventName,
+                        price: event.minPrice,
+                        users: event.memberCount,
+                      );
                     },
                   ),
                 ),

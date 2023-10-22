@@ -51,7 +51,8 @@ class ApiClient {
 
   static String get _token => _getToken();
 
-  static Future delete(String endpoint, {bool useToken = true}) async {
+  static Future delete(String endpoint,
+      {bool useToken = true, Color? backgroundColor, Widget? widget}) async {
     final result = await _makeRequest(
       () async {
         final header = _defaultHeader;
@@ -63,7 +64,8 @@ class ApiClient {
         }
 
         final options = Options(headers: header);
-        AppHelper.showOverlayLoader();
+        AppHelper.showOverlayLoader(
+            backgroundColor: backgroundColor, widget: widget);
         final response = await _dio.delete(endpoint, options: options);
         OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
         return response;

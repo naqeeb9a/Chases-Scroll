@@ -1,13 +1,18 @@
-import 'package:chases_scroll/src/screens/expore_screens/widgets/suggestions_view.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants/dimens.dart';
-import '../../widgets/chasescroll_button.dart';
 import '../../widgets/custom_fonts.dart';
 
 class SearchCommunityWidget extends StatelessWidget {
+  final String? name;
+
+  final String? image;
+  final int? memberCount;
+  final String? desc;
+  final String? joinStatus;
+  final bool? isPublic;
   const SearchCommunityWidget(
       {super.key,
       this.name,
@@ -16,13 +21,6 @@ class SearchCommunityWidget extends StatelessWidget {
       this.desc,
       this.joinStatus,
       this.isPublic});
-
-  final String? name;
-  final String? image;
-  final String? memberCount;
-  final String? desc;
-  final String? joinStatus;
-  final bool? isPublic;
 
   @override
   Widget build(BuildContext context) {
@@ -109,19 +107,19 @@ class SearchCommunityWidget extends StatelessWidget {
                                   topRight: Radius.circular(0),
                                 ),
                                 color: Colors.grey.shade200,
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image"),
-                                ),
+                                // image: DecorationImage(
+                                //   fit: BoxFit.cover,
+                                //   image: NetworkImage(
+                                //       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image"),
+                                // ),
                               ),
-                              child: Center(
-                                child: customText(
-                                    text: image!.isEmpty ? initials : "",
-                                    fontSize: 10,
-                                    textColor: AppColors.deepPrimary,
-                                    fontWeight: FontWeight.w500),
-                              ),
+                              // child: Center(
+                              //   child: customText(
+                              //       text: image!.isEmpty ? initials : "",
+                              //       fontSize: 10,
+                              //       textColor: AppColors.deepPrimary,
+                              //       fontWeight: FontWeight.w500),
+                              // ),
                             ),
                           ),
                         ],
@@ -132,16 +130,16 @@ class SearchCommunityWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         customText(
-                            text: name.toString(),
+                            text: name == null ? "" : name!,
                             fontSize: 14,
                             textColor: AppColors.black,
                             fontWeight: FontWeight.w500),
-                        Container(
+                        SizedBox(
                           height: 38,
                           width: width / 2.5,
                           //color: Colors.amber,
                           child: customText(
-                              text: desc.toString(),
+                              text: desc == null ? "" : desc!,
                               fontSize: 12,
                               textColor: AppColors.searchTextGrey,
                               fontWeight: FontWeight.w500),
@@ -149,11 +147,24 @@ class SearchCommunityWidget extends StatelessWidget {
                         heightSpace(1),
                         Row(
                           children: [
-                            customText(
-                                text: memberCount.toString(),
-                                fontSize: 10,
-                                textColor: AppColors.searchTextGrey,
-                                fontWeight: FontWeight.w500),
+                            Row(
+                              children: [
+                                customText(
+                                    text: memberCount == null
+                                        ? ""
+                                        : memberCount.toString(),
+                                    fontSize: 10,
+                                    textColor: AppColors.deepPrimary,
+                                    fontWeight: FontWeight.w500),
+                                widthSpace(1),
+                                customText(
+                                    text:
+                                        memberCount == 1 ? "Member" : "Members",
+                                    fontSize: 10,
+                                    textColor: AppColors.searchTextGrey,
+                                    fontWeight: FontWeight.w500),
+                              ],
+                            ),
                             widthSpace(10),
                             Container(
                               decoration: BoxDecoration(
@@ -176,28 +187,28 @@ class SearchCommunityWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: AppColors.deepPrimary,
-                      borderRadius: BorderRadius.circular(10)),
-                  padding: EdgeInsets.all(10),
-                  child: customText(
-                      text: joinStatus == "CONNECTED"
-                          ? "Connected"
-                          : joinStatus == "REQUEST_PENDING"
-                              ? "Pending Request"
-                              : joinStatus == "FRIEND_REQUEST_SENT"
-                                  ? "Request Sent"
-                                  : joinStatus == "FRIEND_REQUEST_RECIEVED"
-                                      ? "Received"
-                                      : "Join",
-                      fontSize: 10,
-                      textColor: AppColors.white,
-                      fontWeight: FontWeight.w500),
-                ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //       color: AppColors.deepPrimary,
+                //       borderRadius: BorderRadius.circular(10)),
+                //   padding: const EdgeInsets.all(10),
+                //   child: customText(
+                //       text: joinStatus == "CONNECTED"
+                //           ? "Connected"
+                //           : joinStatus == "REQUEST_PENDING"
+                //               ? "Pending Request"
+                //               : joinStatus == "FRIEND_REQUEST_SENT"
+                //                   ? "Request Sent"
+                //                   : joinStatus == "FRIEND_REQUEST_RECIEVED"
+                //                       ? "Received"
+                //                       : "Join",
+                //       fontSize: 10,
+                //       textColor: AppColors.white,
+                //       fontWeight: FontWeight.w500),
+                // ),
               ],
             ),
-            Divider(),
+            const Divider(),
           ],
         ),
       ),

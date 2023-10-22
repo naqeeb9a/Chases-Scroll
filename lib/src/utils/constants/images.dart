@@ -40,4 +40,6 @@ class AppImages {
   static const String wallet = "assets/svgs/wallet-2.svg";
   static const String paystack = "assets/svgs/paystack.svg";
   static const String stripe = "assets/svgs/Stripe.svg";
+  static const String addOrganizer = "assets/svgs/profile-add.svg";
+  static const String messageOrganizer = "assets/svgs/message-text.svg";
 }

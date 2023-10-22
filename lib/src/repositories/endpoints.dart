@@ -82,4 +82,10 @@ class Endpoints {
       "$port94/payments/verifyPaystackTx?orderCode=$orderCode";
   static String verifyPaymentST =
       "$port94/payments/stripePaySuccess?orderId=$orderID";
+
+  static String createEvent = "$port84/events/create-event";
+  static String deleteFriend = "$port82/user/remove-friend";
+
+  //community Endpoint
+  static String joinedCommunity = "$port83/group/joined-groups";
 }

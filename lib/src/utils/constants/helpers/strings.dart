@@ -129,6 +129,7 @@ Future<dynamic> showDialogBoard(BuildContext context) {
                   text: "Why & how to add community funnel?",
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
+                  lines: 2,
                   textColor: AppColors.black),
               heightSpace(2),
               customText(

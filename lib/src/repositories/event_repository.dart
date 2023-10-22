@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
+import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
+import 'package:chases_scroll/src/models/product_data_type.dart';
 import 'package:chases_scroll/src/repositories/api/api_clients.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
 import 'package:chases_scroll/src/services/storage_service.dart';
@@ -61,6 +63,9 @@ class EventRepository {
   //to get communityList events
   List<Content> communityList = [];
 
+  //for gettting community ID
+  List<CommContent> joinedCommunityList = [];
+
   //create event add image
   Future<String> addImage(
     File image,
@@ -83,6 +88,69 @@ class EventRepository {
     } else {
       log("something went wrong");
       return "";
+    }
+  }
+
+  Future<bool> createEvent({
+    final List<String>? picUrls,
+    final String? eventType,
+    final String? eventName,
+    final String? eventDescription,
+    final String? locationType,
+    final String? currency,
+    final String? currentPicUrl,
+    final String? eventFunnelGroupID,
+    final String? link,
+    final String? address,
+    final String? locationDetails,
+    final int? startTime,
+    final int? endTime,
+    final int? startDate,
+    final int? endDate,
+    final bool? isPublic,
+    final bool? isExclusive,
+    final bool? attendeesVisibility,
+    final bool? toBeAnnounced,
+    final List<ProductTypeDataa>? productTypeData,
+  }) async {
+    final data = {
+      "picUrls": picUrls,
+      "eventType": eventType,
+      "eventName": eventName,
+      "eventDescription": eventDescription,
+      "locationType": locationType,
+      "currency": currency,
+      "currentPicUrl": currentPicUrl,
+      "eventFunnelGroupID": eventFunnelGroupID,
+      "mediaType": "PICTURE",
+      "currentVideoUrl": "",
+      "isPublic": isPublic,
+      "isExclusive": isExclusive,
+      "mask": true,
+      "attendeesVisibility": attendeesVisibility,
+      "startTime": startTime,
+      "endTime": endTime,
+      "startDate": startDate,
+      "endDate": endDate,
+      "expirationDate": 0,
+      "location": {
+        "link": link,
+        "address": address,
+        "locationDetails": locationDetails,
+        "latlng": "string",
+        "placeIds": "string",
+        "toBeAnnounced": toBeAnnounced
+      },
+      "productTypeData": productTypeData
+    };
+    final response =
+        await ApiClient.post(Endpoints.createEvent, body: data, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      log("Create event response ===> ${response.message}");
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -129,6 +197,23 @@ class EventRepository {
 
     if (response.status == 200 || response.status == 201) {
       log("webUrlStripe ======> ${response.message}");
+      return response.message;
+    }
+    return response.message;
+  }
+
+  //delete friend
+  Future<dynamic> deleteFriend({
+    final String? friendID,
+  }) async {
+    String url = "${Endpoints.saveEvent}/$friendID";
+
+    final response = await ApiClient.delete(url,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    if (response.status == 200 || response.status == 201) {
       return response.message;
     }
     return response.message;
@@ -230,6 +315,25 @@ class EventRepository {
           allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return fundraisingList;
+    } else {
+      return [];
+    }
+  }
+
+  //virtual events
+  Future<List<CommContent>> getJoinedCommunity() async {
+    String url = "${Endpoints.joinedCommunity}?userID=$userId";
+    final response =
+        await ApiClient.get(Endpoints.joinedCommunity, useToken: true);
+
+    if (response.status == 200) {
+      final List<dynamic> eventCommunityId = response.message['content'];
+      // log(allEvents.toString());
+      joinedCommunityList = eventCommunityId
+          .map<CommContent>((event) => CommContent.fromJson(event))
+          .toList();
+
+      return joinedCommunityList;
     } else {
       return [];
     }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/repositories/api/api_clients.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
@@ -30,6 +32,8 @@ class ExploreRepository {
         useToken: true,
         backgroundColor: Colors.transparent,
         widget: Container());
+
+    log("response here saying ... =>>>${response.message}");
 
     if (response.status == 200 || response.status == 201) {
       return response.message;

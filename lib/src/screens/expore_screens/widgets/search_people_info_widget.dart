@@ -50,7 +50,7 @@ class SearchPeopleWidget extends StatelessWidget {
             ),
             child: Center(
               child: customText(
-                  text: image!.isEmpty ? fullName![0] : "",
+                  text: image == null ? username![0].toUpperCase() : "",
                   fontSize: 14,
                   textColor: AppColors.deepPrimary,
                   fontWeight: FontWeight.w500),

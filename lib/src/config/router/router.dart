@@ -9,6 +9,8 @@ import 'package:chases_scroll/src/screens/auth_screens/pincode.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
+import 'package:chases_scroll/src/screens/event_screens/add_event_Views/add_event_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/get_community_id_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/event_webview_screens.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/privacy_policy_screen.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.dart';
@@ -22,7 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../screens/bottom_nav.dart';
-import '../../screens/event_screens/add_event_Views/add_event__view_new.dart';
 import '../../screens/event_screens/buying_event_ticket_screen/event_ticket_summary.dart';
 import '../../screens/event_screens/buying_event_ticket_screen/payment_method_screen.dart';
 import '../../screens/event_screens/buying_event_ticket_screen/payment_service_screen.dart';
@@ -104,7 +105,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.addEventView,
         name: AppRoutes.addEventView,
-        builder: (_, __) => const AddEventNewView(),
+        builder: (_, __) => const AddEventView(),
       ),
       GoRoute(
         path: AppRoutes.eventView,
@@ -168,5 +169,10 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         builder: (_, __) => PaymentPaystackView(
           url: __.extra as String,
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.eventCommunityId,
+        name: AppRoutes.eventCommunityId,
+        builder: (_, __) => GetCommunityFunnelID(),
       ),
     ]);

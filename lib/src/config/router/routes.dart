@@ -27,4 +27,5 @@ class AppRoutes {
   static const String currencyPaymentScreen = "/currencyPaymentScreen";
   static const String webEventPayStack = "/webEventPayStack";
   static const String webEventStripe = "/webEventStripe";
+  static const String eventCommunityId = "/eventCommunityId";
 }

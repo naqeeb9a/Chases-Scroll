@@ -5,7 +5,6 @@ import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
-import 'package:chases_scroll/src/screens/expore_screens/widgets/search_community_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_event_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_people_info_widget.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
@@ -350,13 +349,225 @@ class SearchExploreView extends HookWidget {
                           itemCount: foundCommunity.value.length,
                           itemBuilder: (BuildContext context, int index) {
                             CommContent comm = foundCommunity.value[index];
-                            return SearchCommunityWidget(
-                              image: comm.data!.imgSrc,
-                              name: comm.data!.name,
-                              desc: comm.data!.description,
-                              isPublic: comm.data!.isPublic,
-                              memberCount: comm.data!.memberCount.toString(),
-                              joinStatus: comm.joinStatus,
+                            // String n = comm.data!.name.toString();
+                            // List<String> words = n.split(' ');
+                            // String initials =
+                            //     words.map((word) => word[0]).join('');
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 55,
+                                        width: 55,
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              left: 0,
+                                              child: Container(
+                                                width: 35,
+                                                height: 35,
+                                                decoration: const BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      bottomLeft:
+                                                          Radius.circular(20),
+                                                      bottomRight:
+                                                          Radius.circular(20),
+                                                      topLeft:
+                                                          Radius.circular(20),
+                                                      topRight:
+                                                          Radius.circular(0),
+                                                    ),
+                                                    color:
+                                                        AppColors.deepPrimary),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 5,
+                                              child: Container(
+                                                width: 35,
+                                                height: 35,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.white,
+                                                      width: 1),
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(20),
+                                                    bottomRight:
+                                                        Radius.circular(20),
+                                                    topLeft:
+                                                        Radius.circular(20),
+                                                    topRight:
+                                                        Radius.circular(0),
+                                                  ),
+                                                  color: AppColors.deepPrimary,
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 10,
+                                              child: Container(
+                                                width: 35,
+                                                height: 35,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.white,
+                                                      width: 1),
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(20),
+                                                    bottomRight:
+                                                        Radius.circular(20),
+                                                    topLeft:
+                                                        Radius.circular(20),
+                                                    topRight:
+                                                        Radius.circular(0),
+                                                  ),
+                                                  color: Colors.grey.shade200,
+                                                  image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: NetworkImage(
+                                                        "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm.data!.imgSrc}"),
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: customText(
+                                                      text: comm.data!.imgSrc!
+                                                              .isEmpty
+                                                          ? comm.data!.name ==
+                                                                  null
+                                                              ? ""
+                                                              : "initials"
+                                                          : "",
+                                                      fontSize: 10,
+                                                      textColor:
+                                                          AppColors.deepPrimary,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      widthSpace(1),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            customText(
+                                                text: comm.data!.name == null
+                                                    ? ""
+                                                    : comm.data!.name!,
+                                                fontSize: 14,
+                                                textColor: AppColors.black,
+                                                fontWeight: FontWeight.w500),
+                                            customText(
+                                                text:
+                                                    "lekinhfakw cwo acneaw lceni awef qasj caeub ajef qa caibe",
+                                                fontSize: 12,
+                                                textColor:
+                                                    AppColors.searchTextGrey,
+                                                fontWeight: FontWeight.w500,
+                                                lines: 3),
+                                            heightSpace(1),
+                                            Row(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    customText(
+                                                        text: comm
+                                                            .data!.memberCount
+                                                            .toString(),
+                                                        fontSize: 10,
+                                                        textColor: AppColors
+                                                            .deepPrimary,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                    widthSpace(1),
+                                                    customText(
+                                                        text: comm.data!
+                                                                    .memberCount ==
+                                                                1
+                                                            ? "Member"
+                                                            : "Members",
+                                                        fontSize: 10,
+                                                        textColor: AppColors
+                                                            .searchTextGrey,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ],
+                                                ),
+                                                widthSpace(10),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xffD0D4EB),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            3),
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            3.0),
+                                                    child: customText(
+                                                        text: comm.data!
+                                                                    .isPublic ==
+                                                                true
+                                                            ? "Public"
+                                                            : "Private",
+                                                        fontSize: 8,
+                                                        textColor:
+                                                            AppColors.red,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      widthSpace(5),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.deepPrimary,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        padding: const EdgeInsets.all(10),
+                                        child: customText(
+                                            text: comm.joinStatus == "CONNECTED"
+                                                ? "Connected"
+                                                : comm.joinStatus ==
+                                                        "REQUEST_PENDING"
+                                                    ? "Pending Request"
+                                                    : comm.joinStatus ==
+                                                            "FRIEND_REQUEST_SENT"
+                                                        ? "Request Sent"
+                                                        : comm.joinStatus ==
+                                                                "FRIEND_REQUEST_RECIEVED"
+                                                            ? "Received"
+                                                            : "Join",
+                                            fontSize: 10,
+                                            textColor: AppColors.white,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                  const Divider(),
+                                ],
+                              ),
                             );
                           },
                         ),

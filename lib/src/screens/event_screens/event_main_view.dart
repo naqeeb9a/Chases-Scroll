@@ -216,7 +216,7 @@ class WideEventCards extends StatelessWidget {
               widthSpace(1),
               Flexible(
                 child: customText(
-                  text: location!,
+                  text: location.toString(),
                   fontSize: 12,
                   textColor: AppColors.searchTextGrey,
                   fontWeight: FontWeight.w400,

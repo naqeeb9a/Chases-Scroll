@@ -95,7 +95,7 @@ class _SuggestionViewState extends State<SuggestionView> {
                 customText(
                     text: "Shared Affilations",
                     fontSize: 12,
-                    textColor: AppColors.lightGrey,
+                    textColor: AppColors.textGrey,
                     fontWeight: FontWeight.w400),
                 Padding(
                   padding: const EdgeInsets.only(top: 9.0, right: 15, left: 15),
@@ -113,6 +113,9 @@ class _SuggestionViewState extends State<SuggestionView> {
                     borderColor: AppColors.grey,
                     textColor: AppColors.white,
                     height: 4.h,
+                    color: widget.users!.joinStatus == "FRIEND_REQUEST_SENT"
+                        ? AppColors.red
+                        : AppColors.primary,
                     width: 28.w,
                     onTap: widget.function,
                   ),

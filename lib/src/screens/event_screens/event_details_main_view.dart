@@ -1,14 +1,18 @@
 import 'dart:developer';
 
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
-import 'package:chases_scroll/src/models/ticket_summary_model.dart';
 import 'package:chases_scroll/src/providers/event_statenotifier.dart';
+import 'package:chases_scroll/src/providers/eventicket_provider.dart';
+import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/organizer_widget.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_detail_map_locationCard.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_details_iconText.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/luncher.dart';
@@ -69,7 +73,12 @@ class EventDetailsMainView extends ConsumerWidget {
     DateTime endTime =
         DateTimeUtils.convertMillisecondsToDateTime(eventDetails.endTime!);
     String formattedEndTime = DateFormat('hh:mm a').format(startTime);
+
+    final String userId =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+
     return Scaffold(
+      backgroundColor: AppColors.backgroundSummaryScreen,
       appBar: appBar(
         title: "Event Details",
         appBarActionWidget: Padding(
@@ -298,6 +307,22 @@ class EventDetailsMainView extends ConsumerWidget {
                           );
                         }).toList(),
                       ),
+                    ),
+                    heightSpace(2),
+                    OrganizerContainerWidget(
+                      height: height,
+                      width: width,
+                      isCreator: userId == eventDetails.createdBy!.userId
+                          ? true
+                          : false,
+                      orgId: eventDetails.createdBy!.userId!,
+                      orgImage:
+                          eventDetails.createdBy!.data!.imgMain!.objectPublic ==
+                                  false
+                              ? ""
+                              : eventDetails.createdBy!.data!.imgMain!.value!,
+                      orgFName: eventDetails.createdBy!.firstName!,
+                      orgLName: eventDetails.createdBy!.lastName!,
                     ),
                     heightSpace(2),
                     customText(

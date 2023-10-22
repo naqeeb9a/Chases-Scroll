@@ -1,6 +1,6 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
-import 'package:chases_scroll/src/models/ticket_summary_model.dart';
 import 'package:chases_scroll/src/providers/event_statenotifier.dart';
+import 'package:chases_scroll/src/providers/eventicket_provider.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';

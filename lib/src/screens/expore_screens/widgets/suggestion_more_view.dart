@@ -153,7 +153,10 @@ class SuggestionFriendMore extends HookWidget {
                                         hasBorder: false,
                                         borderColor: AppColors.grey,
                                         textColor: AppColors.white,
-                                        color: AppColors.deepPrimary,
+                                        color: content.joinStatus ==
+                                                "FRIEND_REQUEST_SENT"
+                                            ? AppColors.red
+                                            : AppColors.primary,
                                         height: 30,
                                         width: 90,
                                         onTap: () async {

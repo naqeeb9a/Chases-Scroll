@@ -68,7 +68,14 @@ class FindReligiousEvents extends HookWidget {
                     itemCount: myReligiouslModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      return const WideEventCards();
+                      Content event = myReligiouslModel.value[index];
+                      return WideEventCards(
+                        image: event.currentPicUrl,
+                        location: event.location!.address,
+                        name: event.eventName,
+                        price: event.minPrice,
+                        users: event.memberCount,
+                      );
                     },
                   ),
                 ),
