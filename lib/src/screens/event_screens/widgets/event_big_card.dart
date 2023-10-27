@@ -5,10 +5,8 @@ import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../utils/constants/images.dart';
 import '../../widgets/custom_fonts.dart';
 
 class EventBigCard extends StatefulWidget {
@@ -19,9 +17,7 @@ class EventBigCard extends StatefulWidget {
   final String? date;
   final String? location;
   final double? price;
-  final bool isSaved;
   final Content? eventDetails;
-  final Function()? onSave;
 
   const EventBigCard(
     this.width, {
@@ -31,8 +27,6 @@ class EventBigCard extends StatefulWidget {
     this.date,
     this.location,
     this.price,
-    required this.isSaved,
-    this.onSave,
     this.eventDetails,
   });
 
@@ -124,157 +118,144 @@ class _EventBigCardState extends State<EventBigCard> {
               ),
             ),
             heightSpace(0.5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: Container(
-                    //color: Colors.cyan,
-                    child: customText(
-                        text: widget.eventName.toString(),
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.w700,
-                        lines: 1),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Container(
+                        //color: Colors.cyan,
+                        child: customText(
+                            text: widget.eventName.toString(),
+                            fontSize: 12,
+                            textColor: AppColors.black,
+                            fontWeight: FontWeight.w700,
+                            lines: 1),
+                      ),
+                    ),
+                    widthSpace(1.5),
+                    customText(
+                      text: widget.price.toString(),
+                      fontSize: 12,
+                      textColor: AppColors.deepPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    // Text(
+                    //   event['currency'] == "USD"
+                    //       ? "\$${event['minPrice'].toString()}"
+                    //       : "₦${event['minPrice'].toString()}",
+                    //   style: GoogleFonts.montserrat(
+                    //     color: Colors.black,
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w600,
+                    //   ),
+                    // ),
+                  ],
                 ),
-                widthSpace(1.5),
-                customText(
-                  text: widget.price.toString(),
-                  fontSize: 14,
-                  textColor: AppColors.deepPrimary,
-                  fontWeight: FontWeight.w500,
-                ),
-                // Text(
-                //   event['currency'] == "USD"
-                //       ? "\$${event['minPrice'].toString()}"
-                //       : "₦${event['minPrice'].toString()}",
-                //   style: GoogleFonts.montserrat(
-                //     color: Colors.black,
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.w600,
-                //   ),
-                // ),
-              ],
-            ),
-            heightSpace(0.8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.place_rounded,
-                  size: 15,
-                  color: Colors.grey.shade400,
-                ),
-                widthSpace(1),
-                Flexible(
-                  child: customText(
-                    text: widget.location.toString(),
-                    fontSize: 12,
-                    textColor: AppColors.searchTextGrey,
-                    fontWeight: FontWeight.w400,
-                    lines: 1,
-                  ),
-                ),
-              ],
-            ),
-            heightSpace(0.8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+                heightSpace(0.8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 30,
-                      width: 100,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 20,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.green,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 40,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.orange,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 60,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: AppColors.deepPrimary,
-                              ),
-                              child: Center(
-                                child: customText(
-                                  text: "+100",
-                                  fontSize: 5,
-                                  textColor: AppColors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    Icon(
+                      Icons.place_rounded,
+                      size: 15,
+                      color: Colors.grey.shade400,
                     ),
-                    Container(
+                    widthSpace(1),
+                    Flexible(
                       child: customText(
-                        text: "Interested",
+                        text: widget.location.toString(),
                         fontSize: 12,
-                        textColor: AppColors.deepPrimary,
+                        textColor: AppColors.searchTextGrey,
                         fontWeight: FontWeight.w400,
+                        lines: 1,
                       ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: GestureDetector(
-                    onTap: widget.onSave,
-                    child: Container(
-                      child: widget.isSaved == true
-                          ? SvgPicture.asset(
-                              AppImages.bookmarkFilled,
-                              height: 2.4.h,
-                              width: 2.4.w,
-                            )
-                          : SvgPicture.asset(
-                              AppImages.bookmark,
-                              height: 2.4.h,
-                              width: 2.4.w,
-                            ),
+                heightSpace(0.8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 30,
+                          width: 80,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                child: Container(
+                                  width: 6.w,
+                                  height: 3.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 15,
+                                child: Container(
+                                  width: 6.w,
+                                  height: 3.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 30,
+                                child: Container(
+                                  width: 6.w,
+                                  height: 3.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 45,
+                                child: Container(
+                                  width: 6.w,
+                                  height: 3.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: AppColors.deepPrimary,
+                                  ),
+                                  child: Center(
+                                    child: customText(
+                                      text:
+                                          "+${widget.eventDetails!.memberCount}",
+                                      fontSize: 9,
+                                      textColor: AppColors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: customText(
+                            text: "Interested",
+                            fontSize: 12,
+                            textColor: AppColors.deepPrimary,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
+                  ],
+                )
               ],
             )
           ],

@@ -47,14 +47,16 @@ class Endpoints {
   static const String getAllCommunities = "$port83/group/group";
 
   static const String connectFriend = "$port82/user/send-friend-request";
+  static const String disconnectFriend = "$port82/user/remove-friend";
 
   //--------------------------- Event Endpoint ------------------------------//
   static const String saveEvent = "$port84/events/save-event";
+  static const String unSaveEvent = "$port84/events/remove-saved-event";
 
   static String savedEvents =
-      "$port84/events/get-saved-events?typeID=${userId.toString()}&type=EVENT";
+      "$port84/events/get-saved-events?typeID=$userId&type=EVENT";
 
-  static String myEvents = "$port84/events/joined-events/$userId";
+  static String myEvents = "$port84/events/joined-events";
 
   static String pastEvents = "$port84/events/get-past-events";
 
@@ -77,7 +79,7 @@ class Endpoints {
   static String createWebUrlPaystack =
       "$port94/payments/payWithPaystack?orderCode=$orderCode&email=jken04680@gmail.com";
   static String createWebUrlStripe =
-      "8094/payments/payWithStripe?orderId=$orderID";
+      "$port94/payments/payWithStripe?orderId=$orderID";
   static String verifyPaymentPS =
       "$port94/payments/verifyPaystackTx?orderCode=$orderCode";
   static String verifyPaymentST =
@@ -85,7 +87,9 @@ class Endpoints {
 
   static String createEvent = "$port84/events/create-event";
   static String deleteFriend = "$port82/user/remove-friend";
+  static String getEventMembers = "$port84/events/get-event-members";
 
   //community Endpoint
   static String joinedCommunity = "$port83/group/joined-groups";
+  static String joinCommunity = "$port83/group/join-group";
 }

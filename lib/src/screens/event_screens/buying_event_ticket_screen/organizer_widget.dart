@@ -126,14 +126,14 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                       children: [
                         customText(
                           text: "Organizer",
-                          fontSize: 12,
+                          fontSize: 10,
                           textColor: const Color(0xff6B6B6B),
                           fontWeight: FontWeight.w500,
                         ),
                         customText(
                           text:
                               "${widget.orgFName.toUpperCase()} ${widget.orgLName.toUpperCase()}",
-                          fontSize: 14,
+                          fontSize: 12,
                           textColor: AppColors.primary,
                           fontWeight: FontWeight.w500,
                         ),
@@ -164,27 +164,9 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                   widthSpace(2.5),
                   GestureDetector(
                     onTap: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ChatDetailsScreenView(
-                      //       chatID: widget.orgId,
-                      //       chatName: widget.orgName,
-                      //       image: widget.orgImage,
-                      //     ),
-                      //   ),
-                      // );
-
                       if (widget.orgId.isNotEmpty) {
                         fndID.add(widget.orgId.toString());
                       }
-
-                      // creatGroupChatFunction(
-                      //   context,
-                      //   name: fullName,
-                      //   friendIDs: fndID,
-                      //   image: widget.orgImage,
-                      //   userid: widget.orgId,
-                      // );
                     },
                     child: isLoading
                         ? const SizedBox(
@@ -207,30 +189,29 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
     );
   }
 
-  connectFriend(String? userId) async {
-    final result = await _exploreRepository.connectWithFriend(friendID: userId);
+  connectFriend(String friendID) async {
+    final result =
+        await _exploreRepository.connectWithFriend(friendID: friendID);
     if (result['updated'] == true) {
-      // Trigger a refresh of the events data
-      followValue();
-
       ToastResp.toastMsgSuccess(resp: result['message']);
-
-      //refreshEventProvider(context.read);
+      log(result.toString());
+      followValue();
     } else {
       ToastResp.toastMsgError(resp: result['message']);
     }
   }
 
-  disconnectFriend(String? userId) async {
-    final result = await _eventRepository.deleteFriend(friendID: userId);
+  disconnectFriend(String friendID) async {
+    final result =
+        await _exploreRepository.disconnectWithFriend(friendID: friendID);
     if (result['updated'] == true) {
-      // Trigger a refresh of the events data
-      followValue();
-
       ToastResp.toastMsgSuccess(resp: result['message']);
-
-      //refreshEventProvider(context.read);
+      followValue();
+      log(friendID.toString());
+      log(result.toString());
     } else {
+      log(friendID.toString());
+      log(result.toString());
       ToastResp.toastMsgError(resp: result['message']);
     }
   }
@@ -240,67 +221,4 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
       follow = !follow;
     });
   }
-
-//   ChatDatabase chatDatabase = ChatDatabase();
-//   //function to create group chat
-//   creatGroupChatFunction(
-//     context, {
-//     String? name,
-//     String? image,
-//     List<String>? friendIDs,
-//     String? userid,
-//   }) async {
-//     //String? SharedID = friendIDS[0];
-//     setState(() {
-//       isLoading = true;
-//     });
-//     String status = await chatDatabase.createSingleChat(
-//       name: name,
-//       imgString: image,
-//       users: friendIDs,
-//       userId: userid,
-//     );
-//     log(userid!);
-
-//     if (status == "success") {
-//       Provider.of<ChatProvider>(context, listen: false).getAllChatList();
-//       Provider.of<ChatProvider>(context, listen: false)
-//           .getAllChatDetails(userid!);
-//       Provider.of<ChatProvider>(context, listen: false).getAllMember(userid);
-
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: font14Tx500(
-//             "Organizer has been added to your chat list.",
-//             Colors.white,
-//           ),
-//           backgroundColor: mainColor(),
-//         ),
-//       );
-//       // Future.delayed(const Duration(milliseconds: 300), () {
-//       //   Navigator.of(context).push(
-//       //     MaterialPageRoute(
-//       //       builder: (context) => ChatDetailsScreenView(
-//       //         chatName: fullName,
-//       //         image: widget.orgImage.toString(),
-//       //         chatID: widget.orgId,
-//       //       ),
-//       //     ),
-//       //   );
-//       // });
-
-//       setState(() {
-//         isLoading = false;
-//       });
-//     } else if (status == "error") {
-//       setState(() {
-//         isLoading = false;
-//       });
-//       ScaffoldMessenger.of(context).showSnackBar(
-//           const SnackBar(content: Text("Error in Create One-To-One chat")));
-//       setState(() {
-//         isLoading = false;
-//       });
-//     }
-//   }
 }

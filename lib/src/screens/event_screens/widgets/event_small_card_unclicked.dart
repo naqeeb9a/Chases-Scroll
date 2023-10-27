@@ -1,47 +1,49 @@
-import 'package:chases_scroll/src/config/router/routes.dart';
-import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../../models/event_model.dart';
 import '../../../utils/constants/images.dart';
 import '../../widgets/custom_fonts.dart';
 
-class EventSmallCard extends StatefulWidget {
+class EventSmallTitleCardNonNavigate extends StatefulWidget {
   final String? eventName;
-
   final String? image;
+
   final Content? eventDetails;
   final String? date;
   final String? location;
   final double? price;
-  final bool? isSaved;
+  final String? category;
+  final bool? isOrganser;
   final Function()? onSave;
-  const EventSmallCard(
-      {super.key,
-      this.eventName,
-      this.image,
-      this.date,
-      this.location,
-      this.price,
-      this.isSaved,
-      this.onSave,
-      this.eventDetails});
+  const EventSmallTitleCardNonNavigate({
+    super.key,
+    this.eventName,
+    this.image,
+    this.eventDetails,
+    this.date,
+    this.location,
+    this.price,
+    this.category,
+    this.onSave,
+    this.isOrganser,
+  });
 
   @override
-  State<EventSmallCard> createState() => _EventSmallCardState();
+  State<EventSmallTitleCardNonNavigate> createState() =>
+      _EventSmallTitleCardNonNavigateState();
 }
 
-class _EventSmallCardState extends State<EventSmallCard> {
+class _EventSmallTitleCardNonNavigateState
+    extends State<EventSmallTitleCardNonNavigate> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push(AppRoutes.eventDetailMainView, extra: widget.eventDetails);
+        // context.push(AppRoutes.eventDetailMainView, extra: widget.eventDetails);
       },
       child: Container(
         margin: PAD_ALL_10,
@@ -78,16 +80,15 @@ class _EventSmallCardState extends State<EventSmallCard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: 40,
-                              width: 150,
-                              //color: Colors.amber,
+                            Flexible(
                               child: customText(
                                   text: widget.eventName.toString(),
                                   fontSize: 14,
                                   textColor: AppColors.black,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w500,
+                                  lines: 1),
                             ),
+                            widthSpace(1),
                             customText(
                                 text: widget.price.toString(),
                                 fontSize: 14,
@@ -113,48 +114,60 @@ class _EventSmallCardState extends State<EventSmallCard> {
                         ),
                         heightSpace(0.5),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.place_rounded,
+                              size: 15,
+                              color: AppColors.deepPrimary,
+                            ),
+                            widthSpace(1),
+                            Flexible(
+                              child: customText(
+                                text: widget.location.toString(),
+                                fontSize: 12,
+                                textColor: AppColors.deepPrimary,
+                                fontWeight: FontWeight.w500,
+                                lines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        heightSpace(0.5),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SvgPicture.asset(
-                                    AppImages.location,
-                                    height: 15,
-                                    width: 15,
-                                    color: AppColors.primary,
-                                  ),
-                                  widthSpace(1),
+                                  customText(
+                                      text: "Category: ",
+                                      fontSize: 11,
+                                      textColor: AppColors.searchTextGrey,
+                                      fontWeight: FontWeight.w500),
                                   Expanded(
                                     child: customText(
-                                        text: widget.location.toString(),
+                                        text: widget.category.toString(),
                                         fontSize: 11,
-                                        textColor: AppColors.primary,
+                                        textColor: AppColors.deepPrimary,
                                         fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),
                             ),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: widget.onSave,
-                                  child: Container(
-                                    child: widget.isSaved == true
-                                        ? SvgPicture.asset(
-                                            AppImages.bookmarkFilled,
-                                            height: 2.3.h,
-                                            width: 2.3.w,
-                                          )
-                                        : SvgPicture.asset(
-                                            AppImages.bookmark,
-                                            height: 2.3.h,
-                                            width: 2.3.w,
-                                          ),
-                                  ),
-                                ),
-                              ],
+                            widthSpace(1.3),
+                            Container(
+                              padding: PAD_ALL_8,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: AppColors.red.withOpacity(0.8)),
+                              child: customText(
+                                  text: "Attended",
+                                  fontSize: 11,
+                                  textColor: AppColors.white,
+                                  fontWeight: FontWeight.w700),
                             ),
                           ],
                         ),

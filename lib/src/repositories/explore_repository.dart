@@ -33,7 +33,23 @@ class ExploreRepository {
         backgroundColor: Colors.transparent,
         widget: Container());
 
-    log("response here saying ... =>>>${response.message}");
+    log("response here saying  connect friend... =>>>${response.message}");
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
+
+  Future<dynamic> disconnectWithFriend({String? friendID}) async {
+    String url = "${Endpoints.disconnectFriend}/$friendID";
+
+    final response = await ApiClient.delete(url,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    log("response here saying disconnect friend ... =>>>${response.message}");
 
     if (response.status == 200 || response.status == 201) {
       return response.message;

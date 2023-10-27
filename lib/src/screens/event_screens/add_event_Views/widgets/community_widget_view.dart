@@ -1,6 +1,5 @@
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
-import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -66,32 +65,33 @@ class CommunityWidgetView extends StatelessWidget {
               Positioned(
                 left: 8,
                 child: Container(
-                    width: 10.w,
-                    height: 5.h,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 1),
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25),
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(0),
-                      ),
-                      color: Colors.grey.shade200,
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$imageString",
-                        ),
-                        scale: 1.0,
-                        fit: BoxFit.cover,
-                      ),
+                  width: 10.w,
+                  height: 5.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 1),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(0),
                     ),
-                    child: Center(
-                      child: customText(
-                          text: getAcronym(name!),
-                          fontSize: 11,
-                          fontWeight: FontWeight.w400,
-                          textColor: AppColors.black),
-                    )),
+                    color: Colors.grey.shade200,
+                    // image: DecorationImage(
+                    //   image: NetworkImage(
+                    //     "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$imageString",
+                    //   ),
+                    //   scale: 1.0,
+                    //   fit: BoxFit.cover,
+                    // ),
+                  ),
+                  child: const Center(
+                      // child: customText(
+                      //     text: getAcronym(name!),
+                      //     fontSize: 11,
+                      //     fontWeight: FontWeight.w400,
+                      //     textColor: AppColors.black),
+                      ),
+                ),
               ),
             ],
           ),
@@ -101,14 +101,14 @@ class CommunityWidgetView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               customText(
-                  text: name!,
+                  text: name.toString(),
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   textColor: AppColors.black),
               heightSpace(0.1),
               Flexible(
                 child: customText(
-                    text: desc!,
+                    text: desc.toString(),
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     textColor: AppColors.searchTextGrey),

@@ -128,6 +128,11 @@ class SearchExploreView extends HookWidget {
       });
     }
 
+    void refreshCommunity() {
+      communityLoading.value = false; // Set loading state back to true
+      getAllCommunities(); // Trigger the API call again
+    }
+
     //for events filtered list
     void _runCommunityFilter(String enteredKeyword) {
       log(enteredKeyword);
@@ -287,7 +292,11 @@ class SearchExploreView extends HookWidget {
                                             fullName:
                                                 "${user.firstName} ${user.lastName}",
                                             username: "${user.username}",
-                                            image: user.data!.imgMain!.value,
+                                            image: user.data!.imgMain!
+                                                        .objectPublic ==
+                                                    false
+                                                ? ""
+                                                : user.data!.imgMain!.value,
                                           );
                                         },
                                       ),
@@ -349,6 +358,7 @@ class SearchExploreView extends HookWidget {
                           itemCount: foundCommunity.value.length,
                           itemBuilder: (BuildContext context, int index) {
                             CommContent comm = foundCommunity.value[index];
+                            log("comunity ID ==> ${comm.joinStatus}");
                             // String n = comm.data!.name.toString();
                             // List<String> words = n.split(' ');
                             // String initials =
@@ -473,8 +483,8 @@ class SearchExploreView extends HookWidget {
                                                 textColor: AppColors.black,
                                                 fontWeight: FontWeight.w500),
                                             customText(
-                                                text:
-                                                    "lekinhfakw cwo acneaw lceni awef qasj caeub ajef qa caibe",
+                                                text: comm.data!.description
+                                                    .toString(),
                                                 fontSize: 12,
                                                 textColor:
                                                     AppColors.searchTextGrey,
@@ -540,28 +550,45 @@ class SearchExploreView extends HookWidget {
                                         ),
                                       ),
                                       widthSpace(5),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: AppColors.deepPrimary,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        padding: const EdgeInsets.all(10),
-                                        child: customText(
-                                            text: comm.joinStatus == "CONNECTED"
-                                                ? "Connected"
-                                                : comm.joinStatus ==
-                                                        "REQUEST_PENDING"
-                                                    ? "Pending Request"
-                                                    : comm.joinStatus ==
-                                                            "FRIEND_REQUEST_SENT"
-                                                        ? "Request Sent"
-                                                        : comm.joinStatus ==
-                                                                "FRIEND_REQUEST_RECIEVED"
-                                                            ? "Received"
-                                                            : "Join",
-                                            fontSize: 10,
-                                            textColor: AppColors.white,
-                                            fontWeight: FontWeight.w500),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          log("comunity ID ==> ${comm.joinStatus}");
+                                          final result = await _eventRepository
+                                              .joinCommunity(groupID: comm.id);
+                                          log(comm.joinStatus.toString());
+                                          if (result['updated'] == true) {
+                                            ToastResp.toastMsgSuccess(
+                                                resp: result['message']);
+                                            refreshCommunity();
+                                          } else {
+                                            ToastResp.toastMsgError(
+                                                resp: result['message']);
+                                          }
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  comm.joinStatus == "CONNECTED"
+                                                      ? AppColors.green
+                                                      : AppColors.primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          padding: const EdgeInsets.all(10),
+                                          child: customText(
+                                              text: comm.joinStatus ==
+                                                      "CONNECTED"
+                                                  ? "Joined"
+                                                  : comm.joinStatus ==
+                                                          "NOT_CONNECTED"
+                                                      ? "Join"
+                                                      : comm.joinStatus ==
+                                                              "FRIEND_REQUEST_SENT"
+                                                          ? "Pending"
+                                                          : "",
+                                              fontSize: 10,
+                                              textColor: AppColors.white,
+                                              fontWeight: FontWeight.w500),
+                                        ),
                                       ),
                                     ],
                                   ),

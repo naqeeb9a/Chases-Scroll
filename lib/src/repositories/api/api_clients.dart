@@ -196,6 +196,40 @@ class ApiClient {
     }
   }
 
+  static Future postWithBody(
+    String endpoint, {
+    dynamic body,
+    bool useToken = true,
+    Function(int, int)? onSendProgress,
+    Color? backgroundColor,
+    Widget? widget,
+  }) async {
+    final result = await _makeRequest(
+      () async {
+        final header = _defaultHeader;
+
+        if (useToken) {
+          header.addAll(
+            {'Authorization': 'Bearer $_token'},
+          );
+        }
+
+        final options = Options(headers: header);
+        log("${_dio.options.baseUrl}$endpoint $body");
+        AppHelper.showOverlayLoader(
+            backgroundColor: backgroundColor, widget: widget);
+        final response = await _dio.post(endpoint,
+            data: body, options: options, onSendProgress: onSendProgress);
+        log("$response");
+
+        OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+        return response;
+      },
+    );
+
+    return result;
+  }
+
   static Future put(
     String endpoint, {
     required dynamic body,

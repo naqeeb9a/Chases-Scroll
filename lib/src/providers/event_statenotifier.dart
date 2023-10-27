@@ -1,7 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class IsEventDetailIsSavedNotifier extends StateNotifier<bool> {
+  IsEventDetailIsSavedNotifier() : super(false);
+
+  void resetBoolState(bool value) {
+    state = value; // Reset to initial value
+  }
+}
+
+class IsOpendedNotifier extends StateNotifier<bool> {
+  IsOpendedNotifier() : super(false);
+
+  void resetState(bool value) {
+    state = value; // Reset to initial value
+  }
+}
+
 class PriceNumberNotifier extends StateNotifier<int> {
-  PriceNumberNotifier() : super(0);
+  PriceNumberNotifier() : super(1);
 
   void decrementNumber() {
     state--;

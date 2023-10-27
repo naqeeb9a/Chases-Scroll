@@ -1,11 +1,15 @@
 import 'dart:developer';
 
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
@@ -51,6 +55,46 @@ class FindAllEventsView extends HookWidget {
             .toList();
 
         foundEvents.value = found;
+      }
+    }
+
+    //for event data changes
+    void refreshEventData() {
+      allEventlLoading.value = false; // Set loading state back to true
+      getAllMyEvents(); // Trigger the API call again
+    }
+
+    //value for userID
+    String userId =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+
+    saveEvent(String eventId) async {
+      final result = await _eventRepository.saveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['message'] == true) {
+        // Trigger a refresh of the events data
+        refreshEventData();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    unSaveEvent(String eventId) async {
+      final result = await _eventRepository.unSaveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['message'] == true) {
+        // Trigger a refresh of the events data
+        refreshEventData();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
       }
     }
 
@@ -115,11 +159,18 @@ class FindAllEventsView extends HookWidget {
                           itemBuilder: (BuildContext context, int index) {
                             Content event = foundEvents.value[index];
                             return WideEventCards(
+                              eventDetails: event,
                               name: event.eventName,
                               image: event.currentPicUrl,
                               location: event.location!.address,
                               price: event.minPrice,
                               users: event.memberCount,
+                              isSaved: event.isSaved!,
+                              onSave: () {
+                                event.isSaved == false
+                                    ? saveEvent(event.id!)
+                                    : unSaveEvent(event.id!);
+                              },
                             );
                           },
                         ),

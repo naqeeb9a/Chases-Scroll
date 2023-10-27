@@ -58,6 +58,33 @@ class ExploreMainView extends HookWidget {
       getSuggestedUsers(); // Trigger the API call again
     }
 
+    connectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.connectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(result.toString());
+        refreshSuggestedUsers();
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    disconnectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.disconnectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(friendID.toString());
+        log(result.toString());
+        refreshSuggestedUsers();
+      } else {
+        log(friendID.toString());
+        log(result.toString());
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
     useEffect(() {
       getEvents();
       getSuggestedUsers();
@@ -141,12 +168,14 @@ class ExploreMainView extends HookWidget {
                                           },
                                           itemBuilder: (BuildContext context,
                                               int index) {
+                                            Content event =
+                                                eventModel.value[index];
                                             return EventContainerTransformView(
                                               index: index,
                                               currentPageValue:
                                                   currentPageValue.value,
                                               scaleFactor: scaleFactor,
-                                              event: eventModel.value[index],
+                                              event: event,
                                             );
                                           },
                                         ),
@@ -221,21 +250,13 @@ class ExploreMainView extends HookWidget {
                                         : SuggestionView(
                                             users: usersModel.value[index],
                                             function: () async {
-                                              final result =
-                                                  await _exploreRepository
-                                                      .connectWithFriend(
-                                                          friendID:
-                                                              friend.userId);
-                                              if (result['updated'] == true) {
-                                                // Trigger a refresh of the events data
-                                                refreshSuggestedUsers();
-                                                ToastResp.toastMsgSuccess(
-                                                    resp: result['message']);
-                                                log(result.toString());
-                                                //refreshEventProvider(context.read);
+                                              log(friend.userId!);
+                                              if (friend.joinStatus !=
+                                                  "FRIEND_REQUEST_SENT") {
+                                                connectFriend(friend.userId!);
                                               } else {
-                                                ToastResp.toastMsgError(
-                                                    resp: result['message']);
+                                                disconnectFriend(
+                                                    friend.userId!);
                                               }
                                             },
                                           );

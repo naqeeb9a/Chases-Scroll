@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
+import 'package:chases_scroll/src/models/attendee_model.dart';
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/models/product_data_type.dart';
@@ -65,6 +66,9 @@ class EventRepository {
 
   //for gettting community ID
   List<CommContent> joinedCommunityList = [];
+
+  //to get evcent attendees
+  List<EventAttendeesModel> getEventAttendees = [];
 
   //create event add image
   Future<String> addImage(
@@ -147,7 +151,7 @@ class EventRepository {
         await ApiClient.post(Endpoints.createEvent, body: data, useToken: true);
 
     if (response.status == 200 || response.status == 201) {
-      log("Create event response ===> ${response.message}");
+      //log("Create event response ===> ${response.message}");
       return true;
     } else {
       return false;
@@ -165,11 +169,11 @@ class EventRepository {
       "ticketType": ticketType,
       "numberOfTickets": numberOfTickets
     };
-    final response = await ApiClient.post(Endpoints.createEventTicket,
-        body: data,
-        useToken: true,
-        backgroundColor: Colors.transparent,
-        widget: Container());
+    final response = await ApiClient.post(
+      Endpoints.createEventTicket,
+      body: data,
+      useToken: true,
+    );
 
     if (response.status == 200 || response.status == 201) {
       return response.message;
@@ -178,22 +182,26 @@ class EventRepository {
   }
 
   //to create event ticket
-  Future<Map<String, dynamic>> createWebUrlPayStack() async {
+  Future<dynamic> createWebUrlPayStack() async {
     final data = {};
     final response = await ApiClient.post(Endpoints.createWebUrlPaystack,
-        body: data, useToken: true);
+        body: data,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
 
     if (response.status == 200 || response.status == 201) {
-      log("webUrlPaystack ======> ${response.message}");
+      //log("webUrlPaystack ======> ${response.message}");
       return response.message;
     }
     return response.message;
   }
 
-  Future<Map<String, dynamic>> createWebUrlStripe() async {
-    final data = {};
-    final response = await ApiClient.post(Endpoints.createWebUrlStripe,
-        body: data, useToken: true);
+  Future<dynamic> createWebUrlStripe() async {
+    final response = await ApiClient.postWithBody(Endpoints.createWebUrlStripe,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
 
     if (response.status == 200 || response.status == 201) {
       log("webUrlStripe ======> ${response.message}");
@@ -206,7 +214,7 @@ class EventRepository {
   Future<dynamic> deleteFriend({
     final String? friendID,
   }) async {
-    String url = "${Endpoints.saveEvent}/$friendID";
+    String url = "${Endpoints.disconnectFriend}/$friendID";
 
     final response = await ApiClient.delete(url,
         useToken: true,
@@ -286,6 +294,24 @@ class EventRepository {
     }
   }
 
+  Future<List<EventAttendeesModel>> getEventAttendes({String? eventId}) async {
+    String url = "${Endpoints.getEventMembers}/$eventId";
+    final response = await ApiClient.get(url, useToken: true);
+
+    if (response.status == 200) {
+      final List<dynamic> allEventUsers = response.message['content'];
+      log("getting full attedee details ====> ${response.message['content']}");
+      getEventAttendees = allEventUsers
+          .map<EventAttendeesModel>(
+              (event) => EventAttendeesModel.fromJson(event))
+          .toList();
+
+      return getEventAttendees;
+    } else {
+      return [];
+    }
+  }
+
   //Festival events
   Future<List<Content>> getFestivalEvents() async {
     final response =
@@ -322,7 +348,6 @@ class EventRepository {
 
   //virtual events
   Future<List<CommContent>> getJoinedCommunity() async {
-    String url = "${Endpoints.joinedCommunity}?userID=$userId";
     final response =
         await ApiClient.get(Endpoints.joinedCommunity, useToken: true);
 
@@ -340,11 +365,12 @@ class EventRepository {
   }
 
   Future<List<Content>> getMyEvents() async {
-    final response = await ApiClient.get(Endpoints.myEvents, useToken: true);
+    String url = "${Endpoints.myEvents}/$userId";
+    final response = await ApiClient.get(url, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
-      log(allEvents.toString());
+      //log(allEvents.toString());
       myEventList =
           allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
@@ -483,6 +509,26 @@ class EventRepository {
     }
   }
 
+  //join community
+  Future<dynamic> joinCommunity({
+    final String? groupID,
+  }) async {
+    final data = {
+      "groupID": groupID,
+      "joinID": userId,
+    };
+    final response = await ApiClient.post(
+      Endpoints.joinCommunity,
+      body: data,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
+
   //this is  to save an event
   Future<dynamic> saveEvent({
     final String? eventID,
@@ -493,11 +539,33 @@ class EventRepository {
       "typeID": userID,
       "type": "EVENT",
     };
-    final response = await ApiClient.post(Endpoints.saveEvent,
-        body: data,
-        useToken: true,
-        backgroundColor: Colors.transparent,
-        widget: Container());
+    final response = await ApiClient.post(
+      Endpoints.saveEvent,
+      body: data,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
+
+  //this is  to save an event
+  Future<dynamic> unSaveEvent({
+    final String? eventID,
+    final String? userID,
+  }) async {
+    final data = {
+      "eventID": eventID,
+      "typeID": userID,
+      "type": "EVENT",
+    };
+    final response = await ApiClient.post(
+      Endpoints.unSaveEvent,
+      body: data,
+      useToken: true,
+    );
 
     if (response.status == 200 || response.status == 201) {
       return response.message;

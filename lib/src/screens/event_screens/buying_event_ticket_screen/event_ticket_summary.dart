@@ -4,6 +4,7 @@ import 'package:chases_scroll/src/providers/eventicket_provider.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
@@ -22,11 +23,57 @@ class EventTicketSummaryScreen extends ConsumerWidget {
     super.key,
   });
 
+  Row bottomTicketValueContainer(String title, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        customText(
+            text: title,
+            fontSize: 12,
+            textColor: AppColors.black,
+            fontWeight: FontWeight.w500,
+            lines: 2),
+        customText(
+            text: value,
+            fontSize: 12,
+            textColor: AppColors.primary,
+            fontWeight: FontWeight.w500,
+            lines: 1),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final counter = ref.watch(counterProvider);
     final notifier = ref.read(ticketSummaryProvider.notifier);
     final state = notifier.state;
+
+    double ticketServiceFee = 1.77 * counter;
+    double ticketServiceFeeMain =
+        double.parse(ticketServiceFee.toStringAsFixed(2));
+    double totalAmount = state.price! + ticketServiceFee;
+
+    //Dollar
+    double dPrice = state.price! * counter;
+    double total = ((dPrice * 1.025) + 0.30) / (1 - 0.059);
+    double totalRoundedNumber = double.parse(total.toStringAsFixed(2));
+
+    double serviceFee = state.price! * 0.025;
+    double processingFee = total - dPrice - serviceFee;
+    double proRoundedNumber = double.parse(processingFee.toStringAsFixed(2));
+
+    //Naira
+    double nPrice = state.price! * counter;
+    double nTotal = ((nPrice * 1.025) + 100) / (1 - 0.039);
+    if (nTotal < 2500) {
+      nTotal = (nPrice * 1.025) / (1 - 0.039);
+    }
+    double nTotalRoundedNumber = double.parse(nTotal.toStringAsFixed(2));
+
+    double nServiceFee = nPrice * 0.025;
+    double nProcessingFee = nTotal - nPrice - nServiceFee;
+    double nProRoundedNumber = double.parse(nProcessingFee.toStringAsFixed(2));
 
     return Scaffold(
         backgroundColor: AppColors.backgroundSummaryScreen,
@@ -49,7 +96,7 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                     child: Row(
                       children: [
                         Container(
-                          width: 40.w,
+                          width: 35.w,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(30),
@@ -77,7 +124,7 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                                 Flexible(
                                   child: customText(
                                       text: state.name!,
-                                      fontSize: 15,
+                                      fontSize: 14,
                                       textColor: AppColors.black,
                                       fontWeight: FontWeight.w700,
                                       lines: 2),
@@ -124,9 +171,17 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               GestureDetector(
-                                onTap: () => ref
-                                    .read(counterProvider.notifier)
-                                    .decrementNumber(),
+                                onTap: () {
+                                  if (counter == 1) {
+                                    ToastResp.toastMsgError(
+                                        resp:
+                                            "Number of ticket to purchase an event is 1 and above");
+                                  } else {
+                                    ref
+                                        .read(counterProvider.notifier)
+                                        .decrementNumber();
+                                  }
+                                },
                                 child: Container(
                                   height: 40,
                                   width: 40,
@@ -185,6 +240,46 @@ class EventTicketSummaryScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                  heightSpace(1),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Visibility(
+                      visible: state.price != 0.0 ? true : false,
+                      child: state.currency == "NGN"
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                bottomTicketValueContainer(
+                                    "Ticket Price", "₦$nPrice"),
+                                heightSpace(2),
+                                bottomTicketValueContainer(
+                                    "Service Fee", "₦$nServiceFee"),
+                                heightSpace(2),
+                                bottomTicketValueContainer(
+                                    "Processing Fee", "₦$nProRoundedNumber"),
+                                heightSpace(2),
+                                bottomTicketValueContainer(
+                                    "Total", "₦$nTotalRoundedNumber"),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                bottomTicketValueContainer(
+                                    "Ticket Price", "\$$dPrice"),
+                                heightSpace(2),
+                                bottomTicketValueContainer(
+                                    "Service Fee", "\$$serviceFee"),
+                                heightSpace(2),
+                                bottomTicketValueContainer(
+                                    "Processing Fee", "\$$proRoundedNumber"),
+                                heightSpace(2),
+                                bottomTicketValueContainer(
+                                    "Total", "\$$totalRoundedNumber"),
+                              ],
+                            ),
                     ),
                   ),
                   const Spacer(),

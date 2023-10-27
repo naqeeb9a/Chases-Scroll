@@ -32,7 +32,7 @@ class Content {
   int? endTime;
   int? startDate;
   int? endDate;
-  String? expirationDate;
+  int? expirationDate;
   int? memberCount;
   Location? location;
   List<ProductTypeData>? productTypeData;
@@ -314,34 +314,37 @@ class Data {
       this.maritalStatus,
       this.favorites});
 
-  Data.fromJson(Map<String, dynamic> json) {
-    mobilePhone = json['mobilePhone'] != null
-        ? MobilePhone.fromJson(json['mobilePhone'])
-        : null;
-    country =
-        json['country'] != null ? Country.fromJson(json['country']) : null;
-    imgMain =
-        json['imgMain'] != null ? MobilePhone.fromJson(json['imgMain']) : null;
-    images = json['images'] != null ? Country.fromJson(json['images']) : null;
-    gender =
-        json['gender'] != null ? MobilePhone.fromJson(json['gender']) : null;
-    city = json['city'] != null ? Country.fromJson(json['city']) : null;
-    webAddress = json['webAddress'] != null
-        ? MobilePhone.fromJson(json['webAddress'])
-        : null;
-    work = json['work'] != null ? Country.fromJson(json['work']) : null;
-    about = json['about'] != null ? MobilePhone.fromJson(json['about']) : null;
-    state = json['state'] != null ? Country.fromJson(json['state']) : null;
-    userSchool = json['userSchool'] != null
-        ? Country.fromJson(json['userSchool'])
-        : null;
-    maritalStatus = json['maritalStatus'] != null
-        ? Country.fromJson(json['maritalStatus'])
-        : null;
-    favorites =
-        json['favorites'] != null ? Country.fromJson(json['favorites']) : null;
+  factory Data.fromJson(Map<String, dynamic> json) {
+    return Data(
+      mobilePhone: json['mobilePhone'] != null
+          ? MobilePhone.fromJson(json['mobilePhone'])
+          : null,
+      country:
+          json['country'] != null ? Country.fromJson(json['country']) : null,
+      imgMain: json['imgMain'] != null
+          ? MobilePhone.fromJson(json['imgMain'])
+          : null,
+      images: json['images'] != null ? Country.fromJson(json['images']) : null,
+      gender:
+          json['gender'] != null ? MobilePhone.fromJson(json['gender']) : null,
+      city: json['city'] != null ? Country.fromJson(json['city']) : null,
+      webAddress: json['webAddress'] != null
+          ? MobilePhone.fromJson(json['webAddress'])
+          : null,
+      work: json['work'] != null ? Country.fromJson(json['work']) : null,
+      about: json['about'] != null ? MobilePhone.fromJson(json['about']) : null,
+      state: json['state'] != null ? Country.fromJson(json['state']) : null,
+      userSchool: json['userSchool'] != null
+          ? Country.fromJson(json['userSchool'])
+          : null,
+      maritalStatus: json['maritalStatus'] != null
+          ? Country.fromJson(json['maritalStatus'])
+          : null,
+      favorites: json['favorites'] != null
+          ? Country.fromJson(json['favorites'])
+          : null,
+    );
   }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (mobilePhone != null) {
@@ -385,6 +388,25 @@ class Data {
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Data{'
+        'mobilePhone: $mobilePhone, '
+        'country: $country, '
+        'imgMain: $imgMain, '
+        'images: $images, '
+        'gender: $gender, '
+        'city: $city, '
+        'webAddress: $webAddress, '
+        'work: $work, '
+        'about: $about, '
+        'state: $state, '
+        'userSchool: $userSchool, '
+        'maritalStatus: $maritalStatus, '
+        'favorites: $favorites'
+        '}';
+  }
 }
 
 class LastModifiedBy {
@@ -407,17 +429,18 @@ class LastModifiedBy {
       this.joinStatus,
       this.data});
 
-  LastModifiedBy.fromJson(Map<String, dynamic> json) {
-    userId = json['userId'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    username = json['username'];
-    dob = json['dob'];
-    publicProfile = json['publicProfile'];
-    joinStatus = json['joinStatus'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  factory LastModifiedBy.fromJson(Map<String, dynamic> json) {
+    return LastModifiedBy(
+      userId: json['userId'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      username: json['username'],
+      dob: json['dob'],
+      publicProfile: json['publicProfile'],
+      joinStatus: json['joinStatus'],
+      data: json['data'] != null ? Data.fromJson(json['data']) : null,
+    );
   }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['userId'] = userId;
@@ -431,6 +454,20 @@ class LastModifiedBy {
       data['data'] = this.data!.toJson();
     }
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'LastModifiedBy{'
+        'userId: $userId, '
+        'firstName: $firstName, '
+        'lastName: $lastName, '
+        'username: $username, '
+        'dob: $dob, '
+        'publicProfile: $publicProfile, '
+        'joinStatus: $joinStatus, '
+        'data: $data'
+        '}';
   }
 }
 

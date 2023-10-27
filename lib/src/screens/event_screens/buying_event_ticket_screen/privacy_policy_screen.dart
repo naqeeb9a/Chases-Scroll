@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
@@ -199,7 +201,7 @@ class EventTicketPrivacyPolicyScreen extends ConsumerWidget {
                               Expanded(
                                 child: customText(
                                   text:
-                                      "Accept. By clicking Continue, you hereby accept the Chasescroll Refund policy",
+                                      "Accept By clicking Continue, you hereby accept the Chasescroll Refund policy",
                                   fontSize: 12,
                                   textColor: AppColors.searchTextGrey,
                                   fontWeight: FontWeight.w500,
@@ -220,27 +222,33 @@ class EventTicketPrivacyPolicyScreen extends ConsumerWidget {
                         ? AppColors.primary.withOpacity(0.2)
                         : AppColors.deepPrimary,
                     onTap: () async {
-                      final result = await _eventRepository.createTicket(
-                        eventID: state.eventId,
-                        numberOfTickets: state.numberOfTickets,
-                        ticketType: state.ticketType,
-                      );
-
-                      if (result['updated'] == true) {
-                        //to get the ordercode &V orderID from resposnse
-                        storage.saveDataToDisk<String>(
-                            AppKeys.orderCode, result['content']['orderCode']);
-                        storage.saveDataToDisk<String>(
-                            AppKeys.orderID, result['content']['orderId']);
-
-                        if (state.price == 0.0 || state.price == 0) {
-                          onTapFreeSuccess();
-                        } else {
-                          onTapPaidSuccess();
-                        }
-                      } else {
+                      if (policyState == false) {
                         ToastResp.toastMsgError(
-                            resp: result['Could not create ticket']);
+                            resp: "Accept Refend Policy agreement to proceed");
+                      } else {
+                        final result = await _eventRepository.createTicket(
+                          eventID: state.eventId,
+                          numberOfTickets: state.numberOfTickets,
+                          ticketType: state.ticketType,
+                        );
+
+                        if (result['updated'] == true) {
+                          //to get the ordercode &V orderID from resposnse
+                          log("order code +++++++++++==> ${result['content']['orderCode']}");
+                          storage.saveDataToDisk<String>(AppKeys.orderCode,
+                              result['content']['orderCode']);
+                          storage.saveDataToDisk<String>(
+                              AppKeys.orderID, result['content']['orderId']);
+
+                          if (state.price == 0.0 || state.price == 0) {
+                            onTapFreeSuccess();
+                          } else {
+                            onTapPaidSuccess();
+                          }
+                        } else {
+                          ToastResp.toastMsgError(
+                              resp: result['Could not create ticket']);
+                        }
                       }
                     },
                   ),

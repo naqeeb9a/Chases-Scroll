@@ -34,13 +34,11 @@ class EventDetailsIconText extends StatelessWidget {
           ),
         ),
         widthSpace(2),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 75.w,
-              //color: Colors.cyan,
-              child: customText(
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              customText(
                 text: title.toString(),
                 fontSize: 13,
                 textColor: AppColors.deepPrimary,
@@ -48,34 +46,34 @@ class EventDetailsIconText extends StatelessWidget {
                 textAlignment: TextAlign.left,
                 lines: 1,
               ),
-            ),
-            Visibility(
-              visible: subTitle == null ? false : true,
-              child: SizedBox(
-                width: 80.w,
-                child: customText(
-                  text: subTitle.toString(),
-                  fontSize: 11,
-                  textColor: AppColors.subtitleColors,
-                  fontWeight: FontWeight.w400,
-                  lines: 1,
+              Visibility(
+                visible: subTitle == null ? false : true,
+                child: SizedBox(
+                  width: 80.w,
+                  child: customText(
+                    text: subTitle.toString(),
+                    fontSize: 11,
+                    textColor: AppColors.subtitleColors,
+                    fontWeight: FontWeight.w400,
+                    lines: 1,
+                  ),
                 ),
               ),
-            ),
-            Visibility(
-              visible: subTitle2 != null ? true : false,
-              child: SizedBox(
-                width: 80.w,
-                child: customText(
-                  text: subTitle2.toString(),
-                  fontSize: 11,
-                  textColor: AppColors.subtitleColors,
-                  fontWeight: FontWeight.w400,
-                  lines: 1,
+              Visibility(
+                visible: subTitle2 != null ? true : false,
+                child: SizedBox(
+                  width: 80.w,
+                  child: customText(
+                    text: subTitle2.toString(),
+                    fontSize: 11,
+                    textColor: AppColors.subtitleColors,
+                    fontWeight: FontWeight.w400,
+                    lines: 1,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         )
       ],
     );

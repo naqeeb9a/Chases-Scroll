@@ -6,7 +6,6 @@ import '../../widgets/custom_fonts.dart';
 
 class SearchPeopleWidget extends StatelessWidget {
   final String? fullName;
-
   final String? username;
   final String? image;
   const SearchPeopleWidget({
@@ -50,7 +49,7 @@ class SearchPeopleWidget extends StatelessWidget {
             ),
             child: Center(
               child: customText(
-                  text: image == null ? username![0].toUpperCase() : "",
+                  text: image == null ? fullName![0] : "",
                   fontSize: 14,
                   textColor: AppColors.deepPrimary,
                   fontWeight: FontWeight.w500),

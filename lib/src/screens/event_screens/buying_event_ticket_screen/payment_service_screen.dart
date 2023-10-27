@@ -69,11 +69,11 @@ class CardCurrencyScreenView extends ConsumerWidget {
                       "",
                       AppImages.stripe,
                       () async {
-                        Map<String, dynamic> result =
-                            await _eventRepository.createWebUrlPayStack();
+                        final result =
+                            await _eventRepository.createWebUrlStripe();
 
-                        if (result.isNotEmpty) {
-                          log(result['checkout'].toString());
+                        if (result['checkout'].isNotEmpty) {
+                          log("result url here======> ${result['checkout']}");
                           onTapCheckoutSuccessPS(result['checkout']);
                         } else {
                           ToastResp.toastMsgError(

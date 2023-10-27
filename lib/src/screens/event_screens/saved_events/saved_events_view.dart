@@ -1,8 +1,14 @@
+import 'dart:developer';
+
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_small_card.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:flutter/material.dart';
@@ -23,16 +29,74 @@ class SavedEventsView extends HookWidget {
   Widget build(BuildContext context) {
     final mySaveEventLoading = useState<bool>(true);
     final mySaveEventModel = useState<List<Content>>([]);
+    final allEvents = useState<List<Content>>([]);
+    final foundEvents = useState<List<Content>>([]);
 
     getSaveMyEvents() {
       _eventRepository.getSavedEvents().then((value) {
         mySaveEventLoading.value = false;
         mySaveEventModel.value = value;
+        foundEvents.value = value;
+        allEvents.value = value;
       });
+    }
+
+    void refreshEvent() {
+      mySaveEventLoading.value = false; // Set loading state back to true
+      getSaveMyEvents(); // Trigger the API call again
+    }
+
+    String userId =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+
+    saveEvent(String eventId) async {
+      final result = await _eventRepository.saveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['message'] == true) {
+        // Trigger a refresh of the events data
+        refreshEvent();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    unSaveEvent(String eventId) async {
+      final result = await _eventRepository.unSaveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['message'] == true) {
+        // Trigger a refresh of the events data
+        refreshEvent();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    void _runEventFilter(String enteredKeyword) {
+      log(enteredKeyword);
+      if (enteredKeyword.isEmpty) {
+        foundEvents.value = allEvents.value;
+      } else {
+        final found = allEvents.value
+            .where((event) => event.eventName!
+                .toLowerCase()
+                .contains(enteredKeyword.toLowerCase()))
+            .toList();
+
+        foundEvents.value = found;
+      }
     }
 
     useEffect(() {
       getSaveMyEvents();
+      refreshEvent();
       return null;
     }, []);
     return Padding(
@@ -48,7 +112,7 @@ class SavedEventsView extends HookWidget {
             ),
             hintText: "Search for users, event or...",
             onChanged: (value) {
-              //_runUsersFilter(value);
+              _runEventFilter(value);
             },
           ),
           Expanded(
@@ -88,11 +152,10 @@ class SavedEventsView extends HookWidget {
                           child: Container(
                             margin: const EdgeInsets.only(top: 15),
                             child: ListView.builder(
-                              itemCount: mySaveEventModel.value.length,
+                              itemCount: foundEvents.value.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
-                                Content mySavedEvent =
-                                    mySaveEventModel.value[index];
+                                Content mySavedEvent = foundEvents.value[index];
                                 //for formatted time
                                 int startTimeInMillis = mySavedEvent.startTime!;
                                 DateTime startTime =
@@ -109,7 +172,12 @@ class SavedEventsView extends HookWidget {
                                   image: mySavedEvent.currentPicUrl,
                                   price: mySavedEvent.minPrice,
                                   eventDetails: mySavedEvent,
-                                  onSave: () {},
+                                  isSaved: mySavedEvent.isSaved,
+                                  onSave: () {
+                                    mySavedEvent.isSaved == false
+                                        ? saveEvent(mySavedEvent.id!)
+                                        : unSaveEvent(mySavedEvent.id!);
+                                  },
                                 );
                               },
                             ),

@@ -1,5 +1,5 @@
 import 'package:chases_scroll/src/models/event_model.dart';
-import 'package:chases_scroll/src/screens/event_screens/widgets/event_small_card_title.dart';
+import 'package:chases_scroll/src/screens/event_screens/widgets/event_small_card_unclicked.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
@@ -104,7 +104,7 @@ class PastEventView extends HookWidget {
                                     DateUtilss.formatDateTime(startTime);
                                 String eventTypeString =
                                     myPastEvent.eventType!.replaceAll("_", " ");
-                                return EventSmallTitleCard(
+                                return EventSmallTitleCardNonNavigate(
                                   eventName: myPastEvent.eventName,
                                   date: formattedDate,
                                   location: myPastEvent.location!.address,

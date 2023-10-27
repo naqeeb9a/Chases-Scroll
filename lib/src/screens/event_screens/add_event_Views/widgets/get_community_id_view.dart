@@ -103,141 +103,145 @@ class GetCommunityFunnelID extends HookConsumerWidget {
               },
             ),
           ),
-          heightSpace(1),
           Expanded(
             child: ListView.builder(
               itemCount: foundCommunity.value.length,
               itemBuilder: (BuildContext context, int index) {
                 CommContent comm = foundCommunity.value[index];
 
-                String n = comm.data!.name.toString();
-                List<String> words = n.split(' ');
-                String initials = words.map((word) => word[0]).join('');
-                return Row(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                left: 0,
-                                child: Container(
-                                  width: 35,
-                                  height: 35,
-                                  decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.only(
+                // String n = comm.data!.name.toString();
+                // List<String> words = n.split(' ');
+                // String initials = words.map((word) => word[0]).join('');
+                return Padding(
+                  padding: const EdgeInsets.only(right: 10, left: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 0,
+                                  child: Container(
+                                    width: 35,
+                                    height: 35,
+                                    decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(20),
+                                          bottomRight: Radius.circular(20),
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(0),
+                                        ),
+                                        color: AppColors.deepPrimary),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 5,
+                                  child: Container(
+                                    width: 35,
+                                    height: 35,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.white, width: 1),
+                                      borderRadius: const BorderRadius.only(
                                         bottomLeft: Radius.circular(20),
                                         bottomRight: Radius.circular(20),
                                         topLeft: Radius.circular(20),
                                         topRight: Radius.circular(0),
                                       ),
-                                      color: AppColors.deepPrimary),
-                                ),
-                              ),
-                              Positioned(
-                                left: 5,
-                                child: Container(
-                                  width: 35,
-                                  height: 35,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 1),
-                                    borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(0),
-                                    ),
-                                    color: AppColors.deepPrimary,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 10,
-                                child: Container(
-                                  width: 35,
-                                  height: 35,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 1),
-                                    borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(0),
-                                    ),
-                                    color: Colors.grey.shade200,
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                          "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm.data!.imgSrc}"),
+                                      color: AppColors.deepPrimary,
                                     ),
                                   ),
-                                  child: Center(
-                                    child: customText(
-                                        text: comm.data!.imgSrc!.isEmpty
-                                            ? initials
-                                            : "",
-                                        fontSize: 10,
-                                        textColor: AppColors.deepPrimary,
-                                        fontWeight: FontWeight.w500),
+                                ),
+                                Positioned(
+                                  left: 10,
+                                  child: Container(
+                                    width: 35,
+                                    height: 35,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.white, width: 1),
+                                      borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(20),
+                                        bottomRight: Radius.circular(20),
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(0),
+                                      ),
+                                      color: Colors.grey.shade200,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(
+                                            "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm.data!.imgSrc}"),
+                                      ),
+                                    ),
+                                    // child: Center(
+                                    //   child: customText(
+                                    //       text: comm.data!.imgSrc!.isEmpty
+                                    //           ? initials
+                                    //           : "",
+                                    //       fontSize: 10,
+                                    //       textColor: AppColors.deepPrimary,
+                                    //       fontWeight: FontWeight.w500),
+                                    // ),
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                          widthSpace(1),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              customText(
+                                  text: comm.data!.name.toString(),
+                                  fontSize: 14,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.w500),
+                              SizedBox(
+                                height: 38,
+                                width: width / 2.5,
+                                //color: Colors.amber,
+                                child: customText(
+                                    text: comm.data!.description.toString(),
+                                    fontSize: 12,
+                                    textColor: AppColors.searchTextGrey,
+                                    fontWeight: FontWeight.w500),
                               ),
+                              heightSpace(1),
                             ],
                           ),
-                        ),
-                        widthSpace(1),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            customText(
-                                text: comm.data!.name.toString(),
-                                fontSize: 14,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w500),
-                            SizedBox(
-                              height: 38,
-                              width: width / 2.5,
-                              //color: Colors.amber,
-                              child: customText(
-                                  text: comm.data!.description.toString(),
-                                  fontSize: 12,
-                                  textColor: AppColors.searchTextGrey,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            heightSpace(1),
-                          ],
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        eventCommFunnelNotifier.updateCommunityFunnelId(
-                          commDesc: comm.data!.description,
-                          commImage: comm.data!.imgSrc,
-                          commName: comm.data!.name,
-                          id: comm.id,
-                        );
-                        _router.pop();
-                      },
-                      child: Container(
-                        padding: PAD_ALL_15,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: AppColors.primary,
-                        ),
-                        child: customText(
-                            text: "Add",
-                            fontSize: 12,
-                            textColor: AppColors.white),
+                        ],
                       ),
-                    )
-                  ],
+                      GestureDetector(
+                        onTap: () {
+                          eventCommFunnelNotifier.updateCommunityFunnelId(
+                            commDesc: comm.data!.description,
+                            commImage: comm.data!.imgSrc,
+                            commName: comm.data!.name,
+                            id: comm.id,
+                          );
+                          _router.pop();
+                        },
+                        child: Container(
+                          padding: PAD_ALL_10,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: AppColors.primary,
+                          ),
+                          child: customText(
+                              text: "Add",
+                              fontSize: 12,
+                              textColor: AppColors.white),
+                        ),
+                      )
+                    ],
+                  ),
                 );
               },
             ),

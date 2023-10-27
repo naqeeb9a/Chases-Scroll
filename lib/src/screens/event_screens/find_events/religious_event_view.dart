@@ -1,7 +1,13 @@
+import 'dart:developer';
+
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
@@ -27,6 +33,16 @@ class FindReligiousEvents extends HookWidget {
         myReligiouslModel.value = value;
       });
     }
+
+    //for event data changes
+    void refreshEventData() {
+      myReligiousLoading.value = false; // Set loading state back to true
+      getMyEvents(); // Trigger the API call again
+    }
+
+    //value for userID
+    String userId =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
 
     useEffect(() {
       getMyEvents();
@@ -70,11 +86,27 @@ class FindReligiousEvents extends HookWidget {
                     itemBuilder: (BuildContext context, int index) {
                       Content event = myReligiouslModel.value[index];
                       return WideEventCards(
+                        eventDetails: event,
                         image: event.currentPicUrl,
                         location: event.location!.address,
                         name: event.eventName,
                         price: event.minPrice,
                         users: event.memberCount,
+                        isSaved: event.isSaved!,
+                        onSave: () async {
+                          final result = await _eventRepository.saveEvent(
+                            eventID: event.id,
+                            userID: userId,
+                          );
+                          log(userId);
+                          if (result['message'] == true) {
+                            // Trigger a refresh of the events data
+                            refreshEventData();
+                            ToastResp.toastMsgSuccess(resp: result['message']);
+                          } else {
+                            ToastResp.toastMsgError(resp: result['message']);
+                          }
+                        },
                       );
                     },
                   ),

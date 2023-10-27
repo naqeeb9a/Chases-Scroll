@@ -73,9 +73,9 @@ class FindEventsScreenView extends HookWidget {
               ),
             ),
           ),
-          heightSpace(1),
           const RowTextGestureView(
             leftText: "Event Category",
+            rightText: "",
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10.0),

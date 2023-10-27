@@ -13,8 +13,10 @@ import 'package:chases_scroll/src/screens/event_screens/add_event_Views/add_even
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/get_community_id_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/event_webview_screens.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/privacy_policy_screen.dart';
+import 'package:chases_scroll/src/screens/event_screens/event_attendance_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/find_events/trending_event.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
@@ -174,5 +176,17 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         path: AppRoutes.eventCommunityId,
         name: AppRoutes.eventCommunityId,
         builder: (_, __) => GetCommunityFunnelID(),
+      ),
+      GoRoute(
+        path: AppRoutes.eventAttendeesView,
+        name: AppRoutes.eventAttendeesView,
+        builder: (_, __) => EventAttendeesView(
+          eventDetails: __.extra as Content,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.findTrendingEvent,
+        name: AppRoutes.findTrendingEvent,
+        builder: (_, __) => FindTrendingEvents(),
       ),
     ]);
