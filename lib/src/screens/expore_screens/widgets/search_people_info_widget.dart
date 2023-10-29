@@ -1,20 +1,23 @@
+import 'package:chases_scroll/src/models/event_model.dart';
+import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants/spacer.dart';
-import '../../widgets/custom_fonts.dart';
 
-class SearchPeopleWidget extends StatelessWidget {
-  final String? fullName;
-  final String? username;
-  final String? image;
+class SearchPeopleWidget extends StatefulWidget {
+  final ContentUser user;
+
   const SearchPeopleWidget({
     super.key,
-    this.fullName,
-    this.username,
-    this.image,
+    required this.user,
   });
 
+  @override
+  State<SearchPeopleWidget> createState() => _SearchPeopleWidgetState();
+}
+
+class _SearchPeopleWidgetState extends State<SearchPeopleWidget> {
   @override
   Widget build(BuildContext context) {
     //to add initails when there is no image on people profile
@@ -40,19 +43,27 @@ class SearchPeopleWidget extends StatelessWidget {
                 topRight: Radius.circular(0),
               ),
               color: Colors.grey.shade100,
-              border: Border.all(color: AppColors.primary),
+              border: Border.all(color: AppColors.primary, width: 1.5),
               image: DecorationImage(
                 fit: BoxFit.cover,
                 image: NetworkImage(
-                    "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/$image"),
+                    "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.user.data!.imgMain!.value}"),
               ),
             ),
             child: Center(
-              child: customText(
-                  text: image == null ? fullName![0] : "",
-                  fontSize: 14,
-                  textColor: AppColors.deepPrimary,
-                  fontWeight: FontWeight.w500),
+              child: Visibility(
+                visible: widget.user.data!.imgMain!.objectPublic == false
+                    ? true
+                    : false,
+                child: customText(
+                    text: widget.user.firstName!.isEmpty
+                        ? ""
+                        : "${widget.user.firstName![0]}${widget.user.lastName![0]}"
+                            .toUpperCase(),
+                    fontSize: 14,
+                    textColor: AppColors.deepPrimary,
+                    fontWeight: FontWeight.w500),
+              ),
             ),
           ),
           widthSpace(2),
@@ -63,12 +74,12 @@ class SearchPeopleWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 customText(
-                    text: fullName!,
+                    text: "${widget.user.firstName} ${widget.user.lastName}",
                     fontSize: 12,
                     textColor: AppColors.black,
                     fontWeight: FontWeight.w700),
                 customText(
-                    text: username!,
+                    text: widget.user.username!,
                     fontSize: 11,
                     textColor: AppColors.searchTextGrey,
                     fontWeight: FontWeight.w400),

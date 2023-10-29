@@ -529,6 +529,19 @@ class EventRepository {
     return response.message;
   }
 
+  //join community
+  Future<dynamic> leaveCommunity({
+    final String? groupID,
+  }) async {
+    final url = "${Endpoints.leaveCommunity}?groupID=$groupID&userID=$userId";
+    final response = await ApiClient.delete(url, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
+
   //this is  to save an event
   Future<dynamic> saveEvent({
     final String? eventID,

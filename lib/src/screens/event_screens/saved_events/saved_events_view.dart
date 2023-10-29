@@ -117,73 +117,83 @@ class SavedEventsView extends HookWidget {
           ),
           Expanded(
             flex: 4,
-            child: Container(
-              child: Column(
-                children: [
-                  mySaveEventModel.value.isEmpty
-                      ? SizedBox(
-                          height: 50.h,
-                          width: double.infinity,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              CircleAvatar(
-                                radius: 10.h,
-                                backgroundColor:
-                                    AppColors.deepPrimary.withOpacity(0.1),
-                                child: SvgPicture.asset(
-                                  AppImages.calendarAdd,
-                                  color: AppColors.deepPrimary,
-                                  height: 10.h,
+            child: RefreshIndicator(
+              color: AppColors.primary,
+              onRefresh: () async {
+                refreshEvent();
+              },
+              child: Container(
+                child: Column(
+                  children: [
+                    mySaveEventModel.value.isEmpty
+                        ? SizedBox(
+                            height: 50.h,
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 10.h,
+                                  backgroundColor:
+                                      AppColors.deepPrimary.withOpacity(0.1),
+                                  child: SvgPicture.asset(
+                                    AppImages.calendarAdd,
+                                    color: AppColors.deepPrimary,
+                                    height: 10.h,
+                                  ),
                                 ),
+                                heightSpace(2),
+                                customText(
+                                  text:
+                                      "You have no created or attending event",
+                                  fontSize: 12,
+                                  textColor: AppColors.primary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ],
+                            ),
+                          )
+                        : Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 15),
+                              child: ListView.builder(
+                                itemCount: foundEvents.value.length,
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (BuildContext context, int index) {
+                                  Content mySavedEvent =
+                                      foundEvents.value[index];
+                                  //for formatted time
+                                  int startTimeInMillis =
+                                      mySavedEvent.startTime!;
+                                  DateTime startTime = DateTimeUtils
+                                      .convertMillisecondsToDateTime(
+                                          startTimeInMillis);
+                                  String formattedDate =
+                                      DateUtilss.formatDateTime(startTime);
+                                  String eventTypeString = mySavedEvent
+                                      .eventType!
+                                      .replaceAll("_", " ");
+                                  return EventSmallCard(
+                                    eventName: mySavedEvent.eventName,
+                                    date: formattedDate,
+                                    location: mySavedEvent.location!.address,
+                                    image: mySavedEvent.currentPicUrl,
+                                    price: mySavedEvent.minPrice,
+                                    eventDetails: mySavedEvent,
+                                    isSaved: mySavedEvent.isSaved,
+                                    onSave: () {
+                                      mySavedEvent.isSaved == false
+                                          ? saveEvent(mySavedEvent.id!)
+                                          : unSaveEvent(mySavedEvent.id!);
+                                    },
+                                  );
+                                },
                               ),
-                              heightSpace(2),
-                              customText(
-                                text: "You have no created or attending event",
-                                fontSize: 12,
-                                textColor: AppColors.primary,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ],
-                          ),
-                        )
-                      : Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 15),
-                            child: ListView.builder(
-                              itemCount: foundEvents.value.length,
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (BuildContext context, int index) {
-                                Content mySavedEvent = foundEvents.value[index];
-                                //for formatted time
-                                int startTimeInMillis = mySavedEvent.startTime!;
-                                DateTime startTime =
-                                    DateTimeUtils.convertMillisecondsToDateTime(
-                                        startTimeInMillis);
-                                String formattedDate =
-                                    DateUtilss.formatDateTime(startTime);
-                                String eventTypeString = mySavedEvent.eventType!
-                                    .replaceAll("_", " ");
-                                return EventSmallCard(
-                                  eventName: mySavedEvent.eventName,
-                                  date: formattedDate,
-                                  location: mySavedEvent.location!.address,
-                                  image: mySavedEvent.currentPicUrl,
-                                  price: mySavedEvent.minPrice,
-                                  eventDetails: mySavedEvent,
-                                  isSaved: mySavedEvent.isSaved,
-                                  onSave: () {
-                                    mySavedEvent.isSaved == false
-                                        ? saveEvent(mySavedEvent.id!)
-                                        : unSaveEvent(mySavedEvent.id!);
-                                  },
-                                );
-                              },
                             ),
                           ),
-                        ),
-                ],
+                  ],
+                ),
               ),
             ),
           )

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chases_scroll/src/models/attendee_model.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
+import 'package:chases_scroll/src/screens/expore_screens/widgets/search_people_info_widget.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
@@ -177,30 +178,19 @@ class EventAttendeesView extends HookWidget {
                             count: 6,
                           )
                         : Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                            child: SizedBox(
                               width: double.infinity,
                               child: ListView.builder(
                                 itemCount: foundUsers.value.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  User attendee = foundUsers.value[index].user!;
+                                  ContentUser attendee =
+                                      foundUsers.value[index].user!;
 
-                                  log(attendee.toString());
+                                  log("my attendee => ${attendee.toString()}");
 
-                                  return Text(foundUsers
-                                      .value[index].users!.firstName!);
-
-                                  // return SearchPeopleWidget(
-                                  //   fullName:
-                                  //       "${attendee.firstName} ${attendee.lastName}",
-                                  //   username: "${attendee.username}",
-                                  //   image: attendee
-                                  //               .data?.imgMain?.objectPublic ==
-                                  //           false
-                                  //       ? ""
-                                  //       : (attendee.data?.imgMain?.value ?? "")
-                                  //           .toString(),
-                                  // );
+                                  return SearchPeopleWidget(
+                                    user: attendee,
+                                  );
                                 },
                               ),
                             ),

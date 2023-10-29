@@ -1,3 +1,5 @@
+import 'package:chases_scroll/src/models/event_model.dart';
+
 class Country {
   bool? objectPublic;
   dynamic value;
@@ -134,8 +136,7 @@ class EventAttendeesModel {
   LastModifiedBy? createdBy;
   int? lastModifiedDate;
   bool? isDeleted;
-  LastModifiedBy? users;
-  User? user;
+  ContentUser? user;
   String? role;
   bool? active;
   String? rsvp;
@@ -148,7 +149,7 @@ class EventAttendeesModel {
       this.createdBy,
       this.lastModifiedDate,
       this.isDeleted,
-      this.users,
+      this.user,
       this.role,
       this.active,
       this.rsvp,
@@ -163,9 +164,9 @@ class EventAttendeesModel {
     createdBy = json['createdBy'] != null
         ? LastModifiedBy.fromJson(json['createdBy'])
         : null;
+    user = json['user'] != null ? ContentUser.fromJson(json['user']) : null;
     lastModifiedDate = json['lastModifiedDate'];
     isDeleted = json['isDeleted'];
-    users = json['user'] != null ? LastModifiedBy.fromJson(json['user']) : null;
     role = json['role'];
     active = json['active'];
     rsvp = json['rsvp'];
@@ -182,16 +183,22 @@ class EventAttendeesModel {
     if (createdBy != null) {
       data['createdBy'] = createdBy!.toJson();
     }
-    data['lastModifiedDate'] = lastModifiedDate;
-    data['isDeleted'] = isDeleted;
-    if (users != null) {
-      data['user'] = users!.toJson();
+    if (user != null) {
+      data['user'] = user!.toJson();
     }
+    data['lastModifiedDate'] = lastModifiedDate;
     data['role'] = role;
     data['active'] = active;
     data['rsvp'] = rsvp;
     data['guests'] = guests;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'EventAttendeesModel{id: $id, createdDate: $createdDate, lastModifiedBy: $lastModifiedBy, '
+        'createdBy: $createdBy, lastModifiedDate: $lastModifiedDate, isDeleted: $isDeleted, user: $user, '
+        'role: $role, active: $active, rsvp: $rsvp, guests: $guests}';
   }
 }
 

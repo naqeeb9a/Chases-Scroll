@@ -152,6 +152,30 @@ class SearchExploreView extends HookWidget {
     String userId =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
 
+    //join community
+    joinCommunity(CommContent comm) async {
+      final result = await _eventRepository.joinCommunity(groupID: comm.id);
+      log(comm.joinStatus.toString());
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        refreshCommunity();
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    //leave group
+    leaveCommunity(CommContent comm) async {
+      final result = await _eventRepository.leaveCommunity(groupID: comm.id);
+      log(comm.joinStatus.toString());
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        refreshCommunity();
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
     useEffect(() {
       getAllEvents();
       getSuggestedUsers();
@@ -289,14 +313,7 @@ class SearchExploreView extends HookWidget {
                                           ContentUser user =
                                               foundUsers.value[index];
                                           return SearchPeopleWidget(
-                                            fullName:
-                                                "${user.firstName} ${user.lastName}",
-                                            username: "${user.username}",
-                                            image: user.data!.imgMain!
-                                                        .objectPublic ==
-                                                    false
-                                                ? ""
-                                                : user.data!.imgMain!.value,
+                                            user: user,
                                           );
                                         },
                                       ),
@@ -553,17 +570,9 @@ class SearchExploreView extends HookWidget {
                                       GestureDetector(
                                         onTap: () async {
                                           log("comunity ID ==> ${comm.joinStatus}");
-                                          final result = await _eventRepository
-                                              .joinCommunity(groupID: comm.id);
-                                          log(comm.joinStatus.toString());
-                                          if (result['updated'] == true) {
-                                            ToastResp.toastMsgSuccess(
-                                                resp: result['message']);
-                                            refreshCommunity();
-                                          } else {
-                                            ToastResp.toastMsgError(
-                                                resp: result['message']);
-                                          }
+                                          comm.joinStatus == "NOT_CONNECTED"
+                                              ? joinCommunity(comm)
+                                              : leaveCommunity(comm);
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(

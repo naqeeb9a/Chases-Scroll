@@ -92,4 +92,5 @@ class Endpoints {
   //community Endpoint
   static String joinedCommunity = "$port83/group/joined-groups";
   static String joinCommunity = "$port83/group/join-group";
+  static String leaveCommunity = "$port83/group/leave-group";
 }
