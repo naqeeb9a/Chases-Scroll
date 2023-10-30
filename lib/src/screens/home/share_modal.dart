@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chases_scroll/src/models/user_list_model.dart';
 import 'package:chases_scroll/src/repositories/post_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_shape.dart';
@@ -120,8 +122,11 @@ class ShareScreen extends HookWidget {
                             isShared.value
                                 ? GestureDetector(
                                     onTap: () {
-                                      isShared.value = !isShared.value;
-                                      friends.value.add(e.userId!);
+                                      isShared.value = false;
+                                      friends.value.removeWhere(
+                                          (element) => element == e.userId);
+
+                                      log(friends.value.toString());
                                     },
                                     child: Container(
                                       width: 25,
@@ -142,9 +147,9 @@ class ShareScreen extends HookWidget {
                                   )
                                 : GestureDetector(
                                     onTap: () {
-                                      isShared.value = !isShared.value;
-                                      friends.value.removeWhere(
-                                          (element) => element == e.userId);
+                                      isShared.value = true;
+                                      friends.value.add(e.userId!);
+                                      log(friends.value.toString());
                                     },
                                     child: Container(
                                       width: 25,

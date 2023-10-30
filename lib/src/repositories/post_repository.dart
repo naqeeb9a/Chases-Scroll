@@ -39,6 +39,32 @@ class PostRepository {
     return false;
   }
 
+  Future<String> addDocument(
+    File image,
+    String userId,
+  ) async {
+    String endpoint = "${Endpoints.uploadImage}/$userId";
+
+    var formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(
+        image.path,
+        filename: image.path.split('/').last,
+      ),
+    });
+    final response = await ApiClient.postWithoutOverlay(endpoint,
+        useToken: true, body: formData);
+    log(response.status.toString());
+    if (response.status == 200) {
+      log("this request was successfull");
+      String image = response.message["fileName"];
+      log(image);
+      return image;
+    } else {
+      log("something went wrong");
+      return "";
+    }
+  }
+
   Future<String> addImage(
     File image,
     String userId,
@@ -50,8 +76,8 @@ class PostRepository {
           filename: image.path.split('/').last,
           contentType: MediaType.parse(photoType1)),
     });
-    final response =
-        await ApiClient.post(endpoint, useToken: true, body: formData);
+    final response = await ApiClient.postWithoutOverlay(endpoint,
+        useToken: true, body: formData);
     log(response.status.toString());
     if (response.status == 200) {
       log("this request was successfull");
@@ -186,7 +212,8 @@ class PostRepository {
 
   Future<bool> likePost(String postId) async {
     String endpoint = "${Endpoints.likePost}/$postId";
-    final response = await ApiClient.post(endpoint, body: null, useToken: true);
+    final response = await ApiClient.postWithoutOverlay(endpoint,
+        body: null, useToken: true);
 
     if (response.status == 200 || response.status == 201) {
       log("this is the message");

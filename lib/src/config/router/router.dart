@@ -1,4 +1,6 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/models/commdata.dart';
+import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/screens/auth_screens/data.dart';
 import 'package:chases_scroll/src/screens/auth_screens/email_screen.dart';
 import 'package:chases_scroll/src/screens/auth_screens/forgot_password.dart';
@@ -9,6 +11,11 @@ import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
 import 'package:chases_scroll/src/screens/bottom_nav.dart';
+import 'package:chases_scroll/src/screens/community/community_chat.dart';
+import 'package:chases_scroll/src/screens/community/community_info.dart';
+import 'package:chases_scroll/src/screens/community/create_community.dart';
+import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/home/comment/comment.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
@@ -76,7 +83,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.bottomNav,
         name: AppRoutes.bottomNav,
-        builder: (_, __) => const BottomNav(),
+        builder: (_, __) => const BottomNavBar(),
       ),
       GoRoute(
         path: AppRoutes.suggestionFriendMore,
@@ -93,6 +100,35 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         name: AppRoutes.comment,
         builder: (_, __) => Comment(
           commentData: __.extra as Map<dynamic, dynamic>,
+          // path: AppRoutes.addEventView,
+          // name: AppRoutes.addEventView,
+          // builder: (_, __) => const AddEventView(),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.eventView,
+        name: AppRoutes.eventView,
+        builder: (_, __) => const EventMainView(),
+      ),
+      GoRoute(
+        path: AppRoutes.eventDetailMainView,
+        name: AppRoutes.eventDetailMainView,
+        builder: (_, __) => EventDetailsMainView(
+          eventDetails: __.extra as ContentEvent,
+        ),
+      ),
+      GoRoute(
+          path: AppRoutes.communityChat,
+          name: AppRoutes.communityChat,
+          builder: (_, __) => CommunityChat(
+                communityData: __.extra as CommunityData,
+              )),
+      GoRoute(
+          path: AppRoutes.createCommunity,
+          name: AppRoutes.createCommunity,
+          builder: (_, __) => CreateCommunity()),
+      GoRoute(
+          path: AppRoutes.communityInfo,
+          name: AppRoutes.communityInfo,
+          builder: (_, __) => const CommunityInfo()),
     ]);

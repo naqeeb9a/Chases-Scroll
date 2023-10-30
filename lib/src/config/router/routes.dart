@@ -14,4 +14,10 @@ class AppRoutes {
   static const String suggestionFriendMore = "/suggestionFriendMore";
   static const String searchExploreView = "/searchExploreView";
   static const String comment = "/comment";
+  static const String eventView = "/eventView";
+  static const String eventDetailMainView = "/eventDetailMainView";
+  static const String addEventView = "/addEventView";
+  static const String communityChat = "/communityChat";
+  static const String createCommunity = "/createCommunity";
+  static const String communityInfo = "/communityInfo";
 }

@@ -1,3 +1,5 @@
+import 'package:chases_scroll/src/screens/community/community.dart';
+import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/expore_screens/explore_main_view.dart';
 import 'package:chases_scroll/src/screens/home/home.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -57,24 +59,20 @@ containerWithShapeProfile({String? assetName, required String text}) =>
           customText(text: "You", fontSize: 12, textColor: AppColors.white)
         ]));
 
-class BottomNav extends StatefulWidget {
-  const BottomNav({super.key});
+class BottomNavBar extends StatefulWidget {
+  const BottomNavBar({super.key});
 
   @override
-  State<BottomNav> createState() => _BottomNavState();
+  State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavState extends State<BottomNav> {
+class _BottomNavBarState extends State<BottomNavBar> {
   int selectedIndex = 0;
   final List<Widget> _widgets = [
     const HomeScreen(),
     const ExploreMainView(),
-    const Center(
-      child: Text("Option 3"),
-    ),
-    const Center(
-      child: Text("Option 4"),
-    ),
+    const EventMainView(),
+    const Community(),
     const Center(
       child: Text("Option 5"),
     )

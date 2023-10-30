@@ -22,7 +22,7 @@ dependencies:
   cached_network_image: ^3.0.0
   http_parser: ^4.0.2
   intl_phone_field:
-  file_picker: ^5.3.2
+  file_picker: ^6.0.0
   get_it: ^7.2.0
   dropdown_search: ^5.0.6
   flutter_svg:
@@ -36,9 +36,14 @@ dependencies:
   google_fonts:
   intl:
   flutter_page_view_indicator: ^0.0.5
+  dropdown_button2:
+  modal_bottom_sheet: ^3.0.0-pre
+  url_launcher: ^6.1.11
   shimmer: ^3.0.0
   flutter_hooks:
   video_player: ^2.7.2
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +61,7 @@ flutter:
   assets:
     - assets/svgs/
     - assets/pngs/
+    - assets/jpegs/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

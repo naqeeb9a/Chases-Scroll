@@ -36,7 +36,7 @@ class EmailScreen extends StatelessWidget {
                     textColor: AppColors.primary),
                 heightSpace(2),
                 AppTextFormField(
-                  validator: emailValidation,
+                  validator: emptyStringValidation,
                   textEditingController: emailController,
                   label: "Enter your Email",
                   hintText: "Email Address",

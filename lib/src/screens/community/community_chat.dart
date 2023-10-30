@@ -1,0 +1,1382 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chases_scroll/src/models/commdata.dart';
+import 'package:chases_scroll/src/models/post_model.dart';
+import 'package:chases_scroll/src/repositories/community_repo.dart';
+import 'package:chases_scroll/src/repositories/post_repository.dart';
+import 'package:chases_scroll/src/screens/widgets/chasescroll_shape.dart';
+import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
+import 'package:chases_scroll/src/utils/constants/extensions/index_of_map.dart';
+import 'package:chases_scroll/src/utils/constants/images.dart';
+import 'package:chases_scroll/src/utils/constants/spacer.dart';
+import 'package:chases_scroll/src/utils/permissions.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../config/keys.dart';
+import '../../config/locator.dart';
+import '../../config/router/routes.dart';
+import '../../repositories/endpoints.dart';
+import '../../utils/constants/colors.dart';
+
+class CommunityChat extends HookWidget {
+  static final post = TextEditingController();
+  static final CommunityRepo _communityRepo = CommunityRepo();
+  static final textPost = TextEditingController();
+  static final ImagePicker picker = ImagePicker();
+  static final PostRepository _postRepository = PostRepository();
+
+  final CommunityData communityData;
+  const CommunityChat({super.key, required this.communityData});
+
+  @override
+  Widget build(BuildContext context) {
+    final userId =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+    final imageList = useState<List<File>>([]);
+    final imageString = useState<String>('');
+    final postModel = useState<PostModel?>(null);
+    final isLoading = useState<bool>(true);
+    final imageToUpload = useState<List<String>>([]);
+    final locationValue = useState<String>("");
+    final pickFile = useState<File>(File(""));
+
+    final postType = useState<String>('NO_IMAGE_POST');
+    Timer? timer;
+
+    getLocation() async {
+      Map<String, dynamic> location = await getCurrentPosition();
+
+      log("this is the location");
+
+      var text = "==Location${jsonEncode(location)}";
+
+      log(text);
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
+      post.text = text;
+    }
+
+    imageContainer(File imagePath, int index) => Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Image.file(
+                  fit: BoxFit.cover,
+                  imagePath,
+                  width: 76,
+                  height: 53,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 4,
+              left: 70,
+              child: GestureDetector(
+                onTap: () {
+                  imageList.value.removeAt(index);
+                  imageToUpload.value.removeAt(index);
+                  imageList.value = [...imageList.value];
+                },
+                child: Container(
+                  width: 13,
+                  height: 13,
+                  decoration: const BoxDecoration(
+                      color: AppColors.black, shape: BoxShape.circle),
+                  child: const Center(
+                      child:
+                          Icon(Icons.close, color: AppColors.white, size: 10)),
+                ),
+              ),
+            )
+          ],
+        );
+
+    callGroupChat() {
+      _communityRepo.getGroupChat(communityData.groupId).then((value) {
+        postModel.value = value;
+      });
+    }
+
+    void startTimer() {
+      timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        // callGroupChat();
+      });
+    }
+
+    likePost(String id) async {
+      await _postRepository.likePost(id);
+      callGroupChat();
+    }
+
+    getGroupChat() {
+      _communityRepo.getGroupChat(communityData.groupId).then((value) {
+        isLoading.value = false;
+        postModel.value = value;
+      });
+    }
+
+    void uploadFile() async {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null && result.files.isNotEmpty) {
+        pickFile.value = File(result.files.single.path!);
+        String imageName =
+            await _postRepository.addDocument(pickFile.value, userId);
+
+        imageToUpload.value.add(imageName);
+      }
+    }
+
+    void uploadImages(int camera) async {
+      final XFile? image;
+      if (camera == 0) {
+        image = await picker.pickImage(
+            source: ImageSource.camera, imageQuality: 70);
+      } else if (camera == 1) {
+        image = await picker.pickImage(
+            source: ImageSource.gallery, imageQuality: 70);
+      } else {
+        log("it came here");
+        image = await picker.pickVideo(
+          source: ImageSource.gallery,
+        );
+      }
+      if (imageList.value.length < 4) {
+        imageList.value = [...imageList.value, File(image!.path)];
+        String imageName =
+            await _postRepository.addImage(File((image.path)), userId);
+
+        log("###########");
+        log(imageName);
+        imageToUpload.value.add(imageName);
+      }
+    }
+
+    createPost() {
+      if (imageToUpload.value.isNotEmpty) {
+        postType.value = 'WITH_IMAGE';
+      }
+      if (pickFile.value.path.isNotEmpty) {
+        postType.value = 'WITH_FILE';
+      }
+      _communityRepo.createPost(
+          post.text,
+          communityData.groupId!,
+          communityData.groupId!,
+          imageToUpload.value.isEmpty ? '' : imageToUpload.value[0],
+          imageToUpload.value,
+          postType.value);
+
+      post.clear();
+      imageToUpload.value.clear();
+      imageList.value.clear();
+
+      // imageList.value = image;
+      // callGroupChat();
+    }
+
+    useEffect(() {
+      post.clear();
+      getGroupChat();
+      startTimer();
+      return null;
+    }, []);
+
+    uploadDocuments() {
+      showModalBottomSheet(
+        builder: (context) {
+          return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              width: double.infinity,
+              height: 230,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        uploadImages(0);
+                        Navigator.pop(context);
+                      },
+                      child: Row(children: [
+                        SvgPicture.asset(AppImages.camera,
+                            color: AppColors.primary),
+                        widthSpace(2),
+                        customText(
+                            text: "Camera",
+                            fontSize: 16,
+                            textColor: AppColors.black)
+                      ]),
+                    ),
+                    const Divider(color: AppColors.grey),
+                    InkWell(
+                      onTap: () {
+                        uploadImages(1);
+                        Navigator.pop(context);
+                      },
+                      child: Row(children: [
+                        SvgPicture.asset(AppImages.imageIcon,
+                            color: AppColors.primary, width: 20, height: 20),
+                        widthSpace(2),
+                        customText(
+                            text: "Photo",
+                            fontSize: 16,
+                            textColor: AppColors.black)
+                      ]),
+                    ),
+                    const Divider(color: AppColors.grey),
+                    InkWell(
+                      onTap: () {
+                        uploadImages(2);
+                        Navigator.pop(context);
+                      },
+                      child: Row(children: [
+                        SvgPicture.asset(AppImages.imageIcon,
+                            color: AppColors.primary, width: 20, height: 20),
+                        widthSpace(2),
+                        customText(
+                            text: "Video Libary",
+                            fontSize: 16,
+                            textColor: AppColors.black)
+                      ]),
+                    ),
+                    const Divider(color: AppColors.grey),
+                    InkWell(
+                      onTap: () {
+                        uploadFile();
+                        Navigator.pop(context);
+                      },
+                      child: Row(children: [
+                        SvgPicture.asset(AppImages.document,
+                            color: AppColors.primary, width: 20, height: 20),
+                        widthSpace(2),
+                        customText(
+                            text: "Document",
+                            fontSize: 16,
+                            textColor: AppColors.black)
+                      ]),
+                    ),
+                    const Divider(color: AppColors.grey),
+                    InkWell(
+                      onTap: () {
+                        getLocation();
+                      },
+                      child: Row(children: [
+                        SvgPicture.asset(AppImages.location,
+                            color: AppColors.primary, width: 20, height: 20),
+                        widthSpace(3),
+                        customText(
+                            text: "Location",
+                            fontSize: 16,
+                            textColor: AppColors.black)
+                      ]),
+                    ),
+                  ],
+                ),
+              ));
+        },
+        context: context,
+      );
+    }
+
+    List<PopupMenuItem> listOfPopups() {
+      return [
+        PopupMenuItem(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push(AppRoutes.communityInfo);
+                },
+                child: customText(
+                    text: "Community Info",
+                    fontSize: 12,
+                    textColor: AppColors.black)),
+          ),
+        ),
+        PopupMenuItem(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: customText(
+                    text: "Mute Notification",
+                    fontSize: 12,
+                    textColor: AppColors.black)),
+          ),
+        ),
+        PopupMenuItem(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: customText(
+                    text: "Exit community",
+                    fontSize: 12,
+                    textColor: AppColors.red)),
+          ),
+        ),
+        PopupMenuItem(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: customText(
+                    text: "Report Community",
+                    fontSize: 12,
+                    textColor: AppColors.red)),
+          ),
+        ),
+        PopupMenuItem(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: customText(
+                    text: "Cancel", fontSize: 12, textColor: AppColors.red)),
+          ),
+        ),
+      ];
+    }
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100),
+        child: Column(
+          children: [
+            heightSpace(4),
+            Row(children: [
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back_ios),
+              ),
+              Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(5)),
+                child: Center(
+                  child: customText(
+                      text: "${communityData.count}",
+                      fontSize: 10,
+                      textColor: AppColors.white),
+                ),
+              ),
+              widthSpace(5),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  customText(
+                      text: "${communityData.name}",
+                      fontSize: 14,
+                      textColor: AppColors.black,
+                      fontWeight: FontWeight.bold),
+                  customText(
+                      text: "${communityData.description}",
+                      fontSize: 10,
+                      textColor: AppColors.textGrey),
+                ],
+              ),
+              const Spacer(),
+              PopupMenuButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  position: PopupMenuPosition.under,
+                  itemBuilder: ((context) {
+                    return listOfPopups();
+                  }),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: SvgPicture.asset(AppImages.infoCircle),
+                  )),
+            ]),
+          ],
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xffE5E5E5),
+          image: DecorationImage(
+            image: AssetImage(
+              AppImages.chatBackground,
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: isLoading.value
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                        child: Column(
+                      children: [
+                        heightSpace(2),
+                        ...postModel.value!.content!
+                            .mapIndexed((element, index) {
+                          log(userId);
+                          Placemark? address;
+                          if (element.text?.contains("==Location") ?? false) {
+                            var text =
+                                element.text?.replaceAll("==Location", "");
+                            var data = jsonDecode(text!);
+                            address = Placemark.fromMap(data);
+                          }
+                          final likedCount = useState<int>(element.likeCount!);
+
+                          final hasLiked = useState<bool>(
+                              element.likeStatus == "LIKED" ? true : false);
+
+                          final hasClickedOnComment = useState<bool>(false);
+
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: element.user!.userId ==
+                                          json.decode(userId)
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                                  child: address != null
+                                      ? InkWell(
+                                          onTap: () {
+                                            _communityRepo.launchMapOnAddress(
+                                                "${address!.street!} ${address.subLocality!} ${address.locality!}, ${address.administrativeArea!} ${address.country!}");
+                                          },
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft:
+                                                  const Radius.circular(12),
+                                              bottomRight: element
+                                                          .user!.userId ==
+                                                      userId
+                                                  ? const Radius.circular(0)
+                                                  : const Radius.circular(12),
+                                              topLeft: element.user!.userId ==
+                                                      userId
+                                                  ? const Radius.circular(12)
+                                                  : const Radius.circular(0),
+                                              topRight:
+                                                  const Radius.circular(12),
+                                            ),
+                                            child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(9),
+                                                height: 120,
+                                                width: 270,
+                                                decoration: const BoxDecoration(
+                                                  color: AppColors.primary,
+                                                ),
+                                                child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      customText(
+                                                          text:
+                                                              "${element.user?.username}",
+                                                          fontSize: 8,
+                                                          textColor:
+                                                              AppColors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                      Container(
+                                                        height: 60,
+                                                        margin: const EdgeInsets
+                                                            .all(5),
+                                                        decoration: const BoxDecoration(
+                                                            image: DecorationImage(
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                image: AssetImage(
+                                                                    AppImages
+                                                                        .mapPic))),
+                                                      ),
+                                                      customText(
+                                                          text:
+                                                              "${element.text}",
+                                                          fontSize: 10,
+                                                          textColor:
+                                                              AppColors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ])),
+                                          ),
+                                        )
+                                      : SizedBox(
+                                          width: 320,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  ChaseScrollContainer(
+                                                    name:
+                                                        "${element.user?.firstName} ${element.user?.lastName}",
+                                                    imageUrl:
+                                                        '${Endpoints.displayImages}/${element.user?.data?.imgMain?.value}',
+                                                  ),
+                                                  widthSpace(2),
+                                                  Column(
+                                                    children: [
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        width: 250,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                                color: AppColors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          20),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          20),
+                                                                )),
+                                                        child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              customText(
+                                                                  text:
+                                                                      "${element.user?.username}",
+                                                                  fontSize: 8,
+                                                                  textColor:
+                                                                      AppColors
+                                                                          .primary,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                              heightSpace(1),
+                                                              if (element
+                                                                      .type ==
+                                                                  "WITH_IMAGE")
+                                                                SizedBox(
+                                                                  height: 200,
+                                                                  width: double
+                                                                      .infinity,
+                                                                  child: element
+                                                                          .multipleMediaRef!
+                                                                          .isEmpty
+                                                                      ? ClipRRect(
+                                                                          borderRadius:
+                                                                              BorderRadius.only(
+                                                                            bottomLeft:
+                                                                                const Radius.circular(12),
+                                                                            bottomRight: element.user!.userId == userId
+                                                                                ? const Radius.circular(0)
+                                                                                : const Radius.circular(12),
+                                                                            topLeft: element.user!.userId == userId
+                                                                                ? const Radius.circular(12)
+                                                                                : const Radius.circular(0),
+                                                                            topRight:
+                                                                                const Radius.circular(12),
+                                                                          ),
+                                                                          child:
+                                                                              CachedNetworkImage(
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            imageUrl:
+                                                                                "${Endpoints.displayImages}${element.mediaRef}",
+                                                                            errorWidget: (context, url, error) =>
+                                                                                const Icon(Icons.error),
+                                                                          ),
+                                                                        )
+                                                                      : PageView
+                                                                          .builder(
+                                                                          itemCount:
+                                                                              element.multipleMediaRef?.length ?? 0,
+                                                                          onPageChanged:
+                                                                              (int pageIndex) {},
+                                                                          itemBuilder:
+                                                                              (context, index) {
+                                                                            String
+                                                                                images =
+                                                                                element.multipleMediaRef![index];
+
+                                                                            if (element.multipleMediaRef!.isEmpty) {
+                                                                              images = element.mediaRef!;
+                                                                            }
+                                                                            log("*****************************");
+                                                                            log(element.multipleMediaRef!.isEmpty.toString());
+                                                                            return ClipRRect(
+                                                                              borderRadius: BorderRadius.only(
+                                                                                bottomLeft: const Radius.circular(12),
+                                                                                bottomRight: element.user!.userId == userId ? const Radius.circular(0) : const Radius.circular(12),
+                                                                                topLeft: element.user!.userId == userId ? const Radius.circular(12) : const Radius.circular(0),
+                                                                                topRight: const Radius.circular(12),
+                                                                              ),
+                                                                              child: Stack(
+                                                                                children: [
+                                                                                  SizedBox(
+                                                                                    height: 200,
+                                                                                    width: 150,
+                                                                                    child: CachedNetworkImage(
+                                                                                      fit: BoxFit.cover,
+                                                                                      imageUrl: "${Endpoints.displayImages}$images}",
+                                                                                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                                                    ),
+                                                                                  ),
+                                                                                  BackdropFilter(
+                                                                                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                                                                    child: Container(
+                                                                                      color: Colors.transparent,
+                                                                                    ),
+                                                                                  ),
+                                                                                  Center(
+                                                                                      child: InteractiveViewer(
+                                                                                    boundaryMargin: const EdgeInsets.all(20.0),
+                                                                                    minScale: 0.1,
+                                                                                    maxScale: 5.0,
+                                                                                    child: CachedNetworkImage(
+                                                                                      fit: BoxFit.contain,
+                                                                                      imageUrl: "${Endpoints.displayImages}$images}",
+                                                                                      placeholder: (context, url) => const SizedBox(
+                                                                                        height: 20,
+                                                                                        width: 20,
+                                                                                        child: CircularProgressIndicator(color: AppColors.primary),
+                                                                                      ),
+                                                                                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                                                    ),
+                                                                                  )),
+                                                                                ],
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                ),
+                                                              customText(
+                                                                text:
+                                                                    "${element.text}",
+                                                                fontSize: 11,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .black,
+                                                              )
+                                                            ]),
+                                                      ),
+                                                      heightSpace(1),
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 200,
+                                                            height: 50,
+                                                            child:
+                                                                TextFormField(
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                suffixIcon:
+                                                                    Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      top: 17),
+                                                                  child: customText(
+                                                                      text:
+                                                                          "Post",
+                                                                      fontSize:
+                                                                          10,
+                                                                      textColor:
+                                                                          AppColors
+                                                                              .primary),
+                                                                ),
+                                                                prefixIcon:
+                                                                    Container(
+                                                                  margin:
+                                                                      const EdgeInsets
+                                                                          .all(1),
+                                                                  height: 10,
+                                                                  width: 10,
+                                                                  decoration:
+                                                                      const BoxDecoration(
+                                                                          color: AppColors
+                                                                              .grey,
+                                                                          borderRadius:
+                                                                              BorderRadius.only(
+                                                                            bottomLeft:
+                                                                                Radius.circular(20),
+                                                                            bottomRight:
+                                                                                Radius.circular(0),
+                                                                            topLeft:
+                                                                                Radius.circular(20),
+                                                                            topRight:
+                                                                                Radius.circular(20),
+                                                                          )),
+                                                                ),
+                                                                hintText:
+                                                                    "Add your comment...",
+                                                                filled: true,
+                                                                fillColor:
+                                                                    AppColors
+                                                                        .white,
+                                                                focusedBorder:
+                                                                    AppColors
+                                                                        .normalBorder,
+                                                                hintStyle: GoogleFonts.dmSans(
+                                                                    textStyle: const TextStyle(
+                                                                        color: AppColors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            10)),
+                                                                enabledBorder:
+                                                                    const UnderlineInputBorder(
+                                                                        borderSide: BorderSide(
+                                                                            color: AppColors
+                                                                                .textFormColor),
+                                                                        borderRadius:
+                                                                            BorderRadius.only(
+                                                                          bottomLeft:
+                                                                              Radius.circular(20),
+                                                                          bottomRight:
+                                                                              Radius.circular(0),
+                                                                          topLeft:
+                                                                              Radius.circular(20),
+                                                                          topRight:
+                                                                              Radius.circular(20),
+                                                                        )),
+                                                                contentPadding:
+                                                                    const EdgeInsets
+                                                                        .all(10),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          widthSpace(1),
+                                                          InkWell(
+                                                            onTap: () {
+                                                              log(hasLiked.value
+                                                                  .toString());
+
+                                                              if (hasLiked
+                                                                  .value) {
+                                                                likedCount
+                                                                        .value =
+                                                                    likedCount
+                                                                            .value -
+                                                                        1;
+                                                                log(likedCount
+                                                                    .value
+                                                                    .toString());
+                                                                likePost(element
+                                                                    .id!);
+                                                                hasLiked.value =
+                                                                    !hasLiked
+                                                                        .value;
+                                                                return;
+                                                              }
+                                                              if (likedCount
+                                                                      .value <
+                                                                  2) {
+                                                                likedCount
+                                                                        .value =
+                                                                    likedCount
+                                                                            .value +
+                                                                        1;
+                                                              }
+                                                              log(likedCount
+                                                                  .value
+                                                                  .toString());
+                                                              hasLiked.value =
+                                                                  !hasLiked
+                                                                      .value;
+                                                              likePost(
+                                                                  element.id!);
+                                                            },
+                                                            child: Stack(
+                                                              children: [
+                                                                hasLiked.value
+                                                                    ? SvgPicture.asset(
+                                                                        AppImages
+                                                                            .favouriteFilled,
+                                                                        color: AppColors
+                                                                            .red,
+                                                                        width:
+                                                                            25,
+                                                                        height:
+                                                                            25)
+                                                                    : SvgPicture
+                                                                        .asset(
+                                                                        width:
+                                                                            25,
+                                                                        height:
+                                                                            25,
+                                                                        AppImages
+                                                                            .like,
+                                                                      ),
+                                                                Positioned(
+                                                                  right: 0,
+                                                                  child:
+                                                                      Container(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        horizontal:
+                                                                            2),
+                                                                    color: AppColors
+                                                                        .white,
+                                                                    child: Center(
+                                                                        child: customText(
+                                                                            text:
+                                                                                '${likedCount.value}',
+                                                                            fontSize:
+                                                                                8,
+                                                                            textColor:
+                                                                                AppColors.black)),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          widthSpace(1),
+                                                          Stack(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                AppImages
+                                                                    .addComment,
+                                                                width: 25,
+                                                                height: 25,
+                                                              ),
+                                                              Positioned(
+                                                                right: 0,
+                                                                child:
+                                                                    Container(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          2),
+                                                                  color:
+                                                                      AppColors
+                                                                          .white,
+                                                                  child: Center(
+                                                                      child: customText(
+                                                                          text:
+                                                                              '${element.commentCount}',
+                                                                          fontSize:
+                                                                              8,
+                                                                          textColor:
+                                                                              AppColors.black)),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              heightSpace(1),
+                                              const Divider(
+                                                color: AppColors.grey,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                ),
+                                heightSpace(1),
+                                if (element.comments!.content!.isNotEmpty)
+                                  Align(
+                                    alignment: element.user!.userId ==
+                                            json.decode(userId)
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
+                                    child: SizedBox(
+                                      width: 300,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(10),
+                                            width: 300,
+                                            decoration: const BoxDecoration(
+                                                color: AppColors.white,
+                                                borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(20),
+                                                  bottomRight:
+                                                      Radius.circular(0),
+                                                  topLeft: Radius.circular(20),
+                                                  topRight: Radius.circular(20),
+                                                )),
+                                            child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  customText(
+                                                      text:
+                                                          "${element.user?.username}",
+                                                      fontSize: 12,
+                                                      textColor:
+                                                          AppColors.primary,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  heightSpace(1),
+                                                  if (element.type ==
+                                                      "WITH_FILE")
+                                                    Container(
+                                                      width: double.infinity,
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                          color: AppColors.grey,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                    ),
+                                                  if (element.type ==
+                                                      "WITH_IMAGE")
+                                                    SizedBox(
+                                                      height: 200,
+                                                      width: double.infinity,
+                                                      child: PageView.builder(
+                                                        itemCount: element
+                                                                .multipleMediaRef
+                                                                ?.length ??
+                                                            0,
+                                                        onPageChanged:
+                                                            (int pageIndex) {},
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          String images = element
+                                                                  .multipleMediaRef![
+                                                              index];
+                                                          if (images.isEmpty) {
+                                                            images = element
+                                                                .mediaRef!;
+                                                          }
+                                                          return ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .only(
+                                                              bottomLeft:
+                                                                  const Radius
+                                                                      .circular(12),
+                                                              bottomRight: element
+                                                                          .user!
+                                                                          .userId ==
+                                                                      userId
+                                                                  ? const Radius
+                                                                          .circular(
+                                                                      0)
+                                                                  : const Radius
+                                                                      .circular(12),
+                                                              topLeft: element
+                                                                          .user!
+                                                                          .userId ==
+                                                                      userId
+                                                                  ? const Radius
+                                                                          .circular(
+                                                                      12)
+                                                                  : const Radius
+                                                                      .circular(0),
+                                                              topRight: const Radius
+                                                                  .circular(12),
+                                                            ),
+                                                            child: Stack(
+                                                              children: [
+                                                                SizedBox(
+                                                                  height: 200,
+                                                                  width: 150,
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    imageUrl:
+                                                                        "${Endpoints.displayImages}$images}",
+                                                                    errorWidget: (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        const Icon(
+                                                                            Icons.error),
+                                                                  ),
+                                                                ),
+                                                                BackdropFilter(
+                                                                  filter: ImageFilter
+                                                                      .blur(
+                                                                          sigmaX:
+                                                                              5,
+                                                                          sigmaY:
+                                                                              5),
+                                                                  child:
+                                                                      Container(
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                  ),
+                                                                ),
+                                                                Center(
+                                                                    child:
+                                                                        InteractiveViewer(
+                                                                  boundaryMargin:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          20.0),
+                                                                  minScale: 0.1,
+                                                                  maxScale: 5.0,
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    fit: BoxFit
+                                                                        .contain,
+                                                                    imageUrl:
+                                                                        "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${images.toString()}",
+                                                                    placeholder:
+                                                                        (context,
+                                                                                url) =>
+                                                                            const SizedBox(
+                                                                      height:
+                                                                          20,
+                                                                      width: 20,
+                                                                      child: CircularProgressIndicator(
+                                                                          color:
+                                                                              AppColors.primary),
+                                                                    ),
+                                                                    errorWidget: (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        const Icon(
+                                                                            Icons.error),
+                                                                  ),
+                                                                )),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  customText(
+                                                    text: "${element.text}",
+                                                    fontSize: 13,
+                                                    textColor: AppColors.black,
+                                                  )
+                                                ]),
+                                          ),
+                                          heightSpace(1),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 200,
+                                                child: TextFormField(
+                                                  decoration: InputDecoration(
+                                                    prefixIcon: Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      height: 10,
+                                                      width: 10,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              color: AppColors
+                                                                  .grey,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .only(
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                bottomRight:
+                                                                    Radius
+                                                                        .circular(
+                                                                            0),
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        20),
+                                                              )),
+                                                    ),
+                                                    hintText:
+                                                        "Add your comment...",
+                                                    filled: true,
+                                                    fillColor: AppColors.white,
+                                                    focusedBorder:
+                                                        AppColors.normalBorder,
+                                                    hintStyle: GoogleFonts.dmSans(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                                color: AppColors
+                                                                    .black,
+                                                                fontSize: 12)),
+                                                    enabledBorder:
+                                                        const UnderlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: AppColors
+                                                                    .textFormColor),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .only(
+                                                              bottomLeft: Radius
+                                                                  .circular(20),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                          0),
+                                                              topLeft: Radius
+                                                                  .circular(20),
+                                                              topRight: Radius
+                                                                  .circular(20),
+                                                            )),
+                                                    contentPadding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                  ),
+                                                ),
+                                              ),
+                                              widthSpace(1),
+                                              InkWell(
+                                                onTap: () {
+                                                  log(hasLiked.value
+                                                      .toString());
+
+                                                  if (hasLiked.value) {
+                                                    likedCount.value =
+                                                        likedCount.value - 1;
+                                                    log(likedCount.value
+                                                        .toString());
+                                                    likePost(element.id!);
+                                                    hasLiked.value =
+                                                        !hasLiked.value;
+                                                    return;
+                                                  }
+                                                  if (likedCount.value < 2) {
+                                                    likedCount.value =
+                                                        likedCount.value + 1;
+                                                  }
+                                                  log(likedCount.value
+                                                      .toString());
+                                                  hasLiked.value =
+                                                      !hasLiked.value;
+                                                  likePost(element.id!);
+                                                },
+                                                child: Stack(
+                                                  children: [
+                                                    hasLiked.value
+                                                        ? SvgPicture.asset(
+                                                            AppImages
+                                                                .favouriteFilled,
+                                                            color:
+                                                                AppColors.red,
+                                                            width: 25,
+                                                            height: 25)
+                                                        : SvgPicture.asset(
+                                                            width: 25,
+                                                            height: 25,
+                                                            AppImages.like,
+                                                          ),
+                                                    Positioned(
+                                                      right: 0,
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 2),
+                                                        color: AppColors.white,
+                                                        child: Center(
+                                                            child: customText(
+                                                                text:
+                                                                    '${likedCount.value}',
+                                                                fontSize: 8,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .black)),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              widthSpace(1),
+                                              Stack(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    AppImages.addComment,
+                                                    width: 25,
+                                                    height: 25,
+                                                  ),
+                                                  Positioned(
+                                                    right: 0,
+                                                    child: Container(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 2),
+                                                      color: AppColors.white,
+                                                      child: Center(
+                                                          child: customText(
+                                                              text:
+                                                                  '${element.commentCount}',
+                                                              fontSize: 8,
+                                                              textColor:
+                                                                  AppColors
+                                                                      .black)),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          heightSpace(1),
+                                          const Divider(
+                                            color: AppColors.grey,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          );
+                        })
+                      ],
+                    )),
+                  ),
+                  Column(
+                    children: [
+                      if (imageList.value.isNotEmpty)
+                        SizedBox(
+                          height: 73,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: imageList.value
+                                .mapIndexed((e, i) => imageContainer(e, i))
+                                .toList(),
+                          ),
+                        ),
+                      if (pickFile.value.path.isNotEmpty)
+                        Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                              ),
+                              color: Colors.white,
+                            ),
+                            width: double.infinity,
+                            height: 80,
+                            child: Column(children: [
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    customText(
+                                        text: "Selected Document",
+                                        fontSize: 9,
+                                        textColor: AppColors.primary),
+                                    InkWell(
+                                      onTap: () {
+                                        pickFile.value = File("");
+                                      },
+                                      child: Container(
+                                        height: 20,
+                                        width: 20,
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle),
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.close_rounded,
+                                            color: Colors.red,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ]),
+                              heightSpace(1),
+                              customText(
+                                  text: pickFile.value.path,
+                                  fontSize: 10,
+                                  textColor: AppColors.black)
+                            ])),
+                      heightSpace(1),
+                      Row(
+                        children: [
+                          GestureDetector(
+                              onTap: uploadDocuments,
+                              child: SvgPicture.asset(AppImages.addDocument)),
+                          Expanded(
+                              child: Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: 8.0, left: 5.0),
+                            child: TextFormField(
+                              controller: post,
+                              decoration: InputDecoration(
+                                hintText: "Add Post here",
+                                suffixIcon: InkWell(
+                                  onTap: createPost,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: SvgPicture.asset(AppImages.sendIcon),
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: AppColors.white,
+                                focusedBorder: AppColors.normalBorder,
+                                hintStyle: GoogleFonts.dmSans(
+                                    textStyle: const TextStyle(
+                                        color: AppColors.black, fontSize: 12)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: AppColors.textFormColor),
+                                    borderRadius: BorderRadius.circular(10)),
+                                contentPadding: const EdgeInsets.all(10),
+                              ),
+                            ),
+                          ))
+                        ],
+                      ),
+                    ],
+                  )
+                ]),
+              ),
+      ),
+    );
+  }
+}

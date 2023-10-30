@@ -1,6 +1,11 @@
 class AppImages {
   static const String logo = "assets/pngs/logo-main.png";
   static const String onboarding = "assets/pngs/onboarding.png";
+  static const String map = "assets/pngs/map.PNG";
+  static const String chatBackground = "assets/pngs/chat.png";
+
+  //jpegs
+  static const String mapPic = "assets/jpegs/map_pic.jpg";
 
   //svgs
   static const String googleIcon = "assets/svgs/google-icon.svg";
@@ -23,6 +28,24 @@ class AppImages {
   static const String location = "assets/svgs/Location.svg";
   static const String bookmark = "assets/svgs/Bookmark.svg";
   static const String bookmarkFilled = "assets/svgs/Bookmark-filled.svg";
+  static const String addEvents = "assets/svgs/add-square.svg";
+  static const String imageAdd = "assets/svgs/gallery-add.svg";
+  static const String eventFolder = "assets/svgs/folder.svg";
+  static const String navigation = "assets/svgs/navigation.svg";
+  static const String calendarAdd = "assets/svgs/calendar-add.svg";
+  static const String ticket = "assets/svgs/ticket.svg";
   static const String favouriteFilled = "assets/svgs/favorite-filled.svg";
   static const String sentOutline = "assets/svgs/send-outline.svg";
+  static const String closeCircle = "assets/svgs/close-circle.svg";
+  static const String community = "assets/svgs/community.svg";
+  static const String infoCircle = "assets/svgs/info-circle.svg";
+  static const String addPhoto = "assets/svgs/attachment.svg";
+  static const String addDocument = "assets/svgs/add-document.svg";
+  static const String imageIcon = "assets/svgs/image-icon.svg";
+  static const String addComment = "assets/svgs/add-comment.svg";
+  static const String shareArrow = "assets/svgs/share-arrow.svg";
+  static const String camera = "assets/svgs/camera.svg";
+  static const String document = "assets/svgs/document.svg";
+  static const String communityAdd = "assets/svgs/community-add.svg";
+  static const String search = 'assets/svgs/search-normal.svg';
 }

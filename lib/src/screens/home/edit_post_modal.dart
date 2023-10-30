@@ -82,14 +82,15 @@ class EditPostModal extends HookWidget {
       final XFile? image =
           await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
       isLoading.value = true;
-      String imageName = await _postRepository.addImage(
-          File((image!.path)), userId.toString());
+      if (image!.path.isNotEmpty) {
+        String imageName = await _postRepository.addImage(
+            File((image.path)), userId.toString());
 
-      imageLink.value = '${Endpoints.displayImages}/$imageName';
-      isLoading.value = false;
-
-      log("###########");
-      log(imageName);
+        imageLink.value = '${Endpoints.displayImages}/$imageName';
+        isLoading.value = false;
+        log("###########");
+        log(imageName);
+      }
     }
 
     useEffect(() {

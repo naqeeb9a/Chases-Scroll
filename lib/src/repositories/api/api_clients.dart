@@ -97,6 +97,7 @@ class ApiClient {
           options: options,
           queryParameters: queryParameters,
         );
+        log("$response");
         return response;
       },
     );
@@ -129,12 +130,12 @@ class ApiClient {
     return result;
   }
 
-  static Future post(
-    String endpoint, {
-    required dynamic body,
-    bool useToken = true,
-    Function(int, int)? onSendProgress,
-  }) async {
+  static Future post(String endpoint,
+      {required dynamic body,
+      bool useToken = true,
+      Function(int, int)? onSendProgress,
+      Color? backgroundColor,
+      Widget? widget}) async {
     final result = await _makeRequest(
       () async {
         final header = _defaultHeader;
@@ -147,7 +148,8 @@ class ApiClient {
 
         final options = Options(headers: header);
         log("${_dio.options.baseUrl}$endpoint $body");
-        AppHelper.showOverlayLoader();
+        AppHelper.showOverlayLoader(
+            backgroundColor: backgroundColor, widget: widget);
         final response = await _dio.post(endpoint,
             data: body, options: options, onSendProgress: onSendProgress);
         log("$response");
@@ -193,6 +195,36 @@ class ApiClient {
     }
   }
 
+  static Future postWithoutOverlay(String endpoint,
+      {required dynamic body,
+      bool useToken = true,
+      Function(int, int)? onSendProgress,
+      Color? backgroundColor,
+      Widget? widget}) async {
+    final result = await _makeRequest(
+      () async {
+        final header = _defaultHeader;
+
+        if (useToken) {
+          header.addAll(
+            {'Authorization': 'Bearer $_token'},
+          );
+        }
+
+        final options = Options(headers: header);
+        log("${_dio.options.baseUrl}$endpoint $body");
+
+        final response = await _dio.post(endpoint,
+            data: body, options: options, onSendProgress: onSendProgress);
+        log("$response");
+
+        return response;
+      },
+    );
+
+    return result;
+  }
+
   static Future put(
     String endpoint, {
     required dynamic body,
@@ -228,6 +260,13 @@ class ApiClient {
     return json.decode(token);
   }
 
+  static String _getUserId() {
+    String userId =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+    log("this is the userID here");
+    return json.decode(userId);
+  }
+
   static void _handleSocketException(SocketException e) {
     debugPrint('Check Internet');
   }
@@ -236,7 +275,8 @@ class ApiClient {
     try {
       final result = await request();
 
-      return ApiResponse(message: result.data, status: result.statusCode);
+      return ApiResponse(
+          message: result.data ?? result, status: result.statusCode);
     } on DioError catch (e) {
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         // locator<GoRouter>().push(AppRoutes.login);

@@ -85,8 +85,16 @@ class AddVideoModal extends HookWidget {
           heightSpace(2),
           Container(
             width: double.infinity,
-            height: 250,
-            color: Colors.white,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(50),
+                bottomRight: Radius.circular(50),
+                topLeft: Radius.circular(50),
+                topRight: Radius.circular(0),
+              ),
+            ),
+            height: 270,
             child: Chewie(
               controller: chewieController.value!,
             ),

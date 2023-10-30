@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/post_model.dart';
 import 'package:chases_scroll/src/models/user_model.dart';
@@ -13,6 +12,7 @@ import 'package:chases_scroll/src/screens/home/edit_post_modal.dart';
 import 'package:chases_scroll/src/screens/home/share_modal.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_shape.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
+import 'package:chases_scroll/src/screens/widgets/picture_container.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
@@ -28,6 +28,7 @@ import 'package:image_picker/image_picker.dart';
 
 class HomeScreen extends HookWidget {
   static final PostRepository _postRepository = PostRepository();
+
   static final UserRepository _userRepository = UserRepository();
   static final postText = TextEditingController();
   static final ImagePicker picker = ImagePicker();
@@ -338,8 +339,11 @@ class HomeScreen extends HookWidget {
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ChaseScrollContainer(
-                                  name:
-                                      "${userModel.value?.firstName} ${userModel.value?.lastName}"),
+                                name:
+                                    "${userModel.value?.firstName} ${userModel.value?.lastName}",
+                                imageUrl:
+                                    '${Endpoints.displayImages}/${userModel.value?.data?.imgMain?.value}',
+                              ),
                             ),
                             suffixIcon: InkWell(
                               onTap: () async {
@@ -472,8 +476,11 @@ class HomeScreen extends HookWidget {
                                               Row(
                                                 children: [
                                                   ChaseScrollContainer(
-                                                      name:
-                                                          "${e.user?.firstName} ${e.user?.lastName}"),
+                                                    name:
+                                                        "${e.user?.firstName} ${e.user?.lastName}",
+                                                    imageUrl: e.user?.data
+                                                        ?.imgMain?.value,
+                                                  ),
                                                   widthSpace(3),
                                                   Column(
                                                     crossAxisAlignment:
@@ -553,50 +560,17 @@ class HomeScreen extends HookWidget {
                                                   return SizedBox(
                                                     height: 200,
                                                     child: ListView.builder(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
                                                         itemCount: e
                                                             .multipleMediaRef
                                                             ?.length,
                                                         itemBuilder:
                                                             (context, index) {
                                                           log('${Endpoints.displayImages}/${e.multipleMediaRef![index]}');
-                                                          return Container(
-                                                            height: 200,
-                                                            width:
-                                                                double.infinity,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    border: Border.all(
-                                                                        color: AppColors
-                                                                            .textFormColor,
-                                                                        width:
-                                                                            1),
-                                                                    borderRadius:
-                                                                        const BorderRadius
-                                                                            .only(
-                                                                      bottomLeft:
-                                                                          Radius.circular(
-                                                                              20),
-                                                                      bottomRight:
-                                                                          Radius.circular(
-                                                                              20),
-                                                                      topLeft: Radius
-                                                                          .circular(
-                                                                              20),
-                                                                      topRight:
-                                                                          Radius.circular(
-                                                                              0),
-                                                                    )),
-                                                            child: CachedNetworkImage(
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                fadeInCurve: Curves
-                                                                    .bounceInOut,
-                                                                imageUrl:
-                                                                    '${Endpoints.displayImages}/${e.multipleMediaRef![index]}'),
-                                                          );
+                                                          return PictureContainer(
+                                                              image:
+                                                                  '${e.multipleMediaRef![index]}');
                                                         }),
                                                   );
                                                 }
@@ -690,7 +664,9 @@ class HomeScreen extends HookWidget {
                                                         extra: {
                                                           "userModel":
                                                               userModel.value,
-                                                          "postId": e.id
+                                                          "postId": e.id,
+                                                          "imageUrl":
+                                                              '${Endpoints.displayImages}/${userModel.value?.data?.images}'
                                                         }),
                                                     child: Column(
                                                       children: [
