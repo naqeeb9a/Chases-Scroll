@@ -196,7 +196,7 @@ class ApiClient {
     }
   }
 
-  static Future postWithBody(
+  static Future postWithoutBody(
     String endpoint, {
     dynamic body,
     bool useToken = true,

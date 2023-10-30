@@ -187,6 +187,6 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.findTrendingEvent,
         name: AppRoutes.findTrendingEvent,
-        builder: (_, __) => FindTrendingEvents(),
+        builder: (_, __) => const FindTrendingEvents(),
       ),
     ]);

@@ -19,6 +19,12 @@ class EventRepository {
   //USERID
   static String userId =
       locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+  //orderID
+  static String orderID =
+      locator<LocalStorageService>().getDataFromDisk(AppKeys.orderID);
+  //orderID
+  static String orderCode =
+      locator<LocalStorageService>().getDataFromDisk(AppKeys.orderCode);
   //this is to get all events
   List<Content> allEventList = [];
 
@@ -184,7 +190,9 @@ class EventRepository {
   //to create event ticket
   Future<dynamic> createWebUrlPayStack() async {
     final data = {};
-    final response = await ApiClient.post(Endpoints.createWebUrlPaystack,
+    final url =
+        "${Endpoints.createWebUrlPaystack}?orderCode=$orderCode&email=jken04680@gmail.com";
+    final response = await ApiClient.post(url,
         body: data,
         useToken: true,
         backgroundColor: Colors.transparent,
@@ -198,7 +206,8 @@ class EventRepository {
   }
 
   Future<dynamic> createWebUrlStripe() async {
-    final response = await ApiClient.postWithBody(Endpoints.createWebUrlStripe,
+    final url = "${Endpoints.createWebUrlStripe}?orderId=$orderID";
+    final response = await ApiClient.postWithoutBody(url,
         useToken: true,
         backgroundColor: Colors.transparent,
         widget: Container());
@@ -429,7 +438,8 @@ class EventRepository {
   }
 
   Future<List<Content>> getSavedEvents() async {
-    final response = await ApiClient.get(Endpoints.savedEvents, useToken: true);
+    final url = "${Endpoints.savedEvents}/?typeID=$userId&type=EVENT";
+    final response = await ApiClient.get(url, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];

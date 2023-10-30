@@ -1,20 +1,6 @@
-import 'package:chases_scroll/src/config/keys.dart';
-import 'package:chases_scroll/src/config/locator.dart';
-import 'package:chases_scroll/src/services/storage_service.dart';
-
 class Endpoints {
   static const String baseUrl =
       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com";
-
-  //USERID
-  static String userId =
-      locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
-  //orderID
-  static String orderID =
-      locator<LocalStorageService>().getDataFromDisk(AppKeys.orderID);
-  //orderID
-  static String orderCode =
-      locator<LocalStorageService>().getDataFromDisk(AppKeys.orderCode);
 
   static const String port81 = ":8081";
   static const String port82 = ":8082";
@@ -53,8 +39,7 @@ class Endpoints {
   static const String saveEvent = "$port84/events/save-event";
   static const String unSaveEvent = "$port84/events/remove-saved-event";
 
-  static String savedEvents =
-      "$port84/events/get-saved-events?typeID=$userId&type=EVENT";
+  static String savedEvents = "$port84/events/get-saved-events";
 
   static String myEvents = "$port84/events/joined-events";
 
@@ -76,14 +61,8 @@ class Endpoints {
   static String communityEvents =
       "$port84/events/events?eventType=Community_Event";
   static String createEventTicket = "$port84/events/create-ticket";
-  static String createWebUrlPaystack =
-      "$port94/payments/payWithPaystack?orderCode=$orderCode&email=jken04680@gmail.com";
-  static String createWebUrlStripe =
-      "$port94/payments/payWithStripe?orderId=$orderID";
-  static String verifyPaymentPS =
-      "$port94/payments/verifyPaystackTx?orderCode=$orderCode";
-  static String verifyPaymentST =
-      "$port94/payments/stripePaySuccess?orderId=$orderID";
+  static String createWebUrlPaystack = "$port94/payments/payWithPaystack";
+  static String createWebUrlStripe = "$port94/payments/payWithStripe";
 
   static String createEvent = "$port84/events/create-event";
   static String deleteFriend = "$port82/user/remove-friend";
