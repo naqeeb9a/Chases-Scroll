@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/repositories/api/api_clients.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
@@ -12,12 +14,12 @@ final repositoryProvider = Provider<ExploreRepository>(
 );
 
 class ExploreRepository {
-  List<ContentEvent> eventList = [];
+  List<Content> eventList = [];
   //this is for getting suggested users
-  List<Content> suggestedUsers = [];
+  List<ContentUser> suggestedUsers = [];
 
   //this is for all event
-  List<ContentEvent> allEventList = [];
+  List<Content> allEventList = [];
   //this is for community
   List<CommContent> allCommunityList = [];
 
@@ -30,6 +32,24 @@ class ExploreRepository {
         useToken: true,
         backgroundColor: Colors.transparent,
         widget: Container());
+
+    log("response here saying  connect friend... =>>>${response.message}");
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
+
+  Future<dynamic> disconnectWithFriend({String? friendID}) async {
+    String url = "${Endpoints.disconnectFriend}/$friendID";
+
+    final response = await ApiClient.delete(url,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    log("response here saying disconnect friend ... =>>>${response.message}");
 
     if (response.status == 200 || response.status == 201) {
       return response.message;
@@ -54,16 +74,15 @@ class ExploreRepository {
     }
   }
 
-  Future<List<ContentEvent>> getAllEvents() async {
+  Future<List<Content>> getAllEvents() async {
     final response =
         await ApiClient.get(Endpoints.getAllEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      allEventList = allEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      allEventList =
+          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return allEventList;
     } else {
@@ -71,15 +90,16 @@ class ExploreRepository {
     }
   }
 
-  Future<List<Content>> getSuggestedUsers() async {
+  Future<List<ContentUser>> getSuggestedUsers() async {
     final response =
         await ApiClient.get(Endpoints.getSuggestedUsers, useToken: true);
 
     if (response.status == 200 || response.status == 201) {
       final List<dynamic> suggestUsers = response.message['content'];
       //log(suggestUsers.toString());
-      suggestedUsers =
-          suggestUsers.map<Content>((user) => Content.fromJson(user)).toList();
+      suggestedUsers = suggestUsers
+          .map<ContentUser>((user) => ContentUser.fromJson(user))
+          .toList();
 
       return suggestedUsers;
     } else {
@@ -87,16 +107,15 @@ class ExploreRepository {
     }
   }
 
-  Future<List<ContentEvent>> getTopEvents() async {
+  Future<List<Content>> getTopEvents() async {
     final response =
         await ApiClient.get(Endpoints.getTopEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> topEvents = response.message['content'];
       //log(topEvents.toString());
-      eventList = topEvents
-          .map<ContentEvent>((event) => ContentEvent.fromJson(event))
-          .toList();
+      eventList =
+          topEvents.map<Content>((event) => Content.fromJson(event)).toList();
 
       return eventList;
     } else {

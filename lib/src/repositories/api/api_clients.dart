@@ -52,7 +52,10 @@ class ApiClient {
   static String get _token => _getToken();
 
   static Future delete(String endpoint,
-      {bool useToken = true, dynamic queryParameters}) async {
+      {bool useToken = true,
+      Color? backgroundColor,
+      Widget? widget,
+      dynamic queryParameters}) async {
     final result = await _makeRequest(
       () async {
         final header = _defaultHeader;
@@ -64,7 +67,8 @@ class ApiClient {
         }
 
         final options = Options(headers: header);
-        AppHelper.showOverlayLoader();
+        AppHelper.showOverlayLoader(
+            backgroundColor: backgroundColor, widget: widget);
         final response = await _dio.delete(endpoint,
             options: options, queryParameters: queryParameters);
         OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
@@ -215,7 +219,6 @@ class ApiClient {
 
         final options = Options(headers: header);
         log("${_dio.options.baseUrl}$endpoint $body");
-
         final response = await _dio.post(endpoint,
             data: body, options: options, onSendProgress: onSendProgress);
         log("$response");

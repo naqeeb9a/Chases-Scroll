@@ -27,7 +27,7 @@ class _DropDownListStringViewState extends State<DropDownListStringView> {
         //Add isDense true and zero Padding.
         //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
         isDense: true,
-        contentPadding: EdgeInsets.zero,
+        contentPadding: const EdgeInsets.fromLTRB(0, 12, 12, 12),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: Color(0xffE0E0E0), width: 1),
@@ -40,17 +40,7 @@ class _DropDownListStringViewState extends State<DropDownListStringView> {
         widget.typeValue.toString(),
         style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
       ),
-      icon: const Icon(
-        Icons.keyboard_arrow_down_sharp,
-        size: 20,
-        color: Colors.black45,
-      ),
-      iconSize: 30,
-      buttonHeight: 50,
-      buttonPadding: const EdgeInsets.only(left: 0, right: 5),
-      dropdownDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(width: 1.5)),
+
       items: widget.typeList
           .map((item) => DropdownMenuItem<String>(
                 value: item,

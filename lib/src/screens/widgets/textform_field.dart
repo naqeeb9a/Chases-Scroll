@@ -4,8 +4,114 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../utils/constants/colors.dart';
+
+class AppTextFieldHook extends HookConsumerWidget {
+  const AppTextFieldHook(
+      {super.key,
+      required TextEditingController textEditingController,
+      required String? Function(String? string) validator,
+      required String label,
+      required String hintText,
+      required int maxLines});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    TextEditingController? textEditingController;
+    bool hasPrefixConstraint;
+    bool? hasBorder;
+
+    bool isAddress;
+    String? label;
+    String? hintText;
+    Widget? prefixIcon;
+    Widget? suffixIcon;
+    bool isPassword;
+    bool? isNewPassword;
+    String? Function(String?)? validator;
+    List<TextInputFormatter>? inputFormatters;
+    String? error;
+    ValueChanged<String>? onChanged;
+    Function(String)? onSubmitted;
+    TextInputType? keyboardType;
+    int? maxLines;
+    bool? isEnabled;
+    int? maxLength;
+    String? initialValue;
+    bool? showPasswordRequirementContainer;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        heightSpace(1),
+        TextFormField(
+          maxLines: maxLines ?? 1,
+          inputFormatters: inputFormatters,
+          cursorWidth: 0.9,
+          maxLength: maxLength,
+          enabled: isEnabled,
+          onChanged: onChanged,
+          onFieldSubmitted: onSubmitted,
+          keyboardType: keyboardType,
+          controller: textEditingController,
+          // obscureText: isPasswordShow ? false : widget.isPassword,
+          validator: validator,
+          style: const TextStyle(fontSize: 14),
+          initialValue: initialValue,
+          decoration: InputDecoration(
+              prefixIconConstraints: const BoxConstraints(
+                minWidth: 10,
+              ),
+              disabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              errorText: error,
+              border: const OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              contentPadding: maxLines == null
+                  ? const EdgeInsets.only(left: 10)
+                  : const EdgeInsets.all(10),
+              errorStyle: const TextStyle(fontSize: 14),
+              // suffixIcon:  showPasswordIcon(widget.isPassword),
+
+              suffixIcon: (() {
+                // if (widget.isPassword) {
+                //   return showPasswordIcon(widget.isPassword);
+                // }
+
+                if (suffixIcon != null) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: suffixIcon,
+                  );
+                }
+              }()),
+              hintText: hintText,
+              hintStyle: GoogleFonts.dmSans(
+                  textStyle: TextStyle(
+                      color: AppColors.black.withOpacity(.5),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.dp)),
+              prefixIcon: prefixIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: prefixIcon,
+                    )
+                  : null,
+              // suffix: widget.suffixIcon,
+              fillColor: AppColors.white,
+              filled: true,
+              enabledBorder: AppColors.normalBorder,
+              errorBorder: AppColors.errorBorder,
+              focusedBorder: AppColors.normalBorder,
+              focusedErrorBorder: AppColors.normalBorder),
+        ),
+      ],
+    );
+  }
+}
 
 class AppTextFormField extends StatefulWidget {
   final TextEditingController? textEditingController;

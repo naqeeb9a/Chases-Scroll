@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_big_card.dart';
@@ -14,6 +15,7 @@ import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:go_router/go_router.dart';
 
 class FindAllEventCardView extends HookWidget {
   static final EventRepository _eventRepository = EventRepository();
@@ -24,9 +26,9 @@ class FindAllEventCardView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final allEventLoading = useState<bool>(true);
-    final allEventModel = useState<List<ContentEvent>>([]);
+    final allEventModel = useState<List<Content>>([]);
     final topEventLoading = useState<bool>(true);
-    final topEventModel = useState<List<ContentEvent>>([]);
+    final topEventModel = useState<List<Content>>([]);
     final currentPageValue = useValueNotifier(0);
 
     getAllEvents() {
@@ -45,13 +47,46 @@ class FindAllEventCardView extends HookWidget {
 
     //for event data changes
     void refreshEventData() {
-      allEventLoading.value = false; // Set loading state back to true
-      getAllEvents(); // Trigger the API call again
+      allEventLoading.value = false;
+      getAllEvents();
+    }
+
+    void refreshEvent() {
+      topEventLoading.value = false; // Set loading state back to true
+      getTopEvents(); // Trigger the API call again
     }
 
     //value for userID
     String userId =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+
+    saveEvent(String eventId) async {
+      final result = await _eventRepository.saveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['updated'] == true) {
+        refreshEvent();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    unSaveEvent(String eventId) async {
+      final result = await _eventRepository.unSaveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['updated'] == true) {
+        refreshEvent();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
 
     useEffect(() {
       getAllEvents();
@@ -66,60 +101,46 @@ class FindAllEventCardView extends HookWidget {
         children: [
           heightSpace(1),
           Expanded(
-            flex: 5,
+            flex: 6,
             child: Container(
               child: ListView.builder(
                 itemCount: allEventModel.value.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
-                  ContentEvent allEvent = allEventModel.value[index];
+                  Content allEvent = allEventModel.value[index];
                   //for formatted time
-                  int startTimeInMillis = allEvent.startTime;
+                  int? startTimeInMillis = allEvent.startTime;
                   DateTime startTime =
                       DateTimeUtils.convertMillisecondsToDateTime(
-                          startTimeInMillis);
+                          startTimeInMillis!);
                   String formattedDate = DateUtilss.formatDateTime(startTime);
                   return EventBigCard(
                     80.w,
                     eventDetails: allEvent,
                     eventName: allEvent.eventName,
                     date: formattedDate,
-                    location: allEvent.location.address,
+                    location: allEvent.location!.address,
                     image: allEvent.currentPicUrl,
                     price: allEvent.minPrice,
-                    isSaved: allEvent.isSaved!,
-                    onSave: () async {
-                      final result = await _eventRepository.saveEvent(
-                        eventID: allEvent.id,
-                        userID: userId,
-                      );
-                      log(userId);
-                      if (result['message'] == true) {
-                        // Trigger a refresh of the events data
-                        refreshEventData();
-                        ToastResp.toastMsgSuccess(resp: result['message']);
-                      } else {
-                        ToastResp.toastMsgError(resp: result['message']);
-                      }
-                    },
                   );
                 },
               ),
             ),
           ),
-          const RowTextGestureView(
+          RowTextGestureView(
             leftText: "Trending Event 🔥",
+            function: () => context.push(AppRoutes.findTrendingEvent),
           ),
           Expanded(
-            flex: 4,
+            flex: 3,
             child: Container(
               child: ListView.builder(
                 itemCount: topEventModel.value.length,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (BuildContext context, int index) {
-                  ContentEvent topEvent = topEventModel.value[index];
+                  Content topEvent = topEventModel.value[index];
                   //for formatted time
-                  int startTimeInMillis = topEvent.startTime;
+                  int startTimeInMillis = topEvent.startTime!;
                   DateTime startTime =
                       DateTimeUtils.convertMillisecondsToDateTime(
                           startTimeInMillis);
@@ -128,23 +149,15 @@ class FindAllEventCardView extends HookWidget {
                   return EventSmallCard(
                     eventName: topEvent.eventName,
                     date: formattedDate,
-                    location: topEvent.location.address,
+                    location: topEvent.location!.address,
                     image: topEvent.currentPicUrl,
                     price: topEvent.minPrice,
                     isSaved: topEvent.isSaved!,
-                    onSave: () async {
-                      final result = await _eventRepository.saveEvent(
-                        eventID: topEvent.id,
-                        userID: userId,
-                      );
-                      log(userId);
-                      if (result['message'] == true) {
-                        // Trigger a refresh of the events data
-                        refreshEventData();
-                        ToastResp.toastMsgSuccess(resp: result['message']);
-                      } else {
-                        ToastResp.toastMsgError(resp: result['message']);
-                      }
+                    eventDetails: topEvent,
+                    onSave: () {
+                      topEvent.isSaved == false
+                          ? saveEvent(topEvent.id!)
+                          : unSaveEvent(topEvent.id!);
                     },
                   );
                 },

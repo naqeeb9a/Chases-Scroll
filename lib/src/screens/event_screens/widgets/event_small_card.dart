@@ -15,7 +15,7 @@ class EventSmallCard extends StatefulWidget {
   final String? eventName;
 
   final String? image;
-  final ContentEvent? eventDetails;
+  final Content? eventDetails;
   final String? date;
   final String? location;
   final double? price;
@@ -139,7 +139,7 @@ class _EventSmallCardState extends State<EventSmallCard> {
                             Row(
                               children: [
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: widget.onSave,
                                   child: Container(
                                     child: widget.isSaved == true
                                         ? SvgPicture.asset(

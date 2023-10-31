@@ -5,7 +5,6 @@ import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
-import 'package:chases_scroll/src/screens/expore_screens/widgets/search_community_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_event_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_people_info_widget.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
@@ -44,10 +43,10 @@ class SearchExploreView extends HookWidget {
     //------------------------------------------------------------------------//
     //-------------------This is for Events -----------------------------------//
     final allEventLoading = useState<bool>(true);
-    final allEventModel = useState<List<ContentEvent>>([]);
+    final allEventModel = useState<List<Content>>([]);
     //final currentPageValue = useState<double>(0);
-    final allEvents = useState<List<ContentEvent>>([]);
-    final foundEvents = useState<List<ContentEvent>>([]);
+    final allEvents = useState<List<Content>>([]);
+    final foundEvents = useState<List<Content>>([]);
     final currentPageValue = useValueNotifier(0);
 
     getAllEvents() {
@@ -72,7 +71,7 @@ class SearchExploreView extends HookWidget {
         foundEvents.value = allEvents.value;
       } else {
         final found = allEvents.value
-            .where((event) => event.eventName
+            .where((event) => event.eventName!
                 .toLowerCase()
                 .contains(enteredKeyword.toLowerCase()))
             .toList();
@@ -84,9 +83,9 @@ class SearchExploreView extends HookWidget {
     //------------------------------------------------------------------------//
     //-------------------This is for Users -----------------------------------//
     final usersLoading = useState<bool>(true);
-    final usersModel = useState<List<Content>>([]);
-    final allUsers = useState<List<Content>>([]);
-    final foundUsers = useState<List<Content>>([]);
+    final usersModel = useState<List<ContentUser>>([]);
+    final allUsers = useState<List<ContentUser>>([]);
+    final foundUsers = useState<List<ContentUser>>([]);
 
     getSuggestedUsers() {
       _exploreRepository.getSuggestedUsers().then((value) {
@@ -129,6 +128,11 @@ class SearchExploreView extends HookWidget {
       });
     }
 
+    void refreshCommunity() {
+      communityLoading.value = false; // Set loading state back to true
+      getAllCommunities(); // Trigger the API call again
+    }
+
     //for events filtered list
     void _runCommunityFilter(String enteredKeyword) {
       log(enteredKeyword);
@@ -147,6 +151,30 @@ class SearchExploreView extends HookWidget {
 
     String userId =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+
+    //join community
+    joinCommunity(CommContent comm) async {
+      final result = await _eventRepository.joinCommunity(groupID: comm.id);
+      log(comm.joinStatus.toString());
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        refreshCommunity();
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    //leave group
+    leaveCommunity(CommContent comm) async {
+      final result = await _eventRepository.leaveCommunity(groupID: comm.id);
+      log(comm.joinStatus.toString());
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        refreshCommunity();
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
 
     useEffect(() {
       getAllEvents();
@@ -282,13 +310,10 @@ class SearchExploreView extends HookWidget {
                                         itemCount: foundUsers.value.length,
                                         itemBuilder:
                                             (BuildContext context, int index) {
-                                          Content user =
+                                          ContentUser user =
                                               foundUsers.value[index];
                                           return SearchPeopleWidget(
-                                            fullName:
-                                                "${user.firstName} ${user.lastName}",
-                                            username: "${user.username}",
-                                            image: user.data!.imgMain!.value,
+                                            user: user,
                                           );
                                         },
                                       ),
@@ -305,10 +330,10 @@ class SearchExploreView extends HookWidget {
                         child: ListView.builder(
                           itemCount: foundEvents.value.length,
                           itemBuilder: (BuildContext context, int index) {
-                            ContentEvent event = foundEvents.value[index];
+                            Content event = foundEvents.value[index];
 
                             //for formatted time
-                            int startTimeInMillis = event.startTime;
+                            int startTimeInMillis = event.startTime!;
                             DateTime startTime =
                                 DateTimeUtils.convertMillisecondsToDateTime(
                                     startTimeInMillis);
@@ -317,7 +342,7 @@ class SearchExploreView extends HookWidget {
                             return SearchEventWidget(
                               eventName: event.eventName,
                               date: formattedDate,
-                              location: event.location.address,
+                              location: event.location!.address,
                               image: event.currentPicUrl,
                               price: event.minPrice,
                               isSaved: event.isSaved!,
@@ -350,13 +375,235 @@ class SearchExploreView extends HookWidget {
                           itemCount: foundCommunity.value.length,
                           itemBuilder: (BuildContext context, int index) {
                             CommContent comm = foundCommunity.value[index];
-                            return SearchCommunityWidget(
-                              image: comm.data!.imgSrc,
-                              name: comm.data!.name,
-                              desc: comm.data!.description,
-                              isPublic: comm.data!.isPublic,
-                              memberCount: comm.data!.memberCount.toString(),
-                              joinStatus: comm.joinStatus,
+                            log("comunity ID ==> ${comm.joinStatus}");
+                            // String n = comm.data!.name.toString();
+                            // List<String> words = n.split(' ');
+                            // String initials =
+                            //     words.map((word) => word[0]).join('');
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 55,
+                                        width: 55,
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              left: 0,
+                                              child: Container(
+                                                width: 35,
+                                                height: 35,
+                                                decoration: const BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      bottomLeft:
+                                                          Radius.circular(20),
+                                                      bottomRight:
+                                                          Radius.circular(20),
+                                                      topLeft:
+                                                          Radius.circular(20),
+                                                      topRight:
+                                                          Radius.circular(0),
+                                                    ),
+                                                    color:
+                                                        AppColors.deepPrimary),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 5,
+                                              child: Container(
+                                                width: 35,
+                                                height: 35,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.white,
+                                                      width: 1),
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(20),
+                                                    bottomRight:
+                                                        Radius.circular(20),
+                                                    topLeft:
+                                                        Radius.circular(20),
+                                                    topRight:
+                                                        Radius.circular(0),
+                                                  ),
+                                                  color: AppColors.deepPrimary,
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 10,
+                                              child: Container(
+                                                width: 35,
+                                                height: 35,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.white,
+                                                      width: 1),
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(20),
+                                                    bottomRight:
+                                                        Radius.circular(20),
+                                                    topLeft:
+                                                        Radius.circular(20),
+                                                    topRight:
+                                                        Radius.circular(0),
+                                                  ),
+                                                  color: Colors.grey.shade200,
+                                                  image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: NetworkImage(
+                                                        "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm.data!.imgSrc}"),
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: customText(
+                                                      text: comm.data!.imgSrc!
+                                                              .isEmpty
+                                                          ? comm.data!.name ==
+                                                                  null
+                                                              ? ""
+                                                              : "initials"
+                                                          : "",
+                                                      fontSize: 10,
+                                                      textColor:
+                                                          AppColors.deepPrimary,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      widthSpace(1),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            customText(
+                                                text: comm.data!.name == null
+                                                    ? ""
+                                                    : comm.data!.name!,
+                                                fontSize: 14,
+                                                textColor: AppColors.black,
+                                                fontWeight: FontWeight.w500),
+                                            customText(
+                                                text: comm.data!.description
+                                                    .toString(),
+                                                fontSize: 12,
+                                                textColor:
+                                                    AppColors.searchTextGrey,
+                                                fontWeight: FontWeight.w500,
+                                                lines: 3),
+                                            heightSpace(1),
+                                            Row(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    customText(
+                                                        text: comm
+                                                            .data!.memberCount
+                                                            .toString(),
+                                                        fontSize: 10,
+                                                        textColor: AppColors
+                                                            .deepPrimary,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                    widthSpace(1),
+                                                    customText(
+                                                        text: comm.data!
+                                                                    .memberCount ==
+                                                                1
+                                                            ? "Member"
+                                                            : "Members",
+                                                        fontSize: 10,
+                                                        textColor: AppColors
+                                                            .searchTextGrey,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ],
+                                                ),
+                                                widthSpace(10),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xffD0D4EB),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            3),
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            3.0),
+                                                    child: customText(
+                                                        text: comm.data!
+                                                                    .isPublic ==
+                                                                true
+                                                            ? "Public"
+                                                            : "Private",
+                                                        fontSize: 8,
+                                                        textColor:
+                                                            AppColors.red,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      widthSpace(5),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          log("comunity ID ==> ${comm.joinStatus}");
+                                          comm.joinStatus == "NOT_CONNECTED"
+                                              ? joinCommunity(comm)
+                                              : leaveCommunity(comm);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  comm.joinStatus == "CONNECTED"
+                                                      ? AppColors.green
+                                                      : AppColors.primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          padding: const EdgeInsets.all(10),
+                                          child: customText(
+                                              text: comm.joinStatus ==
+                                                      "CONNECTED"
+                                                  ? "Joined"
+                                                  : comm.joinStatus ==
+                                                          "NOT_CONNECTED"
+                                                      ? "Join"
+                                                      : comm.joinStatus ==
+                                                              "FRIEND_REQUEST_SENT"
+                                                          ? "Pending"
+                                                          : "",
+                                              fontSize: 10,
+                                              textColor: AppColors.white,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Divider(),
+                                ],
+                              ),
                             );
                           },
                         ),

@@ -11,17 +11,12 @@ import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../utils/constants/spacer.dart';
 import '../widgets/custom_fonts.dart';
-
-final eventDataProvider = FutureProvider<List<ContentEvent>>((ref) async {
-  return ExploreRepository().getTopEvents();
-});
 
 class ExploreMainView extends HookWidget {
   static final ExploreRepository _exploreRepository = ExploreRepository();
@@ -36,7 +31,7 @@ class ExploreMainView extends HookWidget {
     const double scaleFactor = 0.8;
 
     final eventLoading = useState<bool>(true);
-    final eventModel = useState<List<ContentEvent>>([]);
+    final eventModel = useState<List<Content>>([]);
     final currentPageValue = useState<double>(currentPageValue0);
 
     getEvents() {
@@ -49,7 +44,7 @@ class ExploreMainView extends HookWidget {
     //------------------------------------------------------------------------//
     //------------------------------------------------------------------------//
     final usersLoading = useState<bool>(true);
-    final usersModel = useState<List<Content>>([]);
+    final usersModel = useState<List<ContentUser>>([]);
 
     getSuggestedUsers() {
       _exploreRepository.getSuggestedUsers().then((value) {
@@ -61,6 +56,33 @@ class ExploreMainView extends HookWidget {
     void refreshSuggestedUsers() {
       usersLoading.value = false; // Set loading state back to true
       getSuggestedUsers(); // Trigger the API call again
+    }
+
+    connectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.connectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(result.toString());
+        refreshSuggestedUsers();
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    disconnectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.disconnectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(friendID.toString());
+        log(result.toString());
+        refreshSuggestedUsers();
+      } else {
+        log(friendID.toString());
+        log(result.toString());
+        ToastResp.toastMsgError(resp: result['message']);
+      }
     }
 
     useEffect(() {
@@ -146,12 +168,14 @@ class ExploreMainView extends HookWidget {
                                           },
                                           itemBuilder: (BuildContext context,
                                               int index) {
+                                            Content event =
+                                                eventModel.value[index];
                                             return EventContainerTransformView(
                                               index: index,
                                               currentPageValue:
                                                   currentPageValue.value,
                                               scaleFactor: scaleFactor,
-                                              event: eventModel.value[index],
+                                              event: event,
                                             );
                                           },
                                         ),
@@ -212,7 +236,8 @@ class ExploreMainView extends HookWidget {
                                   itemCount: usersModel.value.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    Content? friend = usersModel.value[index];
+                                    ContentUser? friend =
+                                        usersModel.value[index];
 
                                     return usersLoading.value
                                         ? const Center(
@@ -225,21 +250,13 @@ class ExploreMainView extends HookWidget {
                                         : SuggestionView(
                                             users: usersModel.value[index],
                                             function: () async {
-                                              final result =
-                                                  await _exploreRepository
-                                                      .connectWithFriend(
-                                                          friendID:
-                                                              friend.userId);
-                                              if (result['updated'] == true) {
-                                                // Trigger a refresh of the events data
-                                                refreshSuggestedUsers();
-                                                ToastResp.toastMsgSuccess(
-                                                    resp: result['message']);
-                                                log(result.toString());
-                                                //refreshEventProvider(context.read);
+                                              log(friend.userId!);
+                                              if (friend.joinStatus !=
+                                                  "FRIEND_REQUEST_SENT") {
+                                                connectFriend(friend.userId!);
                                               } else {
-                                                ToastResp.toastMsgError(
-                                                    resp: result['message']);
+                                                disconnectFriend(
+                                                    friend.userId!);
                                               }
                                             },
                                           );
