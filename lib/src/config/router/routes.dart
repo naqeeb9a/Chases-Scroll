@@ -14,6 +14,20 @@ class AppRoutes {
   static const String suggestionFriendMore = "/suggestionFriendMore";
   static const String searchExploreView = "/searchExploreView";
   static const String eventView = "/eventView";
+  static const String allEventView = "/allEventView";
   static const String eventDetailMainView = "/eventDetailMainView";
   static const String addEventView = "/addEventView";
+  static const String eventTicketSummaryScreen = "/eventTicketSummaryScreen";
+  static const String eventTicketPrivacyPolicyScreen =
+      "/eventTicketPrivacyPolicyScreen";
+  static const String threeLoadingDotsScreen = "/threeLoadingDotsScreen";
+  static const String eventSuccessScreen = "/eventSuccessScreen";
+  static const String paymentMethodScreen = "/paymentMethodScreen";
+  static const String refundBoughtDetailScreen = "/refundBoughtDetailScreen";
+  static const String currencyPaymentScreen = "/currencyPaymentScreen";
+  static const String webEventPayStack = "/webEventPayStack";
+  static const String webEventStripe = "/webEventStripe";
+  static const String eventCommunityId = "/eventCommunityId";
+  static const String eventAttendeesView = "/eventAttendeesView";
+  static const String findTrendingEvent = "/findTrendingEvent";
 }

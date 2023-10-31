@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color red = Colors.red;
+  static const Color red = Color(0xffE90303);
   static const Color white = Colors.white;
   static const Color blue = Colors.blue;
   static const Color black = Colors.black;
@@ -17,6 +17,7 @@ class AppColors {
   static const Color green = Colors.green;
   static const Color iconGrey = Color(0xffD0D4EB);
   static const Color subtitleColors = Color(0xff6B6B6B);
+  static const Color backgroundSummaryScreen = Color(0xffF1F2F9);
 
   static OutlineInputBorder errorBorder = const OutlineInputBorder(
       borderSide: BorderSide(

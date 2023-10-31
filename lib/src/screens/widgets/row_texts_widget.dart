@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 
 class RowTextGestureView extends StatelessWidget {
   final String? leftText;
+  final String? rightText;
+  final Function()? function;
 
-  const RowTextGestureView({super.key, this.leftText});
+  const RowTextGestureView(
+      {super.key, this.leftText, this.rightText, this.function});
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +21,14 @@ class RowTextGestureView extends StatelessWidget {
           textColor: AppColors.black,
           fontWeight: FontWeight.w700,
         ),
-        customText(
-          text: "See all",
-          fontSize: 12,
-          textColor: AppColors.deepPrimary,
-          fontWeight: FontWeight.w700,
+        GestureDetector(
+          onTap: function,
+          child: customText(
+            text: rightText ?? "See all",
+            fontSize: 12,
+            textColor: AppColors.deepPrimary,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ]),
     );

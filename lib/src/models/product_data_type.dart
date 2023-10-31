@@ -9,10 +9,10 @@ class ProductTypeDataa {
 
   ProductTypeDataa({
     this.totalNumberOfTickets = 0,
-    this.ticketPrice = 0.0,
-    this.ticketType = "Standard",
-    this.ticketsSold = 0,
-    this.saleID = "",
+    this.ticketPrice = 0,
+    this.ticketType = "Free",
+    this.ticketsSold,
+    this.saleID,
     this.minTicketBuy = 0,
     this.maxTicketBuy = 0,
   });

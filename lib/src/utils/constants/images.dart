@@ -2,6 +2,7 @@ class AppImages {
   static const String logo = "assets/pngs/logo-main.png";
   static const String onboarding = "assets/pngs/onboarding.png";
   static const String map = "assets/pngs/map.PNG";
+  static const String successImage = "assets/pngs/success-jump.png";
 
   //jpegs
   static const String mapPic = "assets/jpegs/map_pic.jpg";
@@ -34,4 +35,12 @@ class AppImages {
   static const String calendarAdd = "assets/svgs/calendar-add.svg";
   static const String ticket = "assets/svgs/ticket.svg";
   static const String favouriteFilled = "assets/svgs/favorite-filled.svg";
+  static const String hiddenBar = "assets/svgs/hidden-bar.svg";
+  static const String card = "assets/svgs/card.svg";
+  static const String wallet = "assets/svgs/wallet-2.svg";
+  static const String paystack = "assets/svgs/paystack.svg";
+  static const String stripe = "assets/svgs/Stripe.svg";
+  static const String addOrganizer = "assets/svgs/profile-add.svg";
+  static const String messageOrganizer = "assets/svgs/message-text.svg";
+  //static const String share = "assets/svgs/message-text.svg";
 }

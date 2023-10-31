@@ -1,5 +1,217 @@
 //suggested users
 class Content {
+  String? id;
+  int? createdDate;
+  LastModifiedBy? lastModifiedBy;
+  LastModifiedBy? createdBy;
+  int? lastModifiedDate;
+  bool? isDeleted;
+  List<String>? picUrls;
+  String? eventName;
+  String? eventDescription;
+  String? eventType;
+  String? locationType;
+  String? currency;
+  String? currentPicUrl;
+  String? eventFunnelGroupID;
+  String? mediaType;
+  String? currentVideoUrl;
+  bool? isPublic;
+  bool? isExclusive;
+  bool? mask;
+  bool? isOrganizer;
+  bool? attendeesVisibility;
+  bool? isJoined;
+  bool? isSaved;
+  bool? isFree;
+  bool? isBought;
+  bool? ticketBought;
+  double? minPrice;
+  double? maxPrice;
+  int? startTime;
+  int? endTime;
+  int? startDate;
+  int? endDate;
+  int? expirationDate;
+  int? memberCount;
+  Location? location;
+  List<ProductTypeData>? productTypeData;
+
+  Content({
+    this.id,
+    this.createdDate,
+    this.lastModifiedBy,
+    this.createdBy,
+    this.lastModifiedDate,
+    this.isDeleted,
+    this.picUrls,
+    this.eventName,
+    this.eventDescription,
+    this.eventType,
+    this.locationType,
+    this.currency,
+    this.currentPicUrl,
+    this.eventFunnelGroupID,
+    this.mediaType,
+    this.currentVideoUrl,
+    this.isPublic,
+    this.isExclusive,
+    this.mask,
+    this.isOrganizer,
+    this.attendeesVisibility,
+    this.isJoined,
+    this.isSaved,
+    this.isFree,
+    this.isBought,
+    this.ticketBought,
+    this.minPrice,
+    this.maxPrice,
+    this.startTime,
+    this.endTime,
+    this.startDate,
+    this.endDate,
+    this.expirationDate,
+    this.memberCount,
+    this.location,
+    this.productTypeData,
+  });
+
+  factory Content.fromJson(Map<String, dynamic> json) {
+    return Content(
+      id: json['id'],
+      createdDate: json['createdDate'],
+      lastModifiedBy: json['lastModifiedBy'] != null
+          ? LastModifiedBy.fromJson(json['lastModifiedBy'])
+          : null,
+      createdBy: json['createdBy'] != null
+          ? LastModifiedBy.fromJson(json['createdBy'])
+          : null,
+      lastModifiedDate: json['lastModifiedDate'],
+      isDeleted: json['isDeleted'],
+      picUrls: json['picUrls'].cast<String>(),
+      eventName: json['eventName'],
+      eventDescription: json['eventDescription'],
+      eventType: json['eventType'],
+      locationType: json['locationType'],
+      currency: json['currency'],
+      currentPicUrl: json['currentPicUrl'],
+      eventFunnelGroupID: json['eventFunnelGroupID'],
+      mediaType: json['mediaType'],
+      currentVideoUrl: json['currentVideoUrl'],
+      isPublic: json['isPublic'],
+      isExclusive: json['isExclusive'],
+      mask: json['mask'],
+      isOrganizer: json['isOrganizer'],
+      attendeesVisibility: json['attendeesVisibility'],
+      isJoined: json['isJoined'],
+      isSaved: json['isSaved'],
+      isFree: json['isFree'],
+      isBought: json['isBought'],
+      ticketBought: json['ticketBought'],
+      minPrice: json['minPrice'],
+      maxPrice: json['maxPrice'],
+      startTime: json['startTime'],
+      endTime: json['endTime'],
+      startDate: json['startDate'],
+      endDate: json['endDate'],
+      expirationDate: json['expirationDate'],
+      memberCount: json['memberCount'],
+      location:
+          json['location'] != null ? Location.fromJson(json['location']) : null,
+      productTypeData: json['productTypeData'] != null
+          ? (json['productTypeData'] as List)
+              .map((v) => ProductTypeData.fromJson(v))
+              .toList()
+          : null,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Content{id: $id, createdDate: $createdDate, lastModifiedBy: $lastModifiedBy, createdBy: $createdBy, lastModifiedDate: $lastModifiedDate, isDeleted: $isDeleted, picUrls: $picUrls, eventName: $eventName, eventDescription: $eventDescription, eventType: $eventType, locationType: $locationType, currency: $currency, currentPicUrl: $currentPicUrl, eventFunnelGroupID: $eventFunnelGroupID, mediaType: $mediaType, currentVideoUrl: $currentVideoUrl, isPublic: $isPublic, isExclusive: $isExclusive, mask: $mask, isOrganizer: $isOrganizer, attendeesVisibility: $attendeesVisibility, isJoined: $isJoined, isSaved: $isSaved, isFree: $isFree, isBought: $isBought, ticketBought: $ticketBought, minPrice: $minPrice, maxPrice: $maxPrice, startTime: $startTime, endTime: $endTime, startDate: $startDate, endDate: $endDate, expirationDate: $expirationDate, memberCount: $memberCount, location: $location, productTypeData: $productTypeData}';
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+///
+///
+///
+class ContentEvent {
+  List<ContentUser>? content;
+  Pageable? pageable;
+  int? totalPages;
+  int? totalElements;
+  bool? last;
+  int? size;
+  int? number;
+  Sort? sort;
+  bool? first;
+  int? numberOfElements;
+  bool? empty;
+
+  ContentEvent(
+      {this.content,
+      this.pageable,
+      this.totalPages,
+      this.totalElements,
+      this.last,
+      this.size,
+      this.number,
+      this.sort,
+      this.first,
+      this.numberOfElements,
+      this.empty});
+
+  factory ContentEvent.fromJson(Map<String, dynamic> json) {
+    return ContentEvent(
+      content: json['content'] != null
+          ? (json['content'] as List)
+              .map((v) => ContentUser.fromJson(v))
+              .toList()
+          : null,
+      pageable:
+          json['pageable'] != null ? Pageable.fromJson(json['pageable']) : null,
+      totalPages: json['totalPages'],
+      totalElements: json['totalElements'],
+      last: json['last'],
+      size: json['size'],
+      number: json['number'],
+      sort: json['sort'] != null ? Sort.fromJson(json['sort']) : null,
+      first: json['first'],
+      numberOfElements: json['numberOfElements'],
+      empty: json['empty'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (content != null) {
+      data['content'] = content!.map((v) => v.toJson()).toList();
+    }
+    if (pageable != null) {
+      data['pageable'] = pageable!.toJson();
+    }
+    data['totalPages'] = totalPages;
+    data['totalElements'] = totalElements;
+    data['last'] = last;
+    data['size'] = size;
+    data['number'] = number;
+    if (sort != null) {
+      data['sort'] = sort!.toJson();
+    }
+    data['first'] = first;
+    data['numberOfElements'] = numberOfElements;
+    data['empty'] = empty;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'ContentEvent{content: $content, pageable: $pageable, totalPages: $totalPages, totalElements: $totalElements, last: $last, size: $size, number: $number, sort: $sort, first: $first, numberOfElements: $numberOfElements, empty: $empty}';
+  }
+}
+
+class ContentUser {
   String? userId;
   String? firstName;
   String? lastName;
@@ -9,7 +221,7 @@ class Content {
   String? joinStatus;
   Data? data;
 
-  Content({
+  ContentUser({
     this.userId,
     this.firstName,
     this.lastName,
@@ -20,7 +232,7 @@ class Content {
     this.joinStatus,
   });
 
-  Content.fromJson(Map<String, dynamic> json) {
+  ContentUser.fromJson(Map<String, dynamic> json) {
     userId = json['userId'] ?? "";
     firstName = json['firstName'] ?? "";
     lastName = json['lastName'] ?? "";
@@ -53,165 +265,15 @@ class Content {
   }
 }
 
-class ContentEvent {
-  String id;
-  dynamic createdDate;
-  EdBy lastModifiedBy;
-  EdBy createdBy;
-  dynamic lastModifiedDate;
-  bool isDeleted;
-  List<String> picUrls;
-  String eventName;
-  String eventDescription;
-  String eventType;
-  String joinSetting;
-  dynamic locationType;
-  String currency;
-  String currentPicUrl;
-  dynamic eventFunnelGroupId;
-  String mediaType;
-  String currentVideoUrl;
-  bool isPublic;
-  bool? isSaved;
-  bool isExclusive;
-  dynamic mask;
-  bool isOrganizer;
-  bool attendeesVisibility;
-  bool isJoined;
-  dynamic minPrice;
-  dynamic maxPrice;
-  dynamic startTime;
-  dynamic endTime;
-  dynamic startDate;
-  dynamic endDate;
-  dynamic expirationDate;
-  int memberCount;
-  Location location;
-  List<ProductTypeDatum> productTypeData;
-
-  ContentEvent({
-    required this.id,
-    required this.createdDate,
-    required this.lastModifiedBy,
-    required this.createdBy,
-    required this.lastModifiedDate,
-    required this.isDeleted,
-    required this.picUrls,
-    required this.eventName,
-    required this.eventDescription,
-    required this.eventType,
-    required this.joinSetting,
-    required this.locationType,
-    required this.currency,
-    required this.currentPicUrl,
-    this.eventFunnelGroupId,
-    required this.mediaType,
-    required this.currentVideoUrl,
-    required this.isPublic,
-    required this.isExclusive,
-    this.mask,
-    required this.isSaved,
-    required this.isOrganizer,
-    required this.attendeesVisibility,
-    required this.isJoined,
-    this.minPrice,
-    this.maxPrice,
-    required this.startTime,
-    required this.endTime,
-    required this.startDate,
-    required this.endDate,
-    this.expirationDate,
-    required this.memberCount,
-    required this.location,
-    required this.productTypeData,
-  });
-
-  factory ContentEvent.fromJson(Map<String, dynamic> json) => ContentEvent(
-        id: json["id"] ?? "",
-        createdDate: json["createdDate"] ?? "",
-        lastModifiedBy: EdBy.fromJson(json["lastModifiedBy"]),
-        createdBy: EdBy.fromJson(json["createdBy"]),
-        lastModifiedDate: json["lastModifiedDate"] ?? "",
-        isDeleted: json["isDeleted"] ?? false,
-        picUrls: List<String>.from(json["picUrls"].map((x) => x)),
-        eventName: json["eventName"] ?? "",
-        eventDescription: json["eventDescription"] ?? "",
-        eventType: json["eventType"] ?? "",
-        joinSetting: json["joinSetting"] ?? "",
-        locationType: json["locationType"] ?? "",
-        currency: json["currency"] ?? "",
-        currentPicUrl: json["currentPicUrl"] ?? "",
-        eventFunnelGroupId: json["eventFunnelGroupID"] ?? "",
-        mediaType: json["mediaType"] ?? "",
-        currentVideoUrl: json["currentVideoUrl"] ?? "",
-        isPublic: json["isPublic"] ?? false,
-        isExclusive: json["isExclusive"] ?? false,
-        mask: json["mask"] ?? "",
-        isSaved: json['isSaved'],
-        isOrganizer: json["isOrganizer"] ?? false,
-        attendeesVisibility: json["attendeesVisibility"] ?? false,
-        isJoined: json["isJoined"] ?? false,
-        minPrice: json["minPrice"] ?? "",
-        maxPrice: json["maxPrice"] ?? "",
-        startTime: json["startTime"] ?? "",
-        endTime: json["endTime"] ?? "",
-        startDate: json["startDate"] ?? "",
-        endDate: json["endDate"] ?? "",
-        expirationDate: json["expirationDate"] ?? "",
-        memberCount: json["memberCount"] ?? 0,
-        location: Location.fromJson(json["location"]),
-        productTypeData: List<ProductTypeDatum>.from(
-            json["productTypeData"].map((x) => ProductTypeDatum.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "createdDate": createdDate,
-        "lastModifiedBy": lastModifiedBy.toJson(),
-        "createdBy": createdBy.toJson(),
-        "lastModifiedDate": lastModifiedDate,
-        "isDeleted": isDeleted,
-        "picUrls": List<dynamic>.from(picUrls.map((x) => x)),
-        "eventName": eventName,
-        "eventDescription": eventDescription,
-        "eventType": eventType,
-        "joinSetting": joinSetting,
-        "locationType": locationType,
-        "currency": currency,
-        "currentPicUrl": currentPicUrl,
-        "eventFunnelGroupID": eventFunnelGroupId,
-        "mediaType": mediaType,
-        "currentVideoUrl": currentVideoUrl,
-        "isPublic": isPublic,
-        "isExclusive": isExclusive,
-        "mask": mask,
-        "isSaved": isSaved,
-        "isOrganizer": isOrganizer,
-        "attendeesVisibility": attendeesVisibility,
-        "isJoined": isJoined,
-        "minPrice": minPrice,
-        "maxPrice": maxPrice,
-        "startTime": startTime,
-        "endTime": endTime,
-        "startDate": startDate,
-        "endDate": endDate,
-        "expirationDate": expirationDate,
-        "memberCount": memberCount,
-        "location": location.toJson(),
-        "productTypeData":
-            List<dynamic>.from(productTypeData.map((x) => x.toJson())),
-      };
-}
-
 class Country {
   bool? objectPublic;
-  dynamic value;
+  String? value;
 
   Country({this.objectPublic, this.value});
 
   Country.fromJson(Map<String, dynamic> json) {
-    objectPublic = json['objectPublic'] ?? false;
-    value = json['value'] ?? "";
+    objectPublic = json['objectPublic'];
+    value = json['value'];
   }
 
   Map<String, dynamic> toJson() {
@@ -223,24 +285,25 @@ class Country {
 }
 
 class Data {
-  Country? country;
-  Country? imgMain;
-  Country? images;
   MobilePhone? mobilePhone;
-  Country? gender;
+  Country? country;
+  MobilePhone? imgMain;
+  Country? images;
+  MobilePhone? gender;
   Country? city;
-  Country? webAddress;
+  MobilePhone? webAddress;
   Country? work;
-  Country? about;
+  MobilePhone? about;
   Country? state;
   Country? userSchool;
   Country? maritalStatus;
+  Country? favorites;
 
   Data(
-      {this.country,
+      {this.mobilePhone,
+      this.country,
       this.imgMain,
       this.images,
-      this.mobilePhone,
       this.gender,
       this.city,
       this.webAddress,
@@ -248,35 +311,45 @@ class Data {
       this.about,
       this.state,
       this.userSchool,
-      this.maritalStatus});
+      this.maritalStatus,
+      this.favorites});
 
-  Data.fromJson(Map<String, dynamic> json) {
-    country =
-        json['country'] != null ? Country.fromJson(json['country']) : null;
-    imgMain =
-        json['imgMain'] != null ? Country.fromJson(json['imgMain']) : null;
-    images = json['images'] != null ? Country.fromJson(json['images']) : null;
-    mobilePhone = json['mobilePhone'] != null
-        ? MobilePhone.fromJson(json['mobilePhone'])
-        : null;
-    gender = json['gender'] != null ? Country.fromJson(json['gender']) : null;
-    city = json['city'] != null ? Country.fromJson(json['city']) : null;
-    webAddress = json['webAddress'] != null
-        ? Country.fromJson(json['webAddress'])
-        : null;
-    work = json['work'] != null ? Country.fromJson(json['work']) : null;
-    about = json['about'] != null ? Country.fromJson(json['about']) : null;
-    state = json['state'] != null ? Country.fromJson(json['state']) : null;
-    userSchool = json['userSchool'] != null
-        ? Country.fromJson(json['userSchool'])
-        : null;
-    maritalStatus = json['maritalStatus'] != null
-        ? Country.fromJson(json['maritalStatus'])
-        : null;
+  factory Data.fromJson(Map<String, dynamic> json) {
+    return Data(
+      mobilePhone: json['mobilePhone'] != null
+          ? MobilePhone.fromJson(json['mobilePhone'])
+          : null,
+      country:
+          json['country'] != null ? Country.fromJson(json['country']) : null,
+      imgMain: json['imgMain'] != null
+          ? MobilePhone.fromJson(json['imgMain'])
+          : null,
+      images: json['images'] != null ? Country.fromJson(json['images']) : null,
+      gender:
+          json['gender'] != null ? MobilePhone.fromJson(json['gender']) : null,
+      city: json['city'] != null ? Country.fromJson(json['city']) : null,
+      webAddress: json['webAddress'] != null
+          ? MobilePhone.fromJson(json['webAddress'])
+          : null,
+      work: json['work'] != null ? Country.fromJson(json['work']) : null,
+      about: json['about'] != null ? MobilePhone.fromJson(json['about']) : null,
+      state: json['state'] != null ? Country.fromJson(json['state']) : null,
+      userSchool: json['userSchool'] != null
+          ? Country.fromJson(json['userSchool'])
+          : null,
+      maritalStatus: json['maritalStatus'] != null
+          ? Country.fromJson(json['maritalStatus'])
+          : null,
+      favorites: json['favorites'] != null
+          ? Country.fromJson(json['favorites'])
+          : null,
+    );
   }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    if (mobilePhone != null) {
+      data['mobilePhone'] = mobilePhone!.toJson();
+    }
     if (country != null) {
       data['country'] = country!.toJson();
     }
@@ -285,9 +358,6 @@ class Data {
     }
     if (images != null) {
       data['images'] = images!.toJson();
-    }
-    if (mobilePhone != null) {
-      data['mobilePhone'] = mobilePhone!.toJson();
     }
     if (gender != null) {
       data['gender'] = gender!.toJson();
@@ -313,115 +383,129 @@ class Data {
     if (maritalStatus != null) {
       data['maritalStatus'] = maritalStatus!.toJson();
     }
+    if (favorites != null) {
+      data['favorites'] = favorites!.toJson();
+    }
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'Data{'
+        'mobilePhone: $mobilePhone, '
+        'country: $country, '
+        'imgMain: $imgMain, '
+        'images: $images, '
+        'gender: $gender, '
+        'city: $city, '
+        'webAddress: $webAddress, '
+        'work: $work, '
+        'about: $about, '
+        'state: $state, '
+        'userSchool: $userSchool, '
+        'maritalStatus: $maritalStatus, '
+        'favorites: $favorites'
+        '}';
   }
 }
 
-class Datum {
-  bool objectPublic;
-  dynamic value;
+class LastModifiedBy {
+  String? userId;
+  String? firstName;
+  String? lastName;
+  String? username;
+  String? dob;
+  bool? publicProfile;
+  String? joinStatus;
+  Data? data;
 
-  Datum({
-    required this.objectPublic,
-    this.value,
-  });
+  LastModifiedBy(
+      {this.userId,
+      this.firstName,
+      this.lastName,
+      this.username,
+      this.dob,
+      this.publicProfile,
+      this.joinStatus,
+      this.data});
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        objectPublic: json["objectPublic"] ?? false,
-        value: json["value"] ?? "",
-      );
+  factory LastModifiedBy.fromJson(Map<String, dynamic> json) {
+    return LastModifiedBy(
+      userId: json['userId'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      username: json['username'],
+      dob: json['dob'],
+      publicProfile: json['publicProfile'],
+      joinStatus: json['joinStatus'],
+      data: json['data'] != null ? Data.fromJson(json['data']) : null,
+    );
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userId'] = userId;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['username'] = username;
+    data['dob'] = dob;
+    data['publicProfile'] = publicProfile;
+    data['joinStatus'] = joinStatus;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
 
-  Map<String, dynamic> toJson() => {
-        "objectPublic": objectPublic,
-        "value": value,
-      };
-}
-
-class EdBy {
-  String userId;
-  String firstName;
-  String lastName;
-  String username;
-  String dob;
-  bool publicProfile;
-  String joinStatus;
-  Map<String, Datum> data;
-
-  EdBy({
-    required this.userId,
-    required this.firstName,
-    required this.lastName,
-    required this.username,
-    required this.dob,
-    required this.publicProfile,
-    required this.joinStatus,
-    required this.data,
-  });
-
-  factory EdBy.fromJson(Map<String, dynamic> json) => EdBy(
-        userId: json["userId"] ?? "",
-        firstName: json["firstName"] ?? "",
-        lastName: json["lastName"] ?? "",
-        username: json["username"] ?? "",
-        dob: json["dob"] ?? "",
-        publicProfile: json["publicProfile"] ?? false,
-        joinStatus: json["joinStatus"] ?? "",
-        data: Map.from(json["data"])
-            .map((k, v) => MapEntry<String, Datum>(k, Datum.fromJson(v))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "userId": userId,
-        "firstName": firstName,
-        "lastName": lastName,
-        "username": username,
-        "dob": dob,
-        "publicProfile": publicProfile,
-        "joinStatus": joinStatus,
-        "data": Map.from(data)
-            .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
-      };
+  @override
+  String toString() {
+    return 'LastModifiedBy{'
+        'userId: $userId, '
+        'firstName: $firstName, '
+        'lastName: $lastName, '
+        'username: $username, '
+        'dob: $dob, '
+        'publicProfile: $publicProfile, '
+        'joinStatus: $joinStatus, '
+        'data: $data'
+        '}';
+  }
 }
 
 class Location {
-  dynamic link;
-  String address;
-  String locationDetails;
-  String? latlng; // Nullable String
-  String? placeIds; // Nullable String
+  String? link;
+  String? address;
+  String? locationDetails;
+  String? latlng;
+  String? placeIds;
+  bool? toBeAnnounced;
 
-  Location({
-    this.link,
-    required this.address,
-    required this.locationDetails,
-    this.latlng, // Nullable String
-    this.placeIds, // Nullable String
-  });
+  Location(
+      {this.link,
+      this.address,
+      this.locationDetails,
+      this.latlng,
+      this.placeIds,
+      this.toBeAnnounced});
 
-  factory Location.fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return Location(
-        address: '',
-        locationDetails: '',
-      );
-    }
-
-    return Location(
-      link: json["link"] ?? "",
-      address: json["address"] ?? '',
-      locationDetails: json["locationDetails"] ?? "",
-      latlng: json["latlng"] ?? "",
-      placeIds: json["placeIds"] ?? "",
-    );
+  Location.fromJson(Map<String, dynamic> json) {
+    link = json['link'];
+    address = json['address'];
+    locationDetails = json['locationDetails'];
+    latlng = json['latlng'];
+    placeIds = json['placeIds'];
+    toBeAnnounced = json['toBeAnnounced'];
   }
 
-  Map<String, dynamic> toJson() => {
-        "link": link,
-        "address": address,
-        "locationDetails": locationDetails,
-        "latlng": latlng,
-        "placeIds": placeIds,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['link'] = link;
+    data['address'] = address;
+    data['locationDetails'] = locationDetails;
+    data['latlng'] = latlng;
+    data['placeIds'] = placeIds;
+    data['toBeAnnounced'] = toBeAnnounced;
+    return data;
+  }
 }
 
 class MobilePhone {
@@ -431,8 +515,8 @@ class MobilePhone {
   MobilePhone({this.objectPublic, this.value});
 
   MobilePhone.fromJson(Map<String, dynamic> json) {
-    objectPublic = json['objectPublic'] ?? false;
-    value = json['value'] ?? "";
+    objectPublic = json['objectPublic'];
+    value = json['value'];
   }
 
   Map<String, dynamic> toJson() {
@@ -443,47 +527,109 @@ class MobilePhone {
   }
 }
 
-class ProductTypeDatum {
+class Pageable {
+  Sort? sort;
+  int? offset;
+  int? pageNumber;
+  int? pageSize;
+  bool? unpaged;
+  bool? paged;
+
+  Pageable(
+      {this.sort,
+      this.offset,
+      this.pageNumber,
+      this.pageSize,
+      this.unpaged,
+      this.paged});
+
+  Pageable.fromJson(Map<String, dynamic> json) {
+    sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
+    offset = json['offset'];
+    pageNumber = json['pageNumber'];
+    pageSize = json['pageSize'];
+    unpaged = json['unpaged'];
+    paged = json['paged'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (sort != null) {
+      data['sort'] = sort!.toJson();
+    }
+    data['offset'] = offset;
+    data['pageNumber'] = pageNumber;
+    data['pageSize'] = pageSize;
+    data['unpaged'] = unpaged;
+    data['paged'] = paged;
+    return data;
+  }
+}
+
+class ProductTypeData {
   dynamic totalNumberOfTickets;
-  dynamic ticketPrice;
-  String ticketType;
-  int ticketsSold;
+  double? ticketPrice;
+  String? ticketType;
+  int? ticketsSold;
   dynamic sale;
-  int minTicketBuy;
-  dynamic maxTicketBuy;
+  int? minTicketBuy;
+  int? maxTicketBuy;
 
-  ProductTypeDatum({
-    this.totalNumberOfTickets,
-    required this.ticketPrice,
-    required this.ticketType,
-    required this.ticketsSold,
-    this.sale,
-    required this.minTicketBuy,
-    this.maxTicketBuy,
-  });
+  ProductTypeData(
+      {this.totalNumberOfTickets,
+      this.ticketPrice,
+      this.ticketType,
+      this.ticketsSold,
+      this.sale,
+      this.minTicketBuy,
+      this.maxTicketBuy});
 
-  factory ProductTypeDatum.fromJson(Map<String, dynamic> json) =>
-      ProductTypeDatum(
-        totalNumberOfTickets: json["totalNumberOfTickets"] ?? "",
-        ticketPrice: json["ticketPrice"] ?? "",
-        ticketType: json["ticketType"] ?? "",
-        ticketsSold: json["ticketsSold"] ?? 0,
-        sale: json["sale"] ?? "",
-        minTicketBuy: json["minTicketBuy"] ?? 0,
-        maxTicketBuy: json["maxTicketBuy"] ?? "",
-      );
+  ProductTypeData.fromJson(Map<String, dynamic> json) {
+    totalNumberOfTickets = json['totalNumberOfTickets'];
+    ticketPrice = json['ticketPrice'];
+    ticketType = json['ticketType'];
+    ticketsSold = json['ticketsSold'];
+    sale = json['sale'];
+    minTicketBuy = json['minTicketBuy'];
+    maxTicketBuy = json['maxTicketBuy'];
+  }
 
-  Map<String, dynamic> toJson() => {
-        "totalNumberOfTickets": totalNumberOfTickets,
-        "ticketPrice": ticketPrice,
-        "ticketType": ticketType,
-        "ticketsSold": ticketsSold,
-        "sale": sale,
-        "minTicketBuy": minTicketBuy,
-        "maxTicketBuy": maxTicketBuy,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['totalNumberOfTickets'] = totalNumberOfTickets;
+    data['ticketPrice'] = ticketPrice;
+    data['ticketType'] = ticketType;
+    data['ticketsSold'] = ticketsSold;
+    data['sale'] = sale;
+    data['minTicketBuy'] = minTicketBuy;
+    data['maxTicketBuy'] = maxTicketBuy;
+    return data;
+  }
+
   @override
   String toString() {
     return '{totalNumberOfTickets: $totalNumberOfTickets,ticketPrice: $ticketPrice, ticketType: $ticketType, ticketsSold: $ticketsSold, sale: $sale, minTicketBuy: $minTicketBuy, maxTicketBuy: $maxTicketBuy,}';
+  }
+}
+
+class Sort {
+  bool? sorted;
+  bool? unsorted;
+  bool? empty;
+
+  Sort({this.sorted, this.unsorted, this.empty});
+
+  Sort.fromJson(Map<String, dynamic> json) {
+    sorted = json['sorted'];
+    unsorted = json['unsorted'];
+    empty = json['empty'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['sorted'] = sorted;
+    data['unsorted'] = unsorted;
+    data['empty'] = empty;
+    return data;
   }
 }

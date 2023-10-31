@@ -51,7 +51,8 @@ class ApiClient {
 
   static String get _token => _getToken();
 
-  static Future delete(String endpoint, {bool useToken = true}) async {
+  static Future delete(String endpoint,
+      {bool useToken = true, Color? backgroundColor, Widget? widget}) async {
     final result = await _makeRequest(
       () async {
         final header = _defaultHeader;
@@ -63,7 +64,8 @@ class ApiClient {
         }
 
         final options = Options(headers: header);
-        AppHelper.showOverlayLoader();
+        AppHelper.showOverlayLoader(
+            backgroundColor: backgroundColor, widget: widget);
         final response = await _dio.delete(endpoint, options: options);
         OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
         return response;
@@ -192,6 +194,40 @@ class ApiClient {
       log(e.response!.statusMessage.toString());
       log(e.response!.data.toString());
     }
+  }
+
+  static Future postWithoutBody(
+    String endpoint, {
+    dynamic body,
+    bool useToken = true,
+    Function(int, int)? onSendProgress,
+    Color? backgroundColor,
+    Widget? widget,
+  }) async {
+    final result = await _makeRequest(
+      () async {
+        final header = _defaultHeader;
+
+        if (useToken) {
+          header.addAll(
+            {'Authorization': 'Bearer $_token'},
+          );
+        }
+
+        final options = Options(headers: header);
+        log("${_dio.options.baseUrl}$endpoint $body");
+        AppHelper.showOverlayLoader(
+            backgroundColor: backgroundColor, widget: widget);
+        final response = await _dio.post(endpoint,
+            data: body, options: options, onSendProgress: onSendProgress);
+        log("$response");
+
+        OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+        return response;
+      },
+    );
+
+    return result;
   }
 
   static Future put(
