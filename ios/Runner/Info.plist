@@ -5,6 +5,10 @@
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>We need access to your phone gallery for upload thoughtout the application</string>
 	<key>CFBundleDevelopmentRegion</key>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>This app needs access to location when open.</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>This app needs access to location when in the background.</string>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Chases Scroll</string>

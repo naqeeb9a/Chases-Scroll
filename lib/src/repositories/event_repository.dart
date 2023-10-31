@@ -206,17 +206,17 @@ class EventRepository {
   }
 
   Future<dynamic> createWebUrlStripe() async {
-    final url = "${Endpoints.createWebUrlStripe}?orderId=$orderID";
-    final response = await ApiClient.postWithoutBody(url,
-        useToken: true,
-        backgroundColor: Colors.transparent,
-        widget: Container());
+    // final url = "${Endpoints.createWebUrlStripe}?orderId=$orderID";
+    // final response = await ApiClient.postWithoutBody(url,
+    //     useToken: true,
+    //     backgroundColor: Colors.transparent,
+    //     widget: Container());
 
-    if (response.status == 200 || response.status == 201) {
-      log("webUrlStripe ======> ${response.message}");
-      return response.message;
-    }
-    return response.message;
+    // if (response.status == 200 || response.status == 201) {
+    //   log("webUrlStripe ======> ${response.message}");
+    //   return response.message;
+    // }
+    // return response.message;
   }
 
   //delete friend

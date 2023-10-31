@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
@@ -37,6 +39,17 @@ class _SplashScreenViewState extends State<SplashScreenView>
     );
   }
 
+  checkForLogin() {
+    final token = storage.getDataFromDisk(AppKeys.token);
+
+    if (token == null) {
+      context.push(AppRoutes.emailScreen);
+      return;
+    }
+    log(token);
+    context.push(AppRoutes.bottomNav);
+  }
+
   checkForOnBoarding() {
     bool firstInstall = storage.getDataFromDisk(AppKeys.firstInstall) ?? true;
 
@@ -44,7 +57,7 @@ class _SplashScreenViewState extends State<SplashScreenView>
       context.push(AppRoutes.onboarding);
       return;
     }
-    // checkForLogin();
+    checkForLogin();
   }
 
   @override
@@ -65,7 +78,7 @@ class _SplashScreenViewState extends State<SplashScreenView>
               .forward()
               .then((value) => _controller.reverse().then((value) => _controller
                   .forward()
-                  .then((value) => context.push(AppRoutes.emailScreen))))),
+                  .then((value) => checkForOnBoarding())))),
         );
   }
 }

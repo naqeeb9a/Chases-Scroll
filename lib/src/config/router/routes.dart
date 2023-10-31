@@ -13,10 +13,15 @@ class AppRoutes {
   static const String bottomNav = "/bottom-nav";
   static const String suggestionFriendMore = "/suggestionFriendMore";
   static const String searchExploreView = "/searchExploreView";
+  static const String comment = "/comment";
   static const String eventView = "/eventView";
   static const String allEventView = "/allEventView";
   static const String eventDetailMainView = "/eventDetailMainView";
   static const String addEventView = "/addEventView";
+  static const String communityChat = "/communityChat";
+  static const String createCommunity = "/createCommunity";
+  static const String communityInfo = "/communityInfo";
+  static const String reportCommunity = "/reportCommunity";
   static const String eventTicketSummaryScreen = "/eventTicketSummaryScreen";
   static const String eventTicketPrivacyPolicyScreen =
       "/eventTicketPrivacyPolicyScreen";

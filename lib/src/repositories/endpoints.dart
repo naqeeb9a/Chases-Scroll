@@ -1,29 +1,49 @@
 class Endpoints {
-  static const String baseUrl =
-      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com";
+  // static const String baseUrl =
+  //     "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com";
+  // https://chaseenv.chasescroll.com/
+
+  static const String baseUrl = "https://chaseenv.chasescroll.com/";
 
   static const String port81 = ":8081";
   static const String port82 = ":8082";
   static const String port88 = ":8088";
   static const String port89 = ":8089";
-  static const String port80 = ":8088";
+  static const String port80 = ":8080";
+
   static const String port83 = ":8083";
   static const String port84 = ":8084";
   static const String port90 = ":8090";
+  static const String displayImages = '${baseUrl}resource-api/download/';
+  static const String login = 'auth/signin';
+  static const String signup = 'auth/signup';
+  static const String verifyEmail = 'chasescroll/verification/verify-token';
   static const String port94 = ":8094";
 
-  static const String login = '$port81/auth/signin';
-  static const String signup = '$port81/auth/signup';
-  static const String verifyEmail =
-      '$port88/chasescroll/verification/verify-token';
-
-  static const String sendEmail = '$port88/chasescroll/verification/send-email';
+  static const String sendEmail = 'chasescroll/verification/send-email';
   static const String changePassword =
-      '$port88/chasescroll/verification/change-password';
-  static const String getPost = '$port89/feed/get-user-and-friends-posts';
-  static const String getUserProfile = '$port82/user/privateprofile';
-  static const String createPost = '$port89/feed/create-post';
-  static const String uploadImage = '$port90/resource-api/upload-image';
+      'chasescroll/verification/change-password';
+  static const String getPost = 'feed/get-user-and-friends-posts';
+  static const String getUserProfile = 'user/privateprofile';
+  static const String createPost = 'feed/create-post';
+  static const String uploadImage = 'resource-api/upload-image';
+  static const String uploadFile = 'resource-api/upload';
+  static const String addComment = 'feed/add-comment';
+  static const String getPostComment = 'feed/get-all-comments';
+  static const String uploadVideo = 'resource-api/upload-video';
+  static const String likePost = 'feed/like-post';
+  static const String suggest = 'user/suggest-connections';
+  static const String sharePost = 'feed/share-post';
+  static const String removePost = 'feed/remove-post';
+  static const String editPost = 'feed/edit-post';
+  static const String createCommunity = 'group/create-group';
+  static const String joinedGroup = 'group/joined-groups';
+  static const String getRequestGroup = 'group/get-requests';
+  static const String findGroup = 'group/find-groups';
+  static const String getGroupPost = 'feed/get-all-group-posts?groupID=';
+  static const String joinCommunity = 'group/join-group';
+  static const String leaveGroup = '/group/leave-group';
+  static const String getGroupMembers = 'group/get-group-members?groupID=';
 
   //-------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//
@@ -70,6 +90,6 @@ class Endpoints {
 
   //community Endpoint
   static String joinedCommunity = "$port83/group/joined-groups";
-  static String joinCommunity = "$port83/group/join-group";
+
   static String leaveCommunity = "$port83/group/leave-group";
 }

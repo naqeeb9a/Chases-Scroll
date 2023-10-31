@@ -52,7 +52,10 @@ class ApiClient {
   static String get _token => _getToken();
 
   static Future delete(String endpoint,
-      {bool useToken = true, Color? backgroundColor, Widget? widget}) async {
+      {bool useToken = true,
+      Color? backgroundColor,
+      Widget? widget,
+      dynamic queryParameters}) async {
     final result = await _makeRequest(
       () async {
         final header = _defaultHeader;
@@ -66,7 +69,8 @@ class ApiClient {
         final options = Options(headers: header);
         AppHelper.showOverlayLoader(
             backgroundColor: backgroundColor, widget: widget);
-        final response = await _dio.delete(endpoint, options: options);
+        final response = await _dio.delete(endpoint,
+            options: options, queryParameters: queryParameters);
         OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
         return response;
       },
@@ -99,6 +103,7 @@ class ApiClient {
           options: options,
           queryParameters: queryParameters,
         );
+        log("$response");
         return response;
       },
     );
@@ -196,14 +201,12 @@ class ApiClient {
     }
   }
 
-  static Future postWithoutBody(
-    String endpoint, {
-    dynamic body,
-    bool useToken = true,
-    Function(int, int)? onSendProgress,
-    Color? backgroundColor,
-    Widget? widget,
-  }) async {
+  static Future postWithoutOverlay(String endpoint,
+      {required dynamic body,
+      bool useToken = true,
+      Function(int, int)? onSendProgress,
+      Color? backgroundColor,
+      Widget? widget}) async {
     final result = await _makeRequest(
       () async {
         final header = _defaultHeader;
@@ -216,13 +219,10 @@ class ApiClient {
 
         final options = Options(headers: header);
         log("${_dio.options.baseUrl}$endpoint $body");
-        AppHelper.showOverlayLoader(
-            backgroundColor: backgroundColor, widget: widget);
         final response = await _dio.post(endpoint,
             data: body, options: options, onSendProgress: onSendProgress);
         log("$response");
 
-        OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
         return response;
       },
     );
@@ -280,7 +280,8 @@ class ApiClient {
     try {
       final result = await request();
 
-      return ApiResponse(message: result.data, status: result.statusCode);
+      return ApiResponse(
+          message: result.data ?? result, status: result.statusCode);
     } on DioError catch (e) {
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         // locator<GoRouter>().push(AppRoutes.login);

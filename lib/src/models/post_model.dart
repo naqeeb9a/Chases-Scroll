@@ -16,75 +16,6 @@ class Chronology {
   }
 }
 
-class Comments {
-  List<String>? content;
-  Pageable? pageable;
-  int? totalPages;
-  int? totalElements;
-  bool? last;
-  int? size;
-  int? number;
-  Sort? sort;
-  bool? first;
-  int? numberOfElements;
-  bool? empty;
-
-  Comments(
-      {this.content,
-      this.pageable,
-      this.totalPages,
-      this.totalElements,
-      this.last,
-      this.size,
-      this.number,
-      this.sort,
-      this.first,
-      this.numberOfElements,
-      this.empty});
-
-  Comments.fromJson(Map<String, dynamic> json) {
-    if (json['content'] != null) {
-      content = <String>[];
-      json['content'].forEach((v) {
-        content!.add(v);
-      });
-    }
-    pageable =
-        json['pageable'] != null ? Pageable.fromJson(json['pageable']) : null;
-    totalPages = json['totalPages'];
-    totalElements = json['totalElements'];
-    last = json['last'];
-    size = json['size'];
-    number = json['number'];
-    sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
-    first = json['first'];
-    numberOfElements = json['numberOfElements'];
-    empty = json['empty'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (content != null) {
-      data['content'] = content!.map((v) => v).toList();
-    }
-    if (pageable != null) {
-      data['pageable'] = pageable!.toJson();
-    }
-    data['totalPages'] = totalPages;
-    data['totalElements'] = totalElements;
-    data['last'] = last;
-    data['size'] = size;
-    data['number'] = number;
-    if (sort != null) {
-      data['sort'] = sort!.toJson();
-    }
-    data['first'] = first;
-    data['numberOfElements'] = numberOfElements;
-    data['empty'] = empty;
-    return data;
-  }
-}
-
 class Content {
   String? id;
   Time? time;
@@ -94,7 +25,7 @@ class Content {
   User? user;
   bool? isGroupFeed;
   String? mediaRef;
-  List<String>? multipleMediaRef;
+  List<dynamic>? multipleMediaRef;
   int? viewCount;
   int? commentCount;
   int? videoLength;
@@ -107,7 +38,7 @@ class Content {
   String? data;
   String? viewStatus;
   String? likeStatus;
-  Comments? comments;
+  PostModel? comments;
   int? timeInMilliseconds;
 
   Content(
@@ -144,12 +75,7 @@ class Content {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     isGroupFeed = json['isGroupFeed'];
     mediaRef = json['mediaRef'];
-    if (json['multipleMediaRef'] != null) {
-      multipleMediaRef = <String>[];
-      json['multipleMediaRef'].forEach((v) {
-        multipleMediaRef!.add(v);
-      });
-    }
+    multipleMediaRef = json['multipleMediaRef'];
     viewCount = json['viewCount'];
     commentCount = json['commentCount'];
     videoLength = json['videoLength'];
@@ -163,7 +89,7 @@ class Content {
     viewStatus = json['viewStatus'];
     likeStatus = json['likeStatus'];
     comments =
-        json['comments'] != null ? Comments.fromJson(json['comments']) : null;
+        json['comments'] != null ? PostModel.fromJson(json['comments']) : null;
     timeInMilliseconds = json['timeInMilliseconds'];
   }
 
@@ -181,9 +107,7 @@ class Content {
     }
     data['isGroupFeed'] = isGroupFeed;
     data['mediaRef'] = mediaRef;
-    if (multipleMediaRef != null) {
-      data['multipleMediaRef'] = multipleMediaRef!.map((v) => v).toList();
-    }
+    data['multipleMediaRef'] = multipleMediaRef;
     data['viewCount'] = viewCount;
     data['commentCount'] = commentCount;
     data['videoLength'] = videoLength;
@@ -204,20 +128,39 @@ class Content {
   }
 }
 
+class Country {
+  bool? objectPublic;
+  String? value;
+
+  Country({this.objectPublic, this.value});
+
+  Country.fromJson(Map<String, dynamic> json) {
+    objectPublic = json['objectPublic'];
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['objectPublic'] = objectPublic;
+    data['value'] = value;
+    return data;
+  }
+}
+
 class Data {
   MobilePhone? mobilePhone;
-  MobilePhone? country;
-  MobilePhone? imgMain;
-  MobilePhone? images;
-  MobilePhone? gender;
-  MobilePhone? city;
-  MobilePhone? webAddress;
-  MobilePhone? work;
-  MobilePhone? about;
-  MobilePhone? state;
-  MobilePhone? userSchool;
-  MobilePhone? maritalStatus;
-  MobilePhone? favorites;
+  Country? country;
+  Country? imgMain;
+  Country? images;
+  Country? gender;
+  Country? city;
+  Country? webAddress;
+  Country? work;
+  Country? about;
+  Country? state;
+  Country? userSchool;
+  Country? maritalStatus;
+  Country? favorites;
 
   Data(
       {this.mobilePhone,
@@ -239,29 +182,26 @@ class Data {
         ? MobilePhone.fromJson(json['mobilePhone'])
         : null;
     country =
-        json['country'] != null ? MobilePhone.fromJson(json['country']) : null;
+        json['country'] != null ? Country.fromJson(json['country']) : null;
     imgMain =
-        json['imgMain'] != null ? MobilePhone.fromJson(json['imgMain']) : null;
-    images =
-        json['images'] != null ? MobilePhone.fromJson(json['images']) : null;
-    gender =
-        json['gender'] != null ? MobilePhone.fromJson(json['gender']) : null;
-    city = json['city'] != null ? MobilePhone.fromJson(json['city']) : null;
+        json['imgMain'] != null ? Country.fromJson(json['imgMain']) : null;
+    images = json['images'] != null ? Country.fromJson(json['images']) : null;
+    gender = json['gender'] != null ? Country.fromJson(json['gender']) : null;
+    city = json['city'] != null ? Country.fromJson(json['city']) : null;
     webAddress = json['webAddress'] != null
-        ? MobilePhone.fromJson(json['webAddress'])
+        ? Country.fromJson(json['webAddress'])
         : null;
-    work = json['work'] != null ? MobilePhone.fromJson(json['work']) : null;
-    about = json['about'] != null ? MobilePhone.fromJson(json['about']) : null;
-    state = json['state'] != null ? MobilePhone.fromJson(json['state']) : null;
+    work = json['work'] != null ? Country.fromJson(json['work']) : null;
+    about = json['about'] != null ? Country.fromJson(json['about']) : null;
+    state = json['state'] != null ? Country.fromJson(json['state']) : null;
     userSchool = json['userSchool'] != null
-        ? MobilePhone.fromJson(json['userSchool'])
+        ? Country.fromJson(json['userSchool'])
         : null;
     maritalStatus = json['maritalStatus'] != null
-        ? MobilePhone.fromJson(json['maritalStatus'])
+        ? Country.fromJson(json['maritalStatus'])
         : null;
-    favorites = json['favorites'] != null
-        ? MobilePhone.fromJson(json['favorites'])
-        : null;
+    favorites =
+        json['favorites'] != null ? Country.fromJson(json['favorites']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -453,6 +393,75 @@ class Sort {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['sorted'] = sorted;
     data['unsorted'] = unsorted;
+    data['empty'] = empty;
+    return data;
+  }
+}
+
+class SubComments {
+  List<String>? content;
+  Pageable? pageable;
+  int? totalPages;
+  int? totalElements;
+  bool? last;
+  int? size;
+  int? number;
+  Sort? sort;
+  bool? first;
+  int? numberOfElements;
+  bool? empty;
+
+  SubComments(
+      {this.content,
+      this.pageable,
+      this.totalPages,
+      this.totalElements,
+      this.last,
+      this.size,
+      this.number,
+      this.sort,
+      this.first,
+      this.numberOfElements,
+      this.empty});
+
+  SubComments.fromJson(Map<String, dynamic> json) {
+    if (json['content'] != null) {
+      content = <String>[];
+      json['content'].forEach((v) {
+        content!.add((v));
+      });
+    }
+    pageable =
+        json['pageable'] != null ? Pageable.fromJson(json['pageable']) : null;
+    totalPages = json['totalPages'];
+    totalElements = json['totalElements'];
+    last = json['last'];
+    size = json['size'];
+    number = json['number'];
+    sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
+    first = json['first'];
+    numberOfElements = json['numberOfElements'];
+    empty = json['empty'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (content != null) {
+      data['content'] = content!.map((v) => v).toList();
+    }
+    if (pageable != null) {
+      data['pageable'] = pageable!.toJson();
+    }
+    data['totalPages'] = totalPages;
+    data['totalElements'] = totalElements;
+    data['last'] = last;
+    data['size'] = size;
+    data['number'] = number;
+    if (sort != null) {
+      data['sort'] = sort!.toJson();
+    }
+    data['first'] = first;
+    data['numberOfElements'] = numberOfElements;
     data['empty'] = empty;
     return data;
   }

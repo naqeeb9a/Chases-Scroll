@@ -9,7 +9,7 @@ import 'package:chases_scroll/src/screens/auth_screens/pincode.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
-import 'package:chases_scroll/src/screens/event_screens/add_event_Views/add_event_view.dart';
+import 'package:chases_scroll/src/screens/bottom_nav.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/get_community_id_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/event_webview_screens.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/privacy_policy_screen.dart';
@@ -17,6 +17,7 @@ import 'package:chases_scroll/src/screens/event_screens/event_attendance_view.da
 import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/trending_event.dart';
+import 'package:chases_scroll/src/screens/home/comment/comment.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
@@ -25,7 +26,6 @@ import 'package:chases_scroll/src/screens/widgets/three_dots_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../screens/bottom_nav.dart';
 import '../../screens/event_screens/buying_event_ticket_screen/event_ticket_summary.dart';
 import '../../screens/event_screens/buying_event_ticket_screen/payment_method_screen.dart';
 import '../../screens/event_screens/buying_event_ticket_screen/payment_service_screen.dart';
@@ -92,7 +92,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.bottomNav,
         name: AppRoutes.bottomNav,
-        builder: (_, __) => const BottomNav(),
+        builder: (_, __) => const BottomNavBar(),
       ),
       GoRoute(
         path: AppRoutes.suggestionFriendMore,
@@ -105,9 +105,14 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         builder: (_, __) => const SearchExploreView(),
       ),
       GoRoute(
-        path: AppRoutes.addEventView,
-        name: AppRoutes.addEventView,
-        builder: (_, __) => const AddEventView(),
+        path: AppRoutes.comment,
+        name: AppRoutes.comment,
+        builder: (_, __) => Comment(
+          commentData: __.extra as Map<dynamic, dynamic>,
+          // path: AppRoutes.addEventView,
+          // name: AppRoutes.addEventView,
+          // builder: (_, __) => const AddEventView(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.eventView,
