@@ -49,6 +49,8 @@ class Endpoints {
   static const String findGroup = 'group/find-groups';
   static const String getGroupPost = 'feed/get-all-group-posts?groupID=';
   static const String joinCommunity = 'group/join-group';
+  static const String leaveGroup = '/group/leave-group';
+  static const String getGroupMembers = 'group/get-group-members?groupID=';
 
   //-------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//

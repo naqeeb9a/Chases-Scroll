@@ -20,4 +20,5 @@ class AppRoutes {
   static const String communityChat = "/communityChat";
   static const String createCommunity = "/createCommunity";
   static const String communityInfo = "/communityInfo";
+  static const String reportCommunity = "/reportCommunity";
 }

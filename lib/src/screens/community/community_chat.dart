@@ -11,6 +11,7 @@ import 'package:chases_scroll/src/repositories/community_repo.dart';
 import 'package:chases_scroll/src/repositories/post_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_shape.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/extensions/index_of_map.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
@@ -111,6 +112,18 @@ class CommunityChat extends HookWidget {
       _communityRepo.getGroupChat(communityData.groupId).then((value) {
         postModel.value = value;
       });
+    }
+
+    exitGroup(String groupId) async {
+      bool result =
+          await _communityRepo.leaveGroup(userId: userId, groupId: groupId);
+      if (result) {
+        ToastResp.toastMsgSuccess(
+            resp: "You have successfully exited the group");
+        if (context.mounted) {
+          context.pop();
+        }
+      }
     }
 
     void startTimer() {
@@ -300,7 +313,7 @@ class CommunityChat extends HookWidget {
       );
     }
 
-    List<PopupMenuItem> listOfPopups() {
+    List<PopupMenuItem> listOfPopups(String groupId) {
       return [
         PopupMenuItem(
           child: Padding(
@@ -335,6 +348,7 @@ class CommunityChat extends HookWidget {
             child: GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+                  exitGroup(groupId);
                 },
                 child: customText(
                     text: "Exit community",
@@ -348,6 +362,7 @@ class CommunityChat extends HookWidget {
             child: GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+                  context.push(AppRoutes.reportCommunity);
                 },
                 child: customText(
                     text: "Report Community",
@@ -414,7 +429,7 @@ class CommunityChat extends HookWidget {
                   ),
                   position: PopupMenuPosition.under,
                   itemBuilder: ((context) {
-                    return listOfPopups();
+                    return listOfPopups(communityData.groupId!);
                   }),
                   child: Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -647,7 +662,7 @@ class CommunityChat extends HookWidget {
                                                                             if (element.multipleMediaRef!.isEmpty) {
                                                                               images = element.mediaRef!;
                                                                             }
-                                                                            log("*****************************");
+
                                                                             log(element.multipleMediaRef!.isEmpty.toString());
                                                                             return ClipRRect(
                                                                               borderRadius: BorderRadius.only(

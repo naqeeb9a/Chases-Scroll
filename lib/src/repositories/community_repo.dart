@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chases_scroll/src/models/group_model.dart';
@@ -100,6 +101,18 @@ class CommunityRepo {
     return PostModel();
   }
 
+  Future<GroupModel> getGroupMembers(String communityId) async {
+    final response = await ApiClient.get(
+      '${Endpoints.getGroupMembers}$communityId',
+      useToken: true,
+    );
+    if (response.status == 200) {
+      log(response.message.toString());
+      return GroupModel.fromJson(response.message);
+    }
+    return GroupModel();
+  }
+
   Future<bool> joinCommunity({
     required String groupId,
     required String userId,
@@ -123,6 +136,22 @@ class CommunityRepo {
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
     }
+  }
+
+  Future<bool> leaveGroup(
+      {required String userId, required String groupId}) async {
+    var queryParameters = {"groupID": groupId, "userID": json.decode(userId)};
+    log(queryParameters.toString());
+    final response = await ApiClient.delete(Endpoints.leaveGroup,
+        queryParameters: queryParameters, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      log("this is the message");
+      getGroup(userId: json.decode(userId));
+      log(response.message.toString());
+      return true;
+    }
+    return false;
   }
 
   Future<GroupModel> requestGroup({String? userId}) async {

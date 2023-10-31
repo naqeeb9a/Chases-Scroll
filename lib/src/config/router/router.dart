@@ -14,6 +14,7 @@ import 'package:chases_scroll/src/screens/bottom_nav.dart';
 import 'package:chases_scroll/src/screens/community/community_chat.dart';
 import 'package:chases_scroll/src/screens/community/community_info.dart';
 import 'package:chases_scroll/src/screens/community/create_community.dart';
+import 'package:chases_scroll/src/screens/community/report_community.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/home/comment/comment.dart';
@@ -131,4 +132,8 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           path: AppRoutes.communityInfo,
           name: AppRoutes.communityInfo,
           builder: (_, __) => const CommunityInfo()),
+      GoRoute(
+          path: AppRoutes.reportCommunity,
+          name: AppRoutes.reportCommunity,
+          builder: (_, __) => const ReportCommunity()),
     ]);

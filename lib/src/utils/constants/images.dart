@@ -48,4 +48,5 @@ class AppImages {
   static const String document = "assets/svgs/document.svg";
   static const String communityAdd = "assets/svgs/community-add.svg";
   static const String search = 'assets/svgs/search-normal.svg';
+  static const String exit = 'assets/svgs/exit.svg';
 }
