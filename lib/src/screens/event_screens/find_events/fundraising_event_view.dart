@@ -26,7 +26,7 @@ class FindFundraisingEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myFundraisingLoading = useState<bool>(true);
-    final myFundraisinglModel = useState<List<Content>>([]);
+    final myFundraisinglModel = useState<List<EventContent>>([]);
 
     getMyEvents() {
       _eventRepository.getFundraisingEvents().then((value) {
@@ -85,7 +85,7 @@ class FindFundraisingEventView extends HookWidget {
                     itemCount: myFundraisinglModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      Content event = myFundraisinglModel.value[index];
+                      EventContent event = myFundraisinglModel.value[index];
                       return WideEventCards(
                         eventDetails: event,
                         image: event.currentPicUrl,

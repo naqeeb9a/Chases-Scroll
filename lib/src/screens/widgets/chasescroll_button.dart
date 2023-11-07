@@ -74,3 +74,76 @@ class ChasescrollButton extends StatelessWidget {
     );
   }
 }
+
+class ChasescrollButtonChanges extends StatelessWidget {
+  final Function()? onTap;
+  final Color color;
+  final Color? textColor;
+  final String? buttonText;
+  final bool hasIcon;
+  final Widget? iconWidget;
+
+  final bool isButtonEnabled;
+  final bool hasBorder;
+  final double? height;
+  final double? width;
+  final Color? borderColor;
+  const ChasescrollButtonChanges(
+      {Key? key,
+      this.onTap,
+      this.color = AppColors.primary,
+      this.textColor,
+      this.buttonText,
+      this.hasIcon = false,
+      this.iconWidget,
+      this.isButtonEnabled = true,
+      this.hasBorder = false,
+      this.height = 50,
+      this.borderColor,
+      this.width})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTapDown: (_) => HapticFeedback.lightImpact(),
+      onTap: isButtonEnabled ? onTap : null,
+      child: Container(
+        height: height,
+        width: width ?? double.infinity,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(8),
+          border: hasBorder
+              ? Border.all(color: borderColor!)
+              : Border.all(width: 0, color: color),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            hasIcon ? iconWidget! : const SizedBox.shrink(),
+            hasIcon
+                ? const SizedBox(
+                    width: 15,
+                  )
+                : const SizedBox.shrink(),
+            Center(
+              child: Text(
+                buttonText!,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: textColor ?? AppColors.white,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

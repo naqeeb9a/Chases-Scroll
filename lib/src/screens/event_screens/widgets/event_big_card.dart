@@ -17,7 +17,7 @@ class EventBigCard extends StatefulWidget {
   final String? date;
   final String? location;
   final double? price;
-  final Content? eventDetails;
+  final EventContent? eventDetails;
 
   const EventBigCard(
     this.width, {

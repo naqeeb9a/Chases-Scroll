@@ -21,6 +21,19 @@ import 'package:chases_scroll/src/screens/home/comment/comment.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
+import 'package:chases_scroll/src/screens/profile_view/other_users_profile_main_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/see_more_community.dart';
+import 'package:chases_scroll/src/screens/profile_view/see_more_event.dart';
+import 'package:chases_scroll/src/screens/profile_view/see_more_user.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/account_settings_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/change_password_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/edit_profile_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/privacy_policy_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/report_bug_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/request_enhancement_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/terms_&_condition_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/widgets/settings_payment_view.dart';
 import 'package:chases_scroll/src/screens/widgets/success_screen.dart';
 import 'package:chases_scroll/src/screens/widgets/three_dots_loading.dart';
 import 'package:flutter/material.dart';
@@ -133,7 +146,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         path: AppRoutes.eventDetailMainView,
         name: AppRoutes.eventDetailMainView,
         builder: (_, __) => EventDetailsMainView(
-          eventDetails: __.extra as Content,
+          eventDetails: __.extra as EventContent,
         ),
       ),
       GoRoute(
@@ -186,12 +199,79 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         path: AppRoutes.eventAttendeesView,
         name: AppRoutes.eventAttendeesView,
         builder: (_, __) => EventAttendeesView(
-          eventDetails: __.extra as Content,
+          eventDetails: __.extra as EventContent,
         ),
       ),
       GoRoute(
         path: AppRoutes.findTrendingEvent,
         name: AppRoutes.findTrendingEvent,
         builder: (_, __) => const FindTrendingEvents(),
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        name: AppRoutes.settings,
+        builder: (_, __) => const SettingsScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.terms,
+        name: AppRoutes.terms,
+        builder: (_, __) => const TermsAndConditionScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.privacy,
+        name: AppRoutes.privacy,
+        builder: (_, __) => const PrivacyPolicyScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.enhancement,
+        name: AppRoutes.enhancement,
+        builder: (_, __) => RequestEnhancementScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.reportBug,
+        name: AppRoutes.reportBug,
+        builder: (_, __) => ReportBugScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.accountSetting,
+        name: AppRoutes.accountSetting,
+        builder: (_, __) => const AccountSettingView(),
+      ),
+      GoRoute(
+        path: AppRoutes.changePassword,
+        name: AppRoutes.changePassword,
+        builder: (_, __) => const ChangePasswordScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.settingPayment,
+        name: AppRoutes.settingPayment,
+        builder: (_, __) => const SettingsPaymentScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.editProfile,
+        name: AppRoutes.editProfile,
+        builder: (_, __) => const EditProfileScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.profileUsersMore,
+        name: AppRoutes.profileUsersMore,
+        builder: (_, __) => const SeeMoreUserView(),
+      ),
+      GoRoute(
+        path: AppRoutes.profileEventMore,
+        name: AppRoutes.profileEventMore,
+        builder: (_, __) => const SeeMoreUserEvents(),
+      ),
+      GoRoute(
+        path: AppRoutes.profileCommmunityMore,
+        name: AppRoutes.profileCommmunityMore,
+        builder: (_, __) => const SeeMoreUserCommunities(),
+      ),
+      GoRoute(
+        path: AppRoutes.otherUsersProfile,
+        name: AppRoutes.otherUsersProfile,
+        builder: (_, __) => OtherUsersMainProfileView(
+          userId: __.extra as String,
+        ),
       ),
     ]);

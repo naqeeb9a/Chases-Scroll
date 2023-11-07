@@ -26,7 +26,7 @@ class FindPopupEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myPopupLoading = useState<bool>(true);
-    final myPopuplModel = useState<List<Content>>([]);
+    final myPopuplModel = useState<List<EventContent>>([]);
 
     getMyEvents() {
       _eventRepository.getReligiousEvents().then((value) {
@@ -85,7 +85,7 @@ class FindPopupEventView extends HookWidget {
                     itemCount: myPopuplModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      Content event = myPopuplModel.value[index];
+                      EventContent event = myPopuplModel.value[index];
                       return WideEventCards(
                         eventDetails: event,
                         image: event.currentPicUrl,

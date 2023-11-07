@@ -1,6 +1,9 @@
+import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/dimens.dart';
@@ -10,7 +13,7 @@ import '../../widgets/custom_fonts.dart';
 
 class SearchEventWidget extends StatefulWidget {
   final String? eventName;
-
+  final EventContent? event;
   final String? image;
   final String? date;
   final String? location;
@@ -26,6 +29,7 @@ class SearchEventWidget extends StatefulWidget {
     this.onSave,
     this.price,
     required this.isSaved,
+    required this.event,
   });
 
   @override
@@ -37,13 +41,7 @@ class _SearchEventWidgetState extends State<SearchEventWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => TicketDetails(
-        //       events: _foundEvents[index],
-        //     ),
-        //   ),
-        // );
+        context.push(AppRoutes.eventDetailMainView, extra: widget.event);
       },
       child: Padding(
         padding: PAD_SYM_H10,

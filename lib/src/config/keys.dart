@@ -4,6 +4,7 @@ class AppKeys {
   static const String firstInstall = "firstInstall";
   static const String orderCode = "orderCode";
   static const String orderID = "orderID";
+  static const String profileBoolean = "profileBoolean";
 }
 
 class AwsKeys {

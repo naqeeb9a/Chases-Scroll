@@ -26,7 +26,7 @@ class FindCommunityEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myCommunityLoading = useState<bool>(true);
-    final myCommunitylModel = useState<List<Content>>([]);
+    final myCommunitylModel = useState<List<EventContent>>([]);
 
     getMyEvents() {
       _eventRepository.getCommunityEvents().then((value) {
@@ -85,7 +85,7 @@ class FindCommunityEventView extends HookWidget {
                     itemCount: myCommunitylModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      Content event = myCommunitylModel.value[index];
+                      EventContent event = myCommunitylModel.value[index];
                       return WideEventCards(
                         eventDetails: event,
                         image: event.currentPicUrl,

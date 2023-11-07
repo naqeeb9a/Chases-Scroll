@@ -377,3 +377,14 @@ usersShimmerWithlength({int? count, double? height, double? width}) {
     children: widget,
   );
 }
+
+//------------------------edit profile shimmer -------------------------//
+Widget zEditProfileShimmer(double height, double width) {
+  return SizedBox(
+    height: 50.h,
+    width: double.infinity,
+    child: const Column(
+      children: [],
+    ),
+  );
+}

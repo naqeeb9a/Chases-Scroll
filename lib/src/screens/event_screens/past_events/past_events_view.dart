@@ -23,7 +23,7 @@ class PastEventView extends HookWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final pastEventLoading = useState<bool>(true);
-    final pastEventModel = useState<List<Content>>([]);
+    final pastEventModel = useState<List<EventContent>>([]);
 
     getPastEvents() {
       _eventRepository.getPastEvents().then((value) {
@@ -93,7 +93,7 @@ class PastEventView extends HookWidget {
                               itemCount: pastEventModel.value.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
-                                Content myPastEvent =
+                                EventContent myPastEvent =
                                     pastEventModel.value[index];
                                 //for formatted time
                                 int startTimeInMillis = myPastEvent.startTime!;

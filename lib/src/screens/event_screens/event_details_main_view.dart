@@ -59,7 +59,7 @@ List<String> wrapTicketTypeList = [
 class EventDetailsMainView extends ConsumerWidget {
   static final EventRepository _eventRepository = EventRepository();
 
-  final Content eventDetails;
+  final EventContent eventDetails;
   const EventDetailsMainView({super.key, required this.eventDetails});
 
   @override

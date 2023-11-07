@@ -12,7 +12,7 @@ class EventSmallTitleCardNonNavigate extends StatefulWidget {
   final String? eventName;
   final String? image;
 
-  final Content? eventDetails;
+  final EventContent? eventDetails;
   final String? date;
   final String? location;
   final double? price;

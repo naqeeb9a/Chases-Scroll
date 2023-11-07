@@ -11,13 +11,14 @@ class AppColors {
   static const Color textGrey = Color(0xFF9E9595);
   static const Color textFormColor = Color(0x3FD0D4EB);
   static const Color searchTextGrey = Color(0xff667085);
-
+  static const Color profileIconGrey = Color(0xffB1B5C3);
   static const Color deepPrimary = Color(0xff1732F7);
   static const Color backgroundGrey = Color(0xffF5F5F5);
   static const Color green = Colors.green;
   static const Color iconGrey = Color(0xffD0D4EB);
   static const Color subtitleColors = Color(0xff6B6B6B);
   static const Color backgroundSummaryScreen = Color(0xffF1F2F9);
+  static const Color btnOrange = Color(0xffF77E0D);
 
   static OutlineInputBorder errorBorder = const OutlineInputBorder(
       borderSide: BorderSide(

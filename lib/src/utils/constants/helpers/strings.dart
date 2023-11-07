@@ -193,3 +193,49 @@ class PlaceHolderTitle extends StatelessWidget {
     );
   }
 }
+
+class TextToggleFunction extends StatelessWidget {
+  final String title;
+
+  final String? subTitle;
+  final Widget? widget;
+  final Widget? widgetIcon;
+  final Function()? iconFunction;
+  const TextToggleFunction({
+    super.key,
+    required this.title,
+    this.widget,
+    this.subTitle,
+    this.widgetIcon,
+    this.iconFunction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: iconFunction,
+                  child: customText(
+                    text: title,
+                    fontSize: 14,
+                    textColor: AppColors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            Container(child: widget),
+          ],
+        ),
+        heightSpace(0.3),
+      ],
+    );
+  }
+}

@@ -26,7 +26,7 @@ class FindFestivalEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myFestivalLoading = useState<bool>(true);
-    final myFestivallModel = useState<List<Content>>([]);
+    final myFestivallModel = useState<List<EventContent>>([]);
 
     getMyEvents() {
       _eventRepository.getFestivalEvents().then((value) {
@@ -85,7 +85,7 @@ class FindFestivalEventView extends HookWidget {
                     itemCount: myFestivallModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      Content event = myFestivallModel.value[index];
+                      EventContent event = myFestivallModel.value[index];
                       return WideEventCards(
                         eventDetails: event,
                         image: event.currentPicUrl,

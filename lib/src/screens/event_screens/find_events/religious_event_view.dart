@@ -25,7 +25,7 @@ class FindReligiousEvents extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myReligiousLoading = useState<bool>(true);
-    final myReligiouslModel = useState<List<Content>>([]);
+    final myReligiouslModel = useState<List<EventContent>>([]);
 
     getMyEvents() {
       _eventRepository.getReligiousEvents().then((value) {
@@ -84,7 +84,7 @@ class FindReligiousEvents extends HookWidget {
                     itemCount: myReligiouslModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      Content event = myReligiouslModel.value[index];
+                      EventContent event = myReligiouslModel.value[index];
                       return WideEventCards(
                         eventDetails: event,
                         image: event.currentPicUrl,

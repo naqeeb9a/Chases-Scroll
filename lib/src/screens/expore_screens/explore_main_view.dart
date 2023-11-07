@@ -31,7 +31,7 @@ class ExploreMainView extends HookWidget {
     const double scaleFactor = 0.8;
 
     final eventLoading = useState<bool>(true);
-    final eventModel = useState<List<Content>>([]);
+    final eventModel = useState<List<EventContent>>([]);
     final currentPageValue = useState<double>(currentPageValue0);
 
     getEvents() {
@@ -168,7 +168,7 @@ class ExploreMainView extends HookWidget {
                                           },
                                           itemBuilder: (BuildContext context,
                                               int index) {
-                                            Content event =
+                                            EventContent event =
                                                 eventModel.value[index];
                                             return EventContainerTransformView(
                                               index: index,
@@ -213,7 +213,7 @@ class ExploreMainView extends HookWidget {
                   GestureDetector(
                     onTap: () => context.push(AppRoutes.suggestionFriendMore),
                     child: customText(
-                        text: "Sell all",
+                        text: "See All",
                         fontSize: 12,
                         textColor: AppColors.deepPrimary,
                         fontWeight: FontWeight.w500),

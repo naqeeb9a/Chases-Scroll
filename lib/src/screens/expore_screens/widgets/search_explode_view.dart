@@ -43,10 +43,10 @@ class SearchExploreView extends HookWidget {
     //------------------------------------------------------------------------//
     //-------------------This is for Events -----------------------------------//
     final allEventLoading = useState<bool>(true);
-    final allEventModel = useState<List<Content>>([]);
+    final allEventModel = useState<List<EventContent>>([]);
     //final currentPageValue = useState<double>(0);
-    final allEvents = useState<List<Content>>([]);
-    final foundEvents = useState<List<Content>>([]);
+    final allEvents = useState<List<EventContent>>([]);
+    final foundEvents = useState<List<EventContent>>([]);
     final currentPageValue = useValueNotifier(0);
 
     getAllEvents() {
@@ -330,7 +330,7 @@ class SearchExploreView extends HookWidget {
                         child: ListView.builder(
                           itemCount: foundEvents.value.length,
                           itemBuilder: (BuildContext context, int index) {
-                            Content event = foundEvents.value[index];
+                            EventContent event = foundEvents.value[index];
 
                             //for formatted time
                             int startTimeInMillis = event.startTime!;
@@ -340,6 +340,7 @@ class SearchExploreView extends HookWidget {
                             String formattedDate =
                                 DateUtilss.formatDateTime(startTime);
                             return SearchEventWidget(
+                              event: event,
                               eventName: event.eventName,
                               date: formattedDate,
                               location: event.location!.address,
@@ -496,7 +497,7 @@ class SearchExploreView extends HookWidget {
                                                 text: comm.data!.name == null
                                                     ? ""
                                                     : comm.data!.name!,
-                                                fontSize: 14,
+                                                fontSize: 13,
                                                 textColor: AppColors.black,
                                                 fontWeight: FontWeight.w500),
                                             customText(
@@ -578,15 +579,16 @@ class SearchExploreView extends HookWidget {
                                           decoration: BoxDecoration(
                                               color:
                                                   comm.joinStatus == "CONNECTED"
-                                                      ? AppColors.green
+                                                      ? AppColors.red
                                                       : AppColors.primary,
                                               borderRadius:
                                                   BorderRadius.circular(10)),
-                                          padding: const EdgeInsets.all(10),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 25, vertical: 13),
                                           child: customText(
                                               text: comm.joinStatus ==
                                                       "CONNECTED"
-                                                  ? "Joined"
+                                                  ? "Leave"
                                                   : comm.joinStatus ==
                                                           "NOT_CONNECTED"
                                                       ? "Join"

@@ -79,6 +79,7 @@ class _SuggestionViewState extends State<SuggestionView> {
                               ? widget.users!.firstName!.isEmpty
                                   ? ""
                                   : "${widget.users!.firstName![0]}${widget.users!.lastName![0]}"
+                                      .toUpperCase()
                               : "",
                           fontSize: 14,
                           textColor: AppColors.deepPrimary,
@@ -99,23 +100,29 @@ class _SuggestionViewState extends State<SuggestionView> {
                     fontWeight: FontWeight.w400),
                 Padding(
                   padding: const EdgeInsets.only(top: 9.0, right: 15, left: 15),
-                  child: ChasescrollButton(
+                  child: ChasescrollButtonChanges(
                     hasIcon: false,
                     iconWidget: SvgPicture.asset(AppImages.appleIcon),
                     buttonText: widget.users!.joinStatus == "CONNECTED"
-                        ? "Connected"
+                        ? "Disconnect"
                         : widget.users!.joinStatus == "NOT_CONNECTED"
                             ? "Connect"
                             : widget.users!.joinStatus == "FRIEND_REQUEST_SENT"
                                 ? "Pending"
                                 : "",
-                    hasBorder: false,
-                    borderColor: AppColors.grey,
-                    textColor: AppColors.white,
+                    hasBorder: true,
+                    borderColor: widget.users!.joinStatus == "NOT_CONNECTED"
+                        ? AppColors.primary
+                        : AppColors.white,
+                    textColor: widget.users!.joinStatus == "FRIEND_REQUEST_SENT"
+                        ? AppColors.btnOrange
+                        : AppColors.primary,
                     height: 4.h,
                     color: widget.users!.joinStatus == "FRIEND_REQUEST_SENT"
-                        ? AppColors.red
-                        : AppColors.primary,
+                        ? AppColors.btnOrange.withOpacity(0.3)
+                        : widget.users!.joinStatus == "CONNECTED"
+                            ? AppColors.red
+                            : AppColors.white,
                     width: 28.w,
                     onTap: widget.function,
                   ),

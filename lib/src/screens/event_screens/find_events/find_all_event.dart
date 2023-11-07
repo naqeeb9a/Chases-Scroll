@@ -26,9 +26,9 @@ class FindAllEventCardView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final allEventLoading = useState<bool>(true);
-    final allEventModel = useState<List<Content>>([]);
+    final allEventModel = useState<List<EventContent>>([]);
     final topEventLoading = useState<bool>(true);
-    final topEventModel = useState<List<Content>>([]);
+    final topEventModel = useState<List<EventContent>>([]);
     final currentPageValue = useValueNotifier(0);
 
     getAllEvents() {
@@ -107,7 +107,7 @@ class FindAllEventCardView extends HookWidget {
                 itemCount: allEventModel.value.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
-                  Content allEvent = allEventModel.value[index];
+                  EventContent allEvent = allEventModel.value[index];
                   //for formatted time
                   int? startTimeInMillis = allEvent.startTime;
                   DateTime startTime =
@@ -138,7 +138,7 @@ class FindAllEventCardView extends HookWidget {
                 itemCount: topEventModel.value.length,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (BuildContext context, int index) {
-                  Content topEvent = topEventModel.value[index];
+                  EventContent topEvent = topEventModel.value[index];
                   //for formatted time
                   int startTimeInMillis = topEvent.startTime!;
                   DateTime startTime =

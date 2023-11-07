@@ -1,137 +1,4 @@
 //suggested users
-class Content {
-  String? id;
-  int? createdDate;
-  LastModifiedBy? lastModifiedBy;
-  LastModifiedBy? createdBy;
-  int? lastModifiedDate;
-  bool? isDeleted;
-  List<String>? picUrls;
-  String? eventName;
-  String? eventDescription;
-  String? eventType;
-  String? locationType;
-  String? currency;
-  String? currentPicUrl;
-  String? eventFunnelGroupID;
-  String? mediaType;
-  String? currentVideoUrl;
-  bool? isPublic;
-  bool? isExclusive;
-  bool? mask;
-  bool? isOrganizer;
-  bool? attendeesVisibility;
-  bool? isJoined;
-  bool? isSaved;
-  bool? isFree;
-  bool? isBought;
-  bool? ticketBought;
-  double? minPrice;
-  double? maxPrice;
-  int? startTime;
-  int? endTime;
-  int? startDate;
-  int? endDate;
-  int? expirationDate;
-  int? memberCount;
-  Location? location;
-  List<ProductTypeData>? productTypeData;
-
-  Content({
-    this.id,
-    this.createdDate,
-    this.lastModifiedBy,
-    this.createdBy,
-    this.lastModifiedDate,
-    this.isDeleted,
-    this.picUrls,
-    this.eventName,
-    this.eventDescription,
-    this.eventType,
-    this.locationType,
-    this.currency,
-    this.currentPicUrl,
-    this.eventFunnelGroupID,
-    this.mediaType,
-    this.currentVideoUrl,
-    this.isPublic,
-    this.isExclusive,
-    this.mask,
-    this.isOrganizer,
-    this.attendeesVisibility,
-    this.isJoined,
-    this.isSaved,
-    this.isFree,
-    this.isBought,
-    this.ticketBought,
-    this.minPrice,
-    this.maxPrice,
-    this.startTime,
-    this.endTime,
-    this.startDate,
-    this.endDate,
-    this.expirationDate,
-    this.memberCount,
-    this.location,
-    this.productTypeData,
-  });
-
-  factory Content.fromJson(Map<String, dynamic> json) {
-    return Content(
-      id: json['id'],
-      createdDate: json['createdDate'],
-      lastModifiedBy: json['lastModifiedBy'] != null
-          ? LastModifiedBy.fromJson(json['lastModifiedBy'])
-          : null,
-      createdBy: json['createdBy'] != null
-          ? LastModifiedBy.fromJson(json['createdBy'])
-          : null,
-      lastModifiedDate: json['lastModifiedDate'],
-      isDeleted: json['isDeleted'],
-      picUrls: json['picUrls'].cast<String>(),
-      eventName: json['eventName'],
-      eventDescription: json['eventDescription'],
-      eventType: json['eventType'],
-      locationType: json['locationType'],
-      currency: json['currency'],
-      currentPicUrl: json['currentPicUrl'],
-      eventFunnelGroupID: json['eventFunnelGroupID'],
-      mediaType: json['mediaType'],
-      currentVideoUrl: json['currentVideoUrl'],
-      isPublic: json['isPublic'],
-      isExclusive: json['isExclusive'],
-      mask: json['mask'],
-      isOrganizer: json['isOrganizer'],
-      attendeesVisibility: json['attendeesVisibility'],
-      isJoined: json['isJoined'],
-      isSaved: json['isSaved'],
-      isFree: json['isFree'],
-      isBought: json['isBought'],
-      ticketBought: json['ticketBought'],
-      minPrice: json['minPrice'],
-      maxPrice: json['maxPrice'],
-      startTime: json['startTime'],
-      endTime: json['endTime'],
-      startDate: json['startDate'],
-      endDate: json['endDate'],
-      expirationDate: json['expirationDate'],
-      memberCount: json['memberCount'],
-      location:
-          json['location'] != null ? Location.fromJson(json['location']) : null,
-      productTypeData: json['productTypeData'] != null
-          ? (json['productTypeData'] as List)
-              .map((v) => ProductTypeData.fromJson(v))
-              .toList()
-          : null,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'Content{id: $id, createdDate: $createdDate, lastModifiedBy: $lastModifiedBy, createdBy: $createdBy, lastModifiedDate: $lastModifiedDate, isDeleted: $isDeleted, picUrls: $picUrls, eventName: $eventName, eventDescription: $eventDescription, eventType: $eventType, locationType: $locationType, currency: $currency, currentPicUrl: $currentPicUrl, eventFunnelGroupID: $eventFunnelGroupID, mediaType: $mediaType, currentVideoUrl: $currentVideoUrl, isPublic: $isPublic, isExclusive: $isExclusive, mask: $mask, isOrganizer: $isOrganizer, attendeesVisibility: $attendeesVisibility, isJoined: $isJoined, isSaved: $isSaved, isFree: $isFree, isBought: $isBought, ticketBought: $ticketBought, minPrice: $minPrice, maxPrice: $maxPrice, startTime: $startTime, endTime: $endTime, startDate: $startDate, endDate: $endDate, expirationDate: $expirationDate, memberCount: $memberCount, location: $location, productTypeData: $productTypeData}';
-  }
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 ///
 ///
@@ -406,6 +273,139 @@ class Data {
         'maritalStatus: $maritalStatus, '
         'favorites: $favorites'
         '}';
+  }
+}
+
+class EventContent {
+  String? id;
+  int? createdDate;
+  LastModifiedBy? lastModifiedBy;
+  LastModifiedBy? createdBy;
+  int? lastModifiedDate;
+  bool? isDeleted;
+  List<String>? picUrls;
+  String? eventName;
+  String? eventDescription;
+  String? eventType;
+  String? locationType;
+  String? currency;
+  String? currentPicUrl;
+  String? eventFunnelGroupID;
+  String? mediaType;
+  String? currentVideoUrl;
+  bool? isPublic;
+  bool? isExclusive;
+  bool? mask;
+  bool? isOrganizer;
+  bool? attendeesVisibility;
+  bool? isJoined;
+  bool? isSaved;
+  bool? isFree;
+  bool? isBought;
+  bool? ticketBought;
+  double? minPrice;
+  double? maxPrice;
+  int? startTime;
+  int? endTime;
+  int? startDate;
+  int? endDate;
+  int? expirationDate;
+  int? memberCount;
+  Location? location;
+  List<ProductTypeData>? productTypeData;
+
+  EventContent({
+    this.id,
+    this.createdDate,
+    this.lastModifiedBy,
+    this.createdBy,
+    this.lastModifiedDate,
+    this.isDeleted,
+    this.picUrls,
+    this.eventName,
+    this.eventDescription,
+    this.eventType,
+    this.locationType,
+    this.currency,
+    this.currentPicUrl,
+    this.eventFunnelGroupID,
+    this.mediaType,
+    this.currentVideoUrl,
+    this.isPublic,
+    this.isExclusive,
+    this.mask,
+    this.isOrganizer,
+    this.attendeesVisibility,
+    this.isJoined,
+    this.isSaved,
+    this.isFree,
+    this.isBought,
+    this.ticketBought,
+    this.minPrice,
+    this.maxPrice,
+    this.startTime,
+    this.endTime,
+    this.startDate,
+    this.endDate,
+    this.expirationDate,
+    this.memberCount,
+    this.location,
+    this.productTypeData,
+  });
+
+  factory EventContent.fromJson(Map<String, dynamic> json) {
+    return EventContent(
+      id: json['id'],
+      createdDate: json['createdDate'],
+      lastModifiedBy: json['lastModifiedBy'] != null
+          ? LastModifiedBy.fromJson(json['lastModifiedBy'])
+          : null,
+      createdBy: json['createdBy'] != null
+          ? LastModifiedBy.fromJson(json['createdBy'])
+          : null,
+      lastModifiedDate: json['lastModifiedDate'],
+      isDeleted: json['isDeleted'],
+      picUrls: json['picUrls'].cast<String>(),
+      eventName: json['eventName'],
+      eventDescription: json['eventDescription'],
+      eventType: json['eventType'],
+      locationType: json['locationType'],
+      currency: json['currency'],
+      currentPicUrl: json['currentPicUrl'],
+      eventFunnelGroupID: json['eventFunnelGroupID'],
+      mediaType: json['mediaType'],
+      currentVideoUrl: json['currentVideoUrl'],
+      isPublic: json['isPublic'],
+      isExclusive: json['isExclusive'],
+      mask: json['mask'],
+      isOrganizer: json['isOrganizer'],
+      attendeesVisibility: json['attendeesVisibility'],
+      isJoined: json['isJoined'],
+      isSaved: json['isSaved'],
+      isFree: json['isFree'],
+      isBought: json['isBought'],
+      ticketBought: json['ticketBought'],
+      minPrice: json['minPrice'],
+      maxPrice: json['maxPrice'],
+      startTime: json['startTime'],
+      endTime: json['endTime'],
+      startDate: json['startDate'],
+      endDate: json['endDate'],
+      expirationDate: json['expirationDate'],
+      memberCount: json['memberCount'],
+      location:
+          json['location'] != null ? Location.fromJson(json['location']) : null,
+      productTypeData: json['productTypeData'] != null
+          ? (json['productTypeData'] as List)
+              .map((v) => ProductTypeData.fromJson(v))
+              .toList()
+          : null,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Content{id: $id, createdDate: $createdDate, lastModifiedBy: $lastModifiedBy, createdBy: $createdBy, lastModifiedDate: $lastModifiedDate, isDeleted: $isDeleted, picUrls: $picUrls, eventName: $eventName, eventDescription: $eventDescription, eventType: $eventType, locationType: $locationType, currency: $currency, currentPicUrl: $currentPicUrl, eventFunnelGroupID: $eventFunnelGroupID, mediaType: $mediaType, currentVideoUrl: $currentVideoUrl, isPublic: $isPublic, isExclusive: $isExclusive, mask: $mask, isOrganizer: $isOrganizer, attendeesVisibility: $attendeesVisibility, isJoined: $isJoined, isSaved: $isSaved, isFree: $isFree, isBought: $isBought, ticketBought: $ticketBought, minPrice: $minPrice, maxPrice: $maxPrice, startTime: $startTime, endTime: $endTime, startDate: $startDate, endDate: $endDate, expirationDate: $expirationDate, memberCount: $memberCount, location: $location, productTypeData: $productTypeData}';
   }
 }
 

@@ -14,12 +14,12 @@ final repositoryProvider = Provider<ExploreRepository>(
 );
 
 class ExploreRepository {
-  List<Content> eventList = [];
+  List<EventContent> eventList = [];
   //this is for getting suggested users
   List<ContentUser> suggestedUsers = [];
 
   //this is for all event
-  List<Content> allEventList = [];
+  List<EventContent> allEventList = [];
   //this is for community
   List<CommContent> allCommunityList = [];
 
@@ -74,15 +74,16 @@ class ExploreRepository {
     }
   }
 
-  Future<List<Content>> getAllEvents() async {
+  Future<List<EventContent>> getAllEvents() async {
     final response =
         await ApiClient.get(Endpoints.getAllEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      allEventList =
-          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
+      allEventList = allEvents
+          .map<EventContent>((event) => EventContent.fromJson(event))
+          .toList();
 
       return allEventList;
     } else {
@@ -107,15 +108,16 @@ class ExploreRepository {
     }
   }
 
-  Future<List<Content>> getTopEvents() async {
+  Future<List<EventContent>> getTopEvents() async {
     final response =
         await ApiClient.get(Endpoints.getTopEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> topEvents = response.message['content'];
       //log(topEvents.toString());
-      eventList =
-          topEvents.map<Content>((event) => Content.fromJson(event)).toList();
+      eventList = topEvents
+          .map<EventContent>((event) => EventContent.fromJson(event))
+          .toList();
 
       return eventList;
     } else {

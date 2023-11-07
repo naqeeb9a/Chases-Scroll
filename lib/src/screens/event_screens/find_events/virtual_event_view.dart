@@ -25,7 +25,7 @@ class FindVirtualEvents extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myVirtualLoading = useState<bool>(true);
-    final myVirtualModel = useState<List<Content>>([]);
+    final myVirtualModel = useState<List<EventContent>>([]);
 
     getMyEvents() {
       _eventRepository.getVirtualEvents().then((value) {
@@ -84,7 +84,7 @@ class FindVirtualEvents extends HookWidget {
                     itemCount: myVirtualModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      Content event = myVirtualModel.value[index];
+                      EventContent event = myVirtualModel.value[index];
                       return WideEventCards(
                         eventDetails: event,
                         image: event.currentPicUrl,

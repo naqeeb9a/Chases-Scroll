@@ -35,4 +35,18 @@ class AppRoutes {
   static const String eventCommunityId = "/eventCommunityId";
   static const String eventAttendeesView = "/eventAttendeesView";
   static const String findTrendingEvent = "/findTrendingEvent";
+  static const String settings = "/settings";
+  static const String terms = "/terms";
+  static const String privacy = "/privacy";
+  static const String enhancement = "/enhancement";
+  static const String reportBug = "/reportBug";
+  static const String accountSetting = "/accountSetting";
+  static const String changePassword = "/changePassword";
+  static const String settingPayment = "/settingPayment";
+  static const String editProfile = "/editProfile";
+  static const String profileUsersMore = "/profileUsersMore";
+  static const String profileEventMore = "/profileEventMore";
+  static const String profileCommmunityMore = "/profileCommmunityMore";
+  static const String profilePostMore = "/profilePostMore";
+  static const String otherUsersProfile = "/otherUsersProfile";
 }

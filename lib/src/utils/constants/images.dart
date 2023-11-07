@@ -58,4 +58,23 @@ class AppImages {
   static const String addOrganizer = "assets/svgs/profile-add.svg";
   static const String messageOrganizer = "assets/svgs/message-text.svg";
   //static const String share = "assets/svgs/message-text.svg";
+
+  //this is for profile
+  static const String post = "assets/svgs/grid-1.svg";
+  static const String network = "assets/svgs/network.svg";
+  static const String event = "assets/svgs/eventIcon.svg";
+  static const String joinedCommunity = "assets/svgs/joinedCommunity.svg";
+
+  //setting
+  static const String payment = "assets/svgs/payment.svg";
+  static const String eventDashboard = "assets/svgs/eventIcon.svg";
+  static const String changePassword = "assets/svgs/change_password.svg";
+  static const String accountSetting = "assets/svgs/profile-circle.svg";
+  static const String shield = "assets/svgs/security.svg";
+  static const String bug = "assets/svgs/Report.svg";
+  static const String block = "assets/svgs/block.svg";
+  static const String arrowUp = "assets/svgs/arrow-up.svg";
+  static const String deleteAccount = "assets/svgs/trash.svg";
+  static const String logout = "assets/svgs/logout.svg";
+  static const String public = "assets/svgs/people.svg";
 }

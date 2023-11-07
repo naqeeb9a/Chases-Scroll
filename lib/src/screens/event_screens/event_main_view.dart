@@ -122,7 +122,7 @@ class EventMainView extends HookWidget {
 
 class WideEventCards extends StatefulWidget {
   final String? image;
-  final Content? eventDetails;
+  final EventContent? eventDetails;
   final String? name;
   final double? price;
   final String? location;

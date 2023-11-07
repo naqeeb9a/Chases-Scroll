@@ -6,12 +6,10 @@ import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
-import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../models/event_model.dart';
 import '../../widgets/app_bar.dart';
@@ -72,9 +70,6 @@ class SuggestionFriendMore extends HookWidget {
       backgroundColor: AppColors.backgroundGrey,
       appBar: appBar(
         title: "Suggestions",
-        appBarActionWidget: SvgPicture.asset(
-          AppImages.suggestionGrid,
-        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -183,10 +178,20 @@ class SuggestionFriendMore extends HookWidget {
                                           height: 40,
                                           width: 100,
                                           decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: content.joinStatus ==
+                                                      "NOT_CONNECTED"
+                                                  ? AppColors.primary
+                                                  : AppColors.white,
+                                            ),
                                             color: content.joinStatus ==
                                                     "FRIEND_REQUEST_SENT"
-                                                ? AppColors.red
-                                                : AppColors.primary,
+                                                ? AppColors.btnOrange
+                                                    .withOpacity(0.3)
+                                                : content.joinStatus ==
+                                                        "CONNECTED"
+                                                    ? AppColors.primary
+                                                    : AppColors.white,
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
@@ -203,7 +208,10 @@ class SuggestionFriendMore extends HookWidget {
                                                           ? "Pending"
                                                           : "",
                                               fontSize: 12,
-                                              textColor: AppColors.white,
+                                              textColor: content.joinStatus ==
+                                                      "FRIEND_REQUEST_SENT"
+                                                  ? AppColors.btnOrange
+                                                  : AppColors.primary,
                                             ),
                                           ),
                                         ),
