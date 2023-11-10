@@ -89,7 +89,7 @@ class Endpoints {
   static String joinedCommunity = "/group/joined-groups";
   static String leaveCommunity = "/group/leave-group";
 
-  //for profile
+  //for profile settings
   static String getUserConnections = "/user/get-users-connections";
   static String getUserConnectionRequests = "/user/friend-requests";
   static String editProfile = "/user/update-profile";
@@ -97,4 +97,16 @@ class Endpoints {
   static String resetPassword = "/chasescroll/verification/reset-password";
   static String getPrivateUserProfile = "/user/privateprofile";
   static String getTransactions = "/payments/transactions";
+  static String getEventsDashboard = "/events/events";
+
+  //wallet
+  static String getTransactionsWallet = "/payments/history";
+  static String escrowAddStatus = "/payments/orders";
+  static String getEscrowBalances = "/escrow/balances";
+  static String fundWallet = "/payments/api/wallet/fundWallet";
+  static String withdrawWallet = "/payments/account/withdraw";
+  static String walletBalances = "/payments/api/wallet/balance";
+  static String accountStatus = "/payments/account/check";
+
+  static String verifyFund = "/payments/api/wallet/verifyFundWallet";
 }

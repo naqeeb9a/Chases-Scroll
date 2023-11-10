@@ -29,10 +29,14 @@ import 'package:chases_scroll/src/screens/profile_view/settings.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/account_settings_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/change_password_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/edit_profile_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/event_dasboard_data_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/event_dashboard_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/privacy_policy_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/report_bug_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/request_enhancement_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/terms_&_condition_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/transaction_screen_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/wallet/wallet_setting_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/widgets/settings_payment_view.dart';
 import 'package:chases_scroll/src/screens/widgets/success_screen.dart';
 import 'package:chases_scroll/src/screens/widgets/three_dots_loading.dart';
@@ -273,5 +277,30 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         builder: (_, __) => OtherUsersMainProfileView(
           userId: __.extra as String,
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.transactionView,
+        name: AppRoutes.transactionView,
+        builder: (_, __) => const TransactionScreeView(),
+      ),
+      GoRoute(
+        path: AppRoutes.settingsWallet,
+        name: AppRoutes.settingsWallet,
+        builder: (_, __) => const WalletSettingScreenView(),
+      ),
+      GoRoute(
+        path: AppRoutes.eventByID,
+        name: AppRoutes.eventByID,
+        builder: (_, __) => MyEventByIDView(),
+      ),
+      GoRoute(
+        path: AppRoutes.eventByID,
+        name: AppRoutes.eventByID,
+        builder: (_, __) => MyEventByIDView(),
+      ),
+      GoRoute(
+        path: AppRoutes.eventByIdDashboard,
+        name: AppRoutes.eventByIdDashboard,
+        builder: (_, __) => const EventDashboardByID(),
       ),
     ]);

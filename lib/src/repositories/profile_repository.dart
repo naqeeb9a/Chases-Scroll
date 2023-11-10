@@ -5,6 +5,7 @@ import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/models/post_model.dart';
+import 'package:chases_scroll/src/models/transaction_model.dart';
 import 'package:chases_scroll/src/models/user_model.dart';
 import 'package:chases_scroll/src/repositories/api/api_clients.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
@@ -29,6 +30,9 @@ class ProfileRepository {
   List<Content> getUserPost = [];
 
   UserModel? userProfile;
+
+  //for gettting transactions
+  List<TransactionHistory> getTransactions = [];
 
   //edit account settings
   Future<bool> accountSetting({
@@ -195,6 +199,25 @@ class ProfileRepository {
       return userProfile;
     }
     return userProfile;
+  }
+
+  //get transaction
+  Future<List<TransactionHistory>> getTransactionHistory() async {
+    final response =
+        await ApiClient.get(Endpoints.getTransactions, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      final List<dynamic> transactions = response.message['content'];
+      // log(allEvents.toString());
+      getTransactions = transactions
+          .map<TransactionHistory>(
+              (event) => TransactionHistory.fromJson(event))
+          .toList();
+
+      return getTransactions;
+    } else {
+      return [];
+    }
   }
 
   //get userConnections

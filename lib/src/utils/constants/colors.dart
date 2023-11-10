@@ -19,6 +19,7 @@ class AppColors {
   static const Color subtitleColors = Color(0xff6B6B6B);
   static const Color backgroundSummaryScreen = Color(0xffF1F2F9);
   static const Color btnOrange = Color(0xffF77E0D);
+  static const Color bgLightPrimary = Color(0xffF4F3FE);
 
   static OutlineInputBorder errorBorder = const OutlineInputBorder(
       borderSide: BorderSide(

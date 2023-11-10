@@ -169,14 +169,14 @@ class _SettingsScreenViewState extends State<SettingsScreenView> {
                             widthSpace(5),
                             customText(
                               text: "Delete Account",
-                              fontSize: 12,
+                              fontSize: 13,
                               textColor: AppColors.red,
                               fontWeight: FontWeight.w700,
                             ),
                           ],
                         ),
                       ),
-                      heightSpace(1),
+                      heightSpace(2),
                       GestureDetector(
                         onTap: () => showDialogLogout(context),
                         child: Row(
@@ -190,7 +190,7 @@ class _SettingsScreenViewState extends State<SettingsScreenView> {
                             widthSpace(5),
                             customText(
                               text: "Logout",
-                              fontSize: 12,
+                              fontSize: 13,
                               textColor: AppColors.primary,
                               fontWeight: FontWeight.w700,
                             ),

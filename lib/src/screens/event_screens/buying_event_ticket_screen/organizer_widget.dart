@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -10,6 +11,7 @@ import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class OrganizerContainerWidget extends StatefulWidget {
   final double height;
@@ -71,13 +73,10 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
           children: [
             GestureDetector(
               onTap: () {
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => UserConnectProfilePageScreenView(
-                //       userID: widget.orgId,
-                //     ),
-                //   ),
-                // );
+                context.push(
+                  AppRoutes.otherUsersProfile,
+                  extra: widget.orgId,
+                );
               },
               child: Container(
                 child: Row(

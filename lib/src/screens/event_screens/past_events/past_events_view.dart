@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_small_card_unclicked.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -24,12 +26,36 @@ class PastEventView extends HookWidget {
     final height = MediaQuery.of(context).size.height;
     final pastEventLoading = useState<bool>(true);
     final pastEventModel = useState<List<EventContent>>([]);
+    final allEvents = useState<List<EventContent>>([]);
+    final foundEvents = useState<List<EventContent>>([]);
 
     getPastEvents() {
       _eventRepository.getPastEvents().then((value) {
         pastEventLoading.value = false;
         pastEventModel.value = value;
+        foundEvents.value = value;
+        allEvents.value = value;
       });
+    }
+
+    void refreshEvent() {
+      pastEventLoading.value = false; // Set loading state back to true
+      getPastEvents(); // Trigger the API call again
+    }
+
+    void _runEventFilter(String enteredKeyword) {
+      log(enteredKeyword);
+      if (enteredKeyword.isEmpty) {
+        foundEvents.value = allEvents.value;
+      } else {
+        final found = allEvents.value
+            .where((event) => event.eventName!
+                .toLowerCase()
+                .contains(enteredKeyword.toLowerCase()))
+            .toList();
+
+        foundEvents.value = found;
+      }
     }
 
     useEffect(() {
@@ -50,7 +76,7 @@ class PastEventView extends HookWidget {
             ),
             hintText: "Search for event or ...",
             onChanged: (value) {
-              //_runUsersFilter(value);
+              _runEventFilter(value);
             },
           ),
           Expanded(

@@ -5,6 +5,11 @@ class AppKeys {
   static const String orderCode = "orderCode";
   static const String orderID = "orderID";
   static const String profileBoolean = "profileBoolean";
+  static const String balanceNaira = "balanceNaira";
+  static const String balanceUSD = "balanceUSD";
+  static const String haveAccount = "haveAccount";
+  static const String escrowNaira = "escrowNaira";
+  static const String ecrowUSD = "ecrowUSD";
 }
 
 class AwsKeys {

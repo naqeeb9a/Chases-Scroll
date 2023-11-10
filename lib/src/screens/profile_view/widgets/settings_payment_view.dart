@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/screens/profile_view/widgets/icon_row_profile.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsPaymentScreenView extends StatefulWidget {
   const SettingsPaymentScreenView({Key? key}) : super(key: key);
@@ -57,13 +59,13 @@ class _SettingsPaymentScreenViewState extends State<SettingsPaymentScreenView> {
                 gestureTextContiner(
                   width,
                   "Wallet",
-                  () {},
+                  () => context.push(AppRoutes.settingsWallet),
                 ),
                 heightSpace(1),
                 gestureTextContiner(
                   width,
                   "Transfer History",
-                  () {},
+                  () => context.push(AppRoutes.transactionView),
                 ),
               ],
             ),

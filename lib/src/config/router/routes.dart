@@ -49,4 +49,10 @@ class AppRoutes {
   static const String profileCommmunityMore = "/profileCommmunityMore";
   static const String profilePostMore = "/profilePostMore";
   static const String otherUsersProfile = "/otherUsersProfile";
+  static const String transactionView = "/transactionView";
+  static const String settingsWallet = "/settingsWallet";
+  static const String fundWalletNGN = "/fundWalletNGN";
+  static const String fundWalletUSD = "/fundWalletUSD";
+  static const String eventByID = "/eventByID";
+  static const String eventByIdDashboard = "/eventByIdDashboard";
 }

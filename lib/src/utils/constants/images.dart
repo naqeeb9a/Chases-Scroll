@@ -77,4 +77,13 @@ class AppImages {
   static const String deleteAccount = "assets/svgs/trash.svg";
   static const String logout = "assets/svgs/logout.svg";
   static const String public = "assets/svgs/people.svg";
+
+  //wallet
+  static const String profileEvent = "assets/svgs/profile-event.svg";
+  static const String profileSetting = "assets/svgs/profile-setting.svg";
+  static const String walletAdd = "assets/svgs/wallet-add.svg";
+  static const String transactionFile = "assets/svgs/transaction-file.svg";
+  static const String walletRemove = "assets/svgs/money-remove.svg";
+  static const String receipt = "assets/svgs/receipt.svg";
+  static const String niaraWallett = "assets/svgs/naira_sign.svg";
 }

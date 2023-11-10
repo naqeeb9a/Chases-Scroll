@@ -325,6 +325,23 @@ class EventRepository {
     }
   }
 
+  Future<List<EventContent>> getEventsByID() async {
+    String url = "${Endpoints.getAllEvents}?createdBy=$userId";
+    final response = await ApiClient.get(url, useToken: true);
+
+    if (response.status == 200) {
+      final List<dynamic> allEvents = response.message['content'];
+      // log(allEvents.toString());
+      allEventList = allEvents
+          .map<EventContent>((event) => EventContent.fromJson(event))
+          .toList();
+
+      return allEventList;
+    } else {
+      return [];
+    }
+  }
+
   //Festival events
   Future<List<EventContent>> getFestivalEvents() async {
     final response =
