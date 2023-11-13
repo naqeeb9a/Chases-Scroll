@@ -1,12 +1,17 @@
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
+import 'package:chases_scroll/src/models/escrow_model.dart';
 import 'package:chases_scroll/src/repositories/wallet_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
+import 'package:chases_scroll/src/utils/constants/dimens.dart';
+import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 class EscrowView extends StatefulHookWidget {
   final PageController pageController;
@@ -86,7 +91,7 @@ class _EscrowViewState extends State<EscrowView> {
 
     //this is for inEscrow
     final inEscrowLoading = useState<bool>(true);
-    final inEscrowModel = useState<List<dynamic>>([]);
+    final inEscrowModel = useState<List<EscrowModel>>([]);
 
     getInEscrow() {
       _walletRepository.getInEscrow().then((value) {
@@ -97,18 +102,18 @@ class _EscrowViewState extends State<EscrowView> {
 
     //this is for finilized
     final finalizedEscrowLoading = useState<bool>(true);
-    final finalizedEscrowModel = useState<List<dynamic>>([]);
+    final finalizedEscrowModel = useState<List<EscrowModel>>([]);
 
     getFinalizedEscrow() {
       _walletRepository.getInFinalized().then((value) {
-        inEscrowLoading.value = false;
-        inEscrowModel.value = value;
+        finalizedEscrowLoading.value = false;
+        finalizedEscrowModel.value = value;
       });
     }
 
     //this is for completed
     final completedEscrowLoading = useState<bool>(true);
-    final completedEscrowModel = useState<List<dynamic>>([]);
+    final completedEscrowModel = useState<List<EscrowModel>>([]);
 
     getCompletedEscrow() {
       _walletRepository.getEscrowRefundCompleted().then((value) {
@@ -359,814 +364,434 @@ class _EscrowViewState extends State<EscrowView> {
               },
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                // Container(
-                //   color: Colors.white,
-                //   child: Padding(
-                //     padding: PAD_ALL_10,
-                //     child: Column(
-                //       children: [
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             SizedBox(
-                //               width: 90,
-                //               child: DropdownButtonFormField2(
-                //                 decoration: InputDecoration(
-                //                   //Add isDense true and zero Padding.
-                //                   //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                //                   isDense: true,
-                //                   contentPadding: EdgeInsets.zero,
-                //                   enabledBorder: OutlineInputBorder(
-                //                     borderRadius: BorderRadius.circular(10),
-                //                     borderSide: const BorderSide(
-                //                         color: Color(0xffE0E0E0), width: 1),
-                //                   ),
-                //                   //Add more decoration as you want here
-                //                   //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                //                 ),
-                //                 isExpanded: true,
-                //                 hint: const Text(
-                //                   'All',
-                //                   style: TextStyle(
-                //                       fontSize: 14,
-                //                       fontWeight: FontWeight.w400),
-                //                 ),
-                //                 items: myListDays
-                //                     .map((item) => DropdownMenuItem<String>(
-                //                           value: item,
-                //                           child: Text(
-                //                             item.toString(),
-                //                             style: const TextStyle(
-                //                               fontSize: 14,
-                //                             ),
-                //                           ),
-                //                         ))
-                //                     .toList(),
-                //                 validator: (value) {
-                //                   if (value == null) {
-                //                     return 'Please select days';
-                //                   }
-                //                   return null;
-                //                 },
-                //                 onChanged: (value) {
-                //                   //Do something when changing the item if you want.
-                //                   setState(() {
-                //                     myListDaysValue = value!;
-                //                     print(myListDaysValue);
-                //                   });
-                //                 },
-                //                 onSaved: (value) {
-                //                   myListDaysValue = value!;
-                //                 },
-                //               ),
-                //             ),
-                //             // Row(
-                //             //   children: [
-                //             //     font14Tx500("Total ", Colors.black87),
-                //             //     font14Tx500("\$350,000 ", Colors.green),
-                //             //   ],
-                //             // )
-                //           ],
-                //         ),
-                //         heightSpace(2),
-                //         const Divider(),
-                //         Expanded(
-                //           child: ontainer(
-                //             height: height,
-                //             width: width,
-                //             decoration: const BoxDecoration(
-                //               borderRadius: BorderRadius.only(
-                //                 topLeft: Radius.circular(35),
-                //                 topRight: Radius.circular(35),
-                //               ),
-                //               color: Colors.white,
-                //             ),
-                //             child: Padding(
-                //               padding: const EdgeInsets.fromLTRB(15, 10, 15, 5),
-                //               child: Column(
-                //                 crossAxisAlignment: CrossAxisAlignment.start,
-                //                 children: [
-                //                   Expanded(
-                //                     child: Container(
-                //                       child: ListView.builder(
-                //                         itemCount: walletHistoryList.length,
-                //                         itemBuilder: (context, index) {
-                //                           final item = walletHistoryList[index];
-                //                           if (item['timeOfOrder'] != null) {
-                //                             dynamic timestamp =
-                //                                 item['timeOfOrder'];
-                //                             DateTime dateTime = DateTime(
-                //                               timestamp[0], // Year
-                //                               timestamp[1], // Month
-                //                               timestamp[2], // Day
-                //                               timestamp[3], // Hour
-                //                               timestamp[4], // Minute
-                //                             );
-                //                             String formattedDateTime =
-                //                                 DateFormat('MMM d, y, hh:mm a')
-                //                                     .format(dateTime);
-                //                             // Build your UI for each item in the list
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: PAD_ALL_10,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: height,
+                            width: width,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(35),
+                                topRight: Radius.circular(35),
+                              ),
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    child: ListView.builder(
+                                      itemCount:
+                                          finalizedEscrowModel.value.length,
+                                      itemBuilder: (context, index) {
+                                        final item =
+                                            finalizedEscrowModel.value[index];
+                                        if (item.timeOfOrder != null) {
+                                          dynamic timestamp = item.timeOfOrder;
 
-                //                             return Padding(
-                //                               padding:
-                //                                   const EdgeInsets.fromLTRB(
-                //                                       0, 15, 0, 3),
-                //                               child: Row(
-                //                                 mainAxisAlignment:
-                //                                     MainAxisAlignment
-                //                                         .spaceBetween,
-                //                                 children: [
-                //                                   Row(
-                //                                     children: [
-                //                                       Container(
-                //                                         height: 50,
-                //                                         width: 50,
-                //                                         decoration:
-                //                                             BoxDecoration(
-                //                                           borderRadius:
-                //                                               BorderRadius
-                //                                                   .circular(50),
-                //                                           color: Colors
-                //                                               .grey.shade300,
-                //                                         ),
-                //                                       ),
-                //                                       const SizedBox(width: 10),
-                //                                       Column(
-                //                                         crossAxisAlignment:
-                //                                             CrossAxisAlignment
-                //                                                 .start,
-                //                                         children: [
-                //                                           SizedBox(
-                //                                             height: 15,
-                //                                             width: width / 2,
-                //                                             child:
-                //                                                 font12Tx500Long(
-                //                                               item['escrowStatus']
-                //                                                   .toString(),
-                //                                               Colors.black87,
-                //                                             ),
-                //                                           ),
-                //                                           size3(),
-                //                                           font12Tx400(
-                //                                             formattedDateTime
-                //                                                 .toString(),
-                //                                             Colors.black87,
-                //                                           ),
-                //                                         ],
-                //                                       )
-                //                                     ],
-                //                                   ),
-                //                                   Row(
-                //                                     children: [
-                //                                       Column(
-                //                                         crossAxisAlignment:
-                //                                             CrossAxisAlignment
-                //                                                 .end,
-                //                                         children: [
-                //                                           item['currency'] ==
-                //                                                   "NGN"
-                //                                               ? font13Tx600Naira(
-                //                                                   item['payableAmount']
-                //                                                               [
-                //                                                               'amount']
-                //                                                           .toString() ??
-                //                                                       "",
-                //                                                   Colors.black)
-                //                                               : font13Tx600(
-                //                                                   "\$${item['payableAmount']['amount'].toString() ?? ""}",
-                //                                                   Colors.black),
-                //                                           size5(),
-                //                                           font12Tx400(
-                //                                             "Sold",
-                //                                             const Color(
-                //                                                 0xff12BC42),
-                //                                           ),
-                //                                         ],
-                //                                       )
-                //                                     ],
-                //                                   )
-                //                                 ],
-                //                               ),
-                //                             );
-                //                           } else {
-                //                             return const SizedBox();
-                //                           }
-                //                         },
-                //                       ),
-                //                     ),
-                //                   ),
-                //                 ],
-                //               ),
-                //             ),
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // Container(
-                //   color: Colors.white,
-                //   child: Padding(
-                //     padding: PAD_ALL_10,
-                //     child: Column(
-                //       children: [
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             SizedBox(
-                //               width: 90,
-                //               child: DropdownButtonFormField2(
-                //                 decoration: InputDecoration(
-                //                   //Add isDense true and zero Padding.
-                //                   //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                //                   isDense: true,
-                //                   contentPadding: EdgeInsets.zero,
-                //                   enabledBorder: OutlineInputBorder(
-                //                     borderRadius: BorderRadius.circular(10),
-                //                     borderSide: const BorderSide(
-                //                         color: Color(0xffE0E0E0), width: 1),
-                //                   ),
-                //                   //Add more decoration as you want here
-                //                   //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                //                 ),
-                //                 isExpanded: true,
-                //                 hint: const Text(
-                //                   'All',
-                //                   style: TextStyle(
-                //                       fontSize: 14,
-                //                       fontWeight: FontWeight.w400),
-                //                 ),
-                //                 icon: const Icon(
-                //                   Icons.arrow_drop_down_rounded,
-                //                   size: 20,
-                //                   color: Colors.black45,
-                //                 ),
-                //                 iconSize: 30,
-                //                 buttonHeight: 40,
-                //                 buttonPadding:
-                //                     const EdgeInsets.only(left: 0, right: 10),
-                //                 dropdownDecoration: BoxDecoration(
-                //                   borderRadius: BorderRadius.circular(15),
-                //                 ),
-                //                 items: myListDays
-                //                     .map((item) => DropdownMenuItem<String>(
-                //                           value: item,
-                //                           child: Text(
-                //                             item.toString(),
-                //                             style: const TextStyle(
-                //                               fontSize: 14,
-                //                             ),
-                //                           ),
-                //                         ))
-                //                     .toList(),
-                //                 validator: (value) {
-                //                   if (value == null) {
-                //                     return 'Please select days';
-                //                   }
-                //                   return null;
-                //                 },
-                //                 onChanged: (value) {
-                //                   //Do something when changing the item if you want.
-                //                   setState(() {
-                //                     myListDaysValue = value!;
-                //                     print(myListDaysValue);
-                //                   });
-                //                 },
-                //                 onSaved: (value) {
-                //                   myListDaysValue = value!;
-                //                 },
-                //               ),
-                //             ),
-                //             // Row(
-                //             //   children: [
-                //             //     font14Tx500("Total ", Colors.black87),
-                //             //     font14Tx500(
-                //             //         "\$350,000 ", const Color(0xffE7B400)),
-                //             //   ],
-                //             // )
-                //           ],
-                //         ),
-                //         size7(),
-                //         spaceContainer(width),
-                //         Expanded(
-                //           child: Container(
-                //             child: FutureBuilder<dynamic>(
-                //               future: WalletProvider().inEscrow(),
-                //               builder: (context, snapshot) {
-                //                 print(snapshot.data);
-                //                 if (snapshot.connectionState ==
-                //                     ConnectionState.waiting) {
-                //                   return Center(
-                //                     child: SizedBox(
-                //                       height: 25,
-                //                       width: 25,
-                //                       child: CircularProgressIndicator(
-                //                         color: mainColor(),
-                //                       ),
-                //                     ),
-                //                   );
-                //                 } else if (snapshot.hasError) {
-                //                   return Text('Error: ${snapshot.error}');
-                //                 } else if (!snapshot.hasData ||
-                //                     snapshot.data == null) {
-                //                   return Column(
-                //                     crossAxisAlignment:
-                //                         CrossAxisAlignment.center,
-                //                     children: [
-                //                       size7(),
-                //                       font14Tx700(
-                //                         "No Funds in wallet",
-                //                         mainColor(),
-                //                       ),
-                //                     ],
-                //                   );
-                //                 } else {
-                //                   final List<dynamic> walletHistoryList =
-                //                       snapshot.data!;
+                                          DateTime dateTime = DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                                  timestamp! * 1000);
 
-                //                   return Container(
-                //                     height: height,
-                //                     width: width,
-                //                     decoration: const BoxDecoration(
-                //                       borderRadius: BorderRadius.only(
-                //                         topLeft: Radius.circular(35),
-                //                         topRight: Radius.circular(35),
-                //                       ),
-                //                       color: Colors.white,
-                //                     ),
-                //                     child: Padding(
-                //                       padding: const EdgeInsets.fromLTRB(
-                //                           15, 10, 15, 5),
-                //                       child: Column(
-                //                         crossAxisAlignment:
-                //                             CrossAxisAlignment.start,
-                //                         children: [
-                //                           Expanded(
-                //                             child: Container(
-                //                               child: ListView.builder(
-                //                                 itemCount:
-                //                                     walletHistoryList.length,
-                //                                 itemBuilder: (context, index) {
-                //                                   if (snapshot
-                //                                           .connectionState ==
-                //                                       ConnectionState.waiting) {
-                //                                     return Center(
-                //                                       child: SizedBox(
-                //                                         height: 25,
-                //                                         width: 25,
-                //                                         child:
-                //                                             CircularProgressIndicator(
-                //                                           color: mainColor(),
-                //                                         ),
-                //                                       ),
-                //                                     );
-                //                                   } else if (snapshot
-                //                                       .hasError) {
-                //                                     return Text(
-                //                                         'Error: ${snapshot.error}');
-                //                                   } else if (!snapshot
-                //                                           .hasData ||
-                //                                       snapshot.data == null) {
-                //                                     return Column(
-                //                                       crossAxisAlignment:
-                //                                           CrossAxisAlignment
-                //                                               .center,
-                //                                       children: [
-                //                                         size7(),
-                //                                         font14Tx700(
-                //                                           "No Funds in Escrow",
-                //                                           mainColor(),
-                //                                         ),
-                //                                       ],
-                //                                     );
-                //                                   } else {
-                //                                     final item =
-                //                                         walletHistoryList[
-                //                                             index];
-                //                                     if (item['timeOfOrder'] !=
-                //                                         null) {
-                //                                       dynamic timestamp =
-                //                                           item['timeOfOrder'];
-                //                                       DateTime dateTime =
-                //                                           DateTime(
-                //                                         timestamp[0], // Year
-                //                                         timestamp[1], // Month
-                //                                         timestamp[2], // Day
-                //                                         timestamp[3], // Hour
-                //                                         timestamp[4], // Minute
-                //                                       );
-                //                                       String formattedDateTime =
-                //                                           DateFormat(
-                //                                                   'MMM d, y, hh:mm a')
-                //                                               .format(dateTime);
-                //                                       // Build your UI for each item in the list
+                                          String formattedDateTime =
+                                              DateFormat('MMM d, y, hh:mm a')
+                                                  .format(dateTime);
 
-                //                                       return Padding(
-                //                                         padding:
-                //                                             const EdgeInsets
-                //                                                 .fromLTRB(
-                //                                                 0, 15, 0, 3),
-                //                                         child: Row(
-                //                                           mainAxisAlignment:
-                //                                               MainAxisAlignment
-                //                                                   .spaceBetween,
-                //                                           children: [
-                //                                             Row(
-                //                                               children: [
-                //                                                 Container(
-                //                                                   height: 50,
-                //                                                   width: 50,
-                //                                                   decoration:
-                //                                                       BoxDecoration(
-                //                                                     borderRadius:
-                //                                                         BorderRadius.circular(
-                //                                                             50),
-                //                                                     color: Colors
-                //                                                         .grey
-                //                                                         .shade300,
-                //                                                   ),
-                //                                                 ),
-                //                                                 const SizedBox(
-                //                                                     width: 10),
-                //                                                 Column(
-                //                                                   crossAxisAlignment:
-                //                                                       CrossAxisAlignment
-                //                                                           .start,
-                //                                                   children: [
-                //                                                     SizedBox(
-                //                                                       height:
-                //                                                           15,
-                //                                                       width:
-                //                                                           width /
-                //                                                               2,
-                //                                                       child:
-                //                                                           font12Tx500Long(
-                //                                                         item['escrowStatus']
-                //                                                             .toString(),
-                //                                                         Colors
-                //                                                             .black87,
-                //                                                       ),
-                //                                                     ),
-                //                                                     size3(),
-                //                                                     font12Tx400(
-                //                                                       formattedDateTime
-                //                                                           .toString(),
-                //                                                       Colors
-                //                                                           .black87,
-                //                                                     ),
-                //                                                   ],
-                //                                                 )
-                //                                               ],
-                //                                             ),
-                //                                             Row(
-                //                                               children: [
-                //                                                 Column(
-                //                                                   crossAxisAlignment:
-                //                                                       CrossAxisAlignment
-                //                                                           .end,
-                //                                                   children: [
-                //                                                     item['currency'] ==
-                //                                                             "NGN"
-                //                                                         ? font13Tx600Naira(
-                //                                                             item['payableAmount']['amount'].toString() ??
-                //                                                                 "",
-                //                                                             Colors
-                //                                                                 .black)
-                //                                                         : font13Tx600(
-                //                                                             "\$${item['payableAmount']['amount'].toString() ?? ""}",
-                //                                                             Colors.black),
-                //                                                     size5(),
-                //                                                     font12Tx400(
-                //                                                       "In Escrow",
-                //                                                       Colors
-                //                                                           .orangeAccent,
-                //                                                     ),
-                //                                                   ],
-                //                                                 )
-                //                                               ],
-                //                                             )
-                //                                           ],
-                //                                         ),
-                //                                       );
-                //                                     } else {
-                //                                       return const SizedBox();
-                //                                     }
-                //                                   }
-                //                                 },
-                //                               ),
-                //                             ),
-                //                           ),
-                //                         ],
-                //                       ),
-                //                     ),
-                //                   );
-                //                 }
-                //               },
-                //             ),
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // Container(
-                //   color: Colors.white,
-                //   child: Padding(
-                //     padding: PAD_ALL_10,
-                //     child: Column(
-                //       children: [
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             SizedBox(
-                //               width: 90,
-                //               child: DropdownButtonFormField2(
-                //                 decoration: InputDecoration(
-                //                   //Add isDense true and zero Padding.
-                //                   //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                //                   isDense: true,
-                //                   contentPadding: EdgeInsets.zero,
-                //                   enabledBorder: OutlineInputBorder(
-                //                     borderRadius: BorderRadius.circular(10),
-                //                     borderSide: const BorderSide(
-                //                         color: Color(0xffE0E0E0), width: 1),
-                //                   ),
-                //                   //Add more decoration as you want here
-                //                   //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                //                 ),
-                //                 isExpanded: true,
-                //                 hint: const Text(
-                //                   'All',
-                //                   style: TextStyle(
-                //                       fontSize: 14,
-                //                       fontWeight: FontWeight.w400),
-                //                 ),
-                //                 icon: const Icon(
-                //                   Icons.arrow_drop_down_rounded,
-                //                   size: 20,
-                //                   color: Colors.black45,
-                //                 ),
-                //                 iconSize: 30,
-                //                 buttonHeight: 40,
-                //                 buttonPadding:
-                //                     const EdgeInsets.only(left: 0, right: 10),
-                //                 dropdownDecoration: BoxDecoration(
-                //                   borderRadius: BorderRadius.circular(15),
-                //                 ),
-                //                 items: myListDays
-                //                     .map((item) => DropdownMenuItem<String>(
-                //                           value: item,
-                //                           child: Text(
-                //                             item.toString(),
-                //                             style: const TextStyle(
-                //                               fontSize: 14,
-                //                             ),
-                //                           ),
-                //                         ))
-                //                     .toList(),
-                //                 validator: (value) {
-                //                   if (value == null) {
-                //                     return 'Please select days';
-                //                   }
-                //                   return null;
-                //                 },
-                //                 onChanged: (value) {
-                //                   //Do something when changing the item if you want.
-                //                   setState(() {
-                //                     myListDaysValue = value!;
-                //                     print(myListDaysValue);
-                //                   });
-                //                 },
-                //                 onSaved: (value) {
-                //                   myListDaysValue = value!;
-                //                 },
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //         size7(),
-                //         spaceContainer(width),
-                //         Expanded(
-                //           child: Container(
-                //             child: FutureBuilder<dynamic>(
-                //               future: WalletProvider().cancelledEscrow(),
-                //               builder: (context, snapshot) {
-                //                 print(snapshot.data);
-                //                 if (snapshot.connectionState ==
-                //                     ConnectionState.waiting) {
-                //                   return Center(
-                //                     child: SizedBox(
-                //                       height: 25,
-                //                       width: 25,
-                //                       child: CircularProgressIndicator(
-                //                         color: mainColor(),
-                //                       ),
-                //                     ),
-                //                   );
-                //                 } else if (snapshot.hasError) {
-                //                   return Text('Error: ${snapshot.error}');
-                //                 } else if (!snapshot.hasData ||
-                //                     snapshot.data == null) {
-                //                   return Column(
-                //                     crossAxisAlignment:
-                //                         CrossAxisAlignment.center,
-                //                     children: [
-                //                       size7(),
-                //                       font14Tx700(
-                //                         "No Funds in wallet",
-                //                         mainColor(),
-                //                       ),
-                //                     ],
-                //                   );
-                //                 } else {
-                //                   final List<dynamic> walletHistoryList =
-                //                       snapshot.data!;
+                                          // Build your UI for each item in the list
 
-                //                   return Container(
-                //                     height: height,
-                //                     width: width,
-                //                     decoration: const BoxDecoration(
-                //                       borderRadius: BorderRadius.only(
-                //                         topLeft: Radius.circular(35),
-                //                         topRight: Radius.circular(35),
-                //                       ),
-                //                       color: Colors.white,
-                //                     ),
-                //                     child: Padding(
-                //                       padding: const EdgeInsets.fromLTRB(
-                //                           15, 10, 15, 5),
-                //                       child: Column(
-                //                         crossAxisAlignment:
-                //                             CrossAxisAlignment.start,
-                //                         children: [
-                //                           Expanded(
-                //                             child: Container(
-                //                               child: ListView.builder(
-                //                                 itemCount:
-                //                                     walletHistoryList.length,
-                //                                 itemBuilder: (context, index) {
-                //                                   if (snapshot
-                //                                           .connectionState ==
-                //                                       ConnectionState.waiting) {
-                //                                     return Center(
-                //                                       child: SizedBox(
-                //                                         height: 25,
-                //                                         width: 25,
-                //                                         child:
-                //                                             CircularProgressIndicator(
-                //                                           color: mainColor(),
-                //                                         ),
-                //                                       ),
-                //                                     );
-                //                                   } else if (snapshot
-                //                                       .hasError) {
-                //                                     return Text(
-                //                                         'Error: ${snapshot.error}');
-                //                                   } else if (!snapshot
-                //                                           .hasData ||
-                //                                       snapshot.data == null) {
-                //                                     return Column(
-                //                                       crossAxisAlignment:
-                //                                           CrossAxisAlignment
-                //                                               .center,
-                //                                       children: [
-                //                                         size7(),
-                //                                         font14Tx700(
-                //                                           "No Funds in Escrow",
-                //                                           mainColor(),
-                //                                         ),
-                //                                       ],
-                //                                     );
-                //                                   } else {
-                //                                     final item =
-                //                                         walletHistoryList[
-                //                                             index];
-                //                                     if (item['timeOfOrder'] !=
-                //                                         null) {
-                //                                       dynamic timestamp =
-                //                                           item['timeOfOrder'];
-                //                                       DateTime dateTime =
-                //                                           DateTime(
-                //                                         timestamp[0], // Year
-                //                                         timestamp[1], // Month
-                //                                         timestamp[2], // Day
-                //                                         timestamp[3], // Hour
-                //                                         timestamp[4], // Minute
-                //                                       );
-                //                                       String formattedDateTime =
-                //                                           DateFormat(
-                //                                                   'MMM d, y, hh:mm a')
-                //                                               .format(dateTime);
-                //                                       // Build your UI for each item in the list
+                                          return Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 15, 0, 3),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(50),
+                                                        color: const Color(
+                                                            0xff12BC42),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10.0),
+                                                        child: SvgPicture.asset(
+                                                          AppImages
+                                                              .profileEvent,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 10),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 15,
+                                                          width: width / 2,
+                                                          child: customText(
+                                                            text:
+                                                                "${item.escrowStatus}",
+                                                            fontSize: 12,
+                                                            textColor:
+                                                                AppColors.black,
+                                                          ),
+                                                        ),
+                                                        heightSpace(0.5),
+                                                        customText(
+                                                            text:
+                                                                formattedDateTime,
+                                                            fontSize: 12,
+                                                            textColor:
+                                                                AppColors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        item.currency == "NGN"
+                                                            ? customText(
+                                                                text:
+                                                                    "NGN${item.payableAmount!.amount}",
+                                                                fontSize: 12,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .black,
+                                                              )
+                                                            : customText(
+                                                                text:
+                                                                    "\$${item.payableAmount!.amount}",
+                                                                fontSize: 12,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .black,
+                                                              ),
+                                                        heightSpace(1),
+                                                        customText(
+                                                          text: "Sold",
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          textColor:
+                                                              const Color(
+                                                                  0xff12BC42),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          return const SizedBox();
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: PAD_ALL_10,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            child: ListView.builder(
+                              itemCount: inEscrowModel.value.length,
+                              itemBuilder: (context, index) {
+                                final item = inEscrowModel.value[index];
+                                dynamic timestamp = item.timeOfOrder;
 
-                //                                       return Padding(
-                //                                         padding:
-                //                                             const EdgeInsets
-                //                                                 .fromLTRB(
-                //                                                 0, 15, 0, 3),
-                //                                         child: Row(
-                //                                           mainAxisAlignment:
-                //                                               MainAxisAlignment
-                //                                                   .spaceBetween,
-                //                                           children: [
-                //                                             Row(
-                //                                               children: [
-                //                                                 Container(
-                //                                                   height: 50,
-                //                                                   width: 50,
-                //                                                   decoration:
-                //                                                       BoxDecoration(
-                //                                                     borderRadius:
-                //                                                         BorderRadius.circular(
-                //                                                             50),
-                //                                                     color: Colors
-                //                                                         .grey
-                //                                                         .shade300,
-                //                                                   ),
-                //                                                 ),
-                //                                                 const SizedBox(
-                //                                                     width: 10),
-                //                                                 Column(
-                //                                                   crossAxisAlignment:
-                //                                                       CrossAxisAlignment
-                //                                                           .start,
-                //                                                   children: [
-                //                                                     SizedBox(
-                //                                                       height:
-                //                                                           15,
-                //                                                       width:
-                //                                                           width /
-                //                                                               2,
-                //                                                       child:
-                //                                                           font12Tx500Long(
-                //                                                         item['escrowStatus']
-                //                                                             .toString(),
-                //                                                         Colors
-                //                                                             .black87,
-                //                                                       ),
-                //                                                     ),
-                //                                                     size3(),
-                //                                                     font12Tx400(
-                //                                                       formattedDateTime
-                //                                                           .toString(),
-                //                                                       Colors
-                //                                                           .black87,
-                //                                                     ),
-                //                                                   ],
-                //                                                 )
-                //                                               ],
-                //                                             ),
-                //                                             Row(
-                //                                               children: [
-                //                                                 Column(
-                //                                                   crossAxisAlignment:
-                //                                                       CrossAxisAlignment
-                //                                                           .end,
-                //                                                   children: [
-                //                                                     item['currency'] ==
-                //                                                             "NGN"
-                //                                                         ? font13Tx600Naira(
-                //                                                             item['payableAmount']['amount'].toString() ??
-                //                                                                 "",
-                //                                                             Colors
-                //                                                                 .black)
-                //                                                         : font13Tx600(
-                //                                                             "\$${item['payableAmount']['amount'].toString() ?? ""}",
-                //                                                             Colors.black),
-                //                                                     size5(),
-                //                                                     font12Tx400(
-                //                                                       "Cancelled",
-                //                                                       mainRed(),
-                //                                                     ),
-                //                                                   ],
-                //                                                 )
-                //                                               ],
-                //                                             )
-                //                                           ],
-                //                                         ),
-                //                                       );
-                //                                     } else {
-                //                                       return const SizedBox();
-                //                                     }
-                //                                   }
-                //                                 },
-                //                               ),
-                //                             ),
-                //                           ),
-                //                         ],
-                //                       ),
-                //                     ),
-                //                   );
-                //                 }
-                //               },
-                //             ),
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                // ),
+                                DateTime dateTime =
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        timestamp! * 1000);
+
+                                String formattedDateTime =
+                                    DateFormat('MMM d, y, hh:mm a')
+                                        .format(dateTime);
+
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 15, 0, 3),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            height: 50,
+                                            width: 50,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              color: AppColors.primary,
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              child: SvgPicture.asset(
+                                                AppImages.profileEvent,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                height: 15,
+                                                width: width / 2,
+                                                child: customText(
+                                                  text: "${item.escrowStatus}",
+                                                  fontSize: 12,
+                                                  textColor: AppColors.black,
+                                                ),
+                                              ),
+                                              heightSpace(0.5),
+                                              customText(
+                                                  text: formattedDateTime,
+                                                  fontSize: 12,
+                                                  textColor: AppColors.black,
+                                                  fontWeight: FontWeight.w400),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              item.currency == "NGN"
+                                                  ? customText(
+                                                      text:
+                                                          "NGN${item.payableAmount!.amount}",
+                                                      fontSize: 12,
+                                                      textColor:
+                                                          AppColors.black,
+                                                    )
+                                                  : customText(
+                                                      text:
+                                                          "\$${item.payableAmount!.amount}",
+                                                      fontSize: 12,
+                                                      textColor:
+                                                          AppColors.black,
+                                                    ),
+                                              heightSpace(1),
+                                              customText(
+                                                text: "Pending",
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                textColor: AppColors.primary,
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: PAD_ALL_10,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: height,
+                            width: width,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(35),
+                                topRight: Radius.circular(35),
+                              ),
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 10, 15, 5),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      child: ListView.builder(
+                                        itemCount:
+                                            completedEscrowModel.value.length,
+                                        itemBuilder: (context, index) {
+                                          final item =
+                                              completedEscrowModel.value[index];
+
+                                          dynamic timestamp = item.timeOfOrder;
+                                          DateTime dateTime = DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                                  timestamp! * 1000);
+                                          String formattedDateTime =
+                                              DateFormat('MMM d, y, hh:mm a')
+                                                  .format(dateTime);
+                                          // Build your UI for each item in the list
+
+                                          return Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 15, 0, 3),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(50),
+                                                        color: AppColors.red
+                                                            .withOpacity(0.5),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10.0),
+                                                        child: SvgPicture.asset(
+                                                          AppImages
+                                                              .profileEvent,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 10),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 15,
+                                                          width: width / 2,
+                                                          child: customText(
+                                                            text:
+                                                                "${item.escrowStatus}",
+                                                            fontSize: 12,
+                                                            textColor:
+                                                                AppColors.black,
+                                                          ),
+                                                        ),
+                                                        heightSpace(0.5),
+                                                        customText(
+                                                            text:
+                                                                formattedDateTime,
+                                                            fontSize: 12,
+                                                            textColor:
+                                                                AppColors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        item.currency == "NGN"
+                                                            ? customText(
+                                                                text:
+                                                                    "NGN${item.payableAmount!.amount}",
+                                                                fontSize: 12,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .black,
+                                                              )
+                                                            : customText(
+                                                                text:
+                                                                    "\$${item.payableAmount!.amount}",
+                                                                fontSize: 12,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .black,
+                                                              ),
+                                                        heightSpace(1),
+                                                        customText(
+                                                          text: "Cancelled",
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          textColor: AppColors
+                                                              .red
+                                                              .withOpacity(0.5),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           )

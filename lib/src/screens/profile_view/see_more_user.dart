@@ -26,9 +26,11 @@ class SeeMoreUserView extends HookWidget {
     final allUsers = useState<List<ContentUser>>([]);
     final foundUsers = useState<List<ContentUser>>([]);
 
-    final userRequestModel = useState<List<ContentUser>>([]);
-    final allUsersRequest = useState<List<ContentUser>>([]);
-    final foundUsersRequest = useState<List<ContentUser>>([]);
+    //user connection request
+
+    final userRequestModel = useState<List<dynamic>>([]);
+    final allUsersRequest = useState<List<dynamic>>([]);
+    final foundUsersRequest = useState<List<dynamic>>([]);
 
     getUsersConnection() {
       _profileRepository.getUserConnections().then((value) {
@@ -40,7 +42,7 @@ class SeeMoreUserView extends HookWidget {
     }
 
     getUsersConnectionRequests() {
-      _profileRepository.getUserConnectionsRequest().then((value) {
+      _profileRepository.getConnectionRequest("10").then((value) {
         userRequestLoading.value = false;
         userRequestModel.value = value;
         allUsersRequest.value = value;

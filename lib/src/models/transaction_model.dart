@@ -1,7 +1,7 @@
 class TransactionHistory {
   String? id;
   String? userID;
-  List<int>? timestamp;
+  int? timestamp;
   String? description;
   String? currency;
   String? gatewayReferenceID;
@@ -30,7 +30,7 @@ class TransactionHistory {
   TransactionHistory.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? "";
     userID = json['userID'] ?? "";
-    timestamp = json['timestamp'] != null ? [json['timestamp']] : null;
+    timestamp = json['timestamp'];
     description = json['description'] ?? "";
     currency = json['currency'] ?? "";
     gatewayReferenceID = json['gatewayReferenceID'] ?? "";

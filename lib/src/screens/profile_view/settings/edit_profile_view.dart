@@ -231,10 +231,11 @@ class EditProfileScreenView extends HookWidget {
                                 Center(
                                   child: GestureDetector(
                                     onTap: () => uploadImage(),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.camera_alt,
                                       size: 40,
-                                      color: AppColors.deepPrimary,
+                                      color: AppColors.deepPrimary
+                                          .withOpacity(0.6),
                                     ),
                                   ),
                                 ),

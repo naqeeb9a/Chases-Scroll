@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
+import 'package:chases_scroll/src/models/blockedUser_model.dart';
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/models/post_model.dart';
@@ -33,6 +34,9 @@ class ProfileRepository {
 
   //for gettting transactions
   List<TransactionHistory> getTransactions = [];
+
+  //for gettting blocked Users
+  List<BlockedModel> blockedUsers = [];
 
   //edit account settings
   Future<bool> accountSetting({
@@ -110,6 +114,54 @@ class ProfileRepository {
       return true;
     }
     return false;
+  }
+
+  //get bloackedUsers
+  Future<List<BlockedModel>> getblockedUsers() async {
+    String url = "${Endpoints.blockedList}?size=10";
+    final response = await ApiClient.get(url, useToken: true);
+
+    if (response.status == 200) {
+      final List<dynamic> block = response.message['content'];
+      // log(allEvents.toString());
+      blockedUsers = block
+          .map<BlockedModel>((user) => BlockedModel.fromJson(user))
+          .toList();
+
+      return blockedUsers;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> getConnectionRequest(String? page) async {
+    String url = "${Endpoints.getUserConnectionRequests}/?size=$page";
+    final response = await ApiClient.get(url, useToken: true);
+
+    if (response.status == 200) {
+      final List<dynamic> userConnections = response.message['content'];
+
+      return userConnections;
+    } else {
+      return [];
+    }
+  }
+
+  //reset password
+  Future<dynamic> getEventAnalytic({
+    final String? eventId,
+  }) async {
+    String url = "${Endpoints.analyticEvent}?eventID=$eventId";
+    final response = await ApiClient.get(
+      url,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    } else {
+      return response.message;
+    }
   }
 
   //getJOined Communities
@@ -239,22 +291,22 @@ class ProfileRepository {
   }
 
   //get userConnections
-  Future<List<ContentUser>> getUserConnectionsRequest() async {
-    String url = "${Endpoints.getUserConnectionRequests}?size=10";
-    final response = await ApiClient.get(url, useToken: true);
+  // Future<List<ContentUser>> getUserConnectionsRequest() async {
+  //   String url = "${Endpoints.getUserConnectionRequests}?size=10";
+  //   final response = await ApiClient.get(url, useToken: true);
 
-    if (response.status == 200) {
-      final List<dynamic> userRequests = response.message['content'];
-      // log(allEvents.toString());
-      allUserRequests = userRequests
-          .map<ContentUser>((user) => ContentUser.fromJson(user))
-          .toList();
+  //   if (response.status == 200) {
+  //     final List<dynamic> userRequests = response.message['content'];
+  //     // log(allEvents.toString());
+  //     allUserRequests = userRequests
+  //         .map<ContentUser>((user) => ContentUser.fromJson(user))
+  //         .toList();
 
-      return allUserRequests;
-    } else {
-      return [];
-    }
-  }
+  //     return allUserRequests;
+  //   } else {
+  //     return [];
+  //   }
+  // }
 
   //to get user post
   Future<List<Content>> getUserPosts({String? page}) async {
@@ -283,9 +335,58 @@ class ProfileRepository {
       final userProfile = UserModel.fromJson(userProfileMap);
 
       log("here is the user profile ====> $userProfile");
+      _storage.saveDataToDisk(
+          AppKeys.fullName, "${userProfile.firstName} ${userProfile.lastName}");
+      _storage.saveDataToDisk(AppKeys.username, "${userProfile.username}");
       return userProfile;
     }
     return userProfile;
+  }
+
+  //report bug
+  Future<bool> reportBug({
+    final String? title,
+    final String? description,
+  }) async {
+    final data = {
+      "title": title,
+      "description": description,
+      "reportType": "REPORT_BUG",
+      "typeID": userId
+    };
+    final response = await ApiClient.post(
+      Endpoints.report,
+      body: data,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      return true;
+    }
+    return false;
+  }
+
+  //report bug
+  Future<bool> reportEnhancement({
+    final String? title,
+    final String? description,
+  }) async {
+    final data = {
+      "title": title,
+      "description": description,
+      "reportType": "REPORT_ENHANCEMENT",
+      "typeID": userId
+    };
+    final response = await ApiClient.post(
+      Endpoints.report,
+      body: data,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      return true;
+    }
+    return false;
   }
 
   //reset password
@@ -299,6 +400,24 @@ class ProfileRepository {
       body: data,
       useToken: true,
     );
+
+    if (response.status == 200 || response.status == 201) {
+      return true;
+    }
+    return false;
+  }
+
+  //reset password
+  Future<bool> unblockUser({
+    final String? userID,
+  }) async {
+    String url = "${Endpoints.blockedUsers}/$userID";
+    final response = await ApiClient.delete(
+      url,
+      useToken: true,
+    );
+
+    log(response.message);
 
     if (response.status == 200 || response.status == 201) {
       return true;

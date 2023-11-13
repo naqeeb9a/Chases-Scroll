@@ -27,9 +27,9 @@ import 'package:chases_scroll/src/screens/profile_view/see_more_event.dart';
 import 'package:chases_scroll/src/screens/profile_view/see_more_user.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/account_settings_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/blocked_users_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/change_password_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/edit_profile_view.dart';
-import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/event_dasboard_data_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/event_dashboard_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/privacy_policy_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/report_bug_view.dart';
@@ -195,6 +195,13 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         ),
       ),
       GoRoute(
+        path: AppRoutes.webEventStripe,
+        name: AppRoutes.webEventStripe,
+        builder: (_, __) => PaymentStripeView(
+          url: __.extra as String,
+        ),
+      ),
+      GoRoute(
         path: AppRoutes.eventCommunityId,
         name: AppRoutes.eventCommunityId,
         builder: (_, __) => GetCommunityFunnelID(),
@@ -291,16 +298,16 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.eventByID,
         name: AppRoutes.eventByID,
-        builder: (_, __) => MyEventByIDView(),
+        builder: (_, __) => const MyEventByIDView(),
       ),
+      // GoRoute(
+      //   path: AppRoutes.eventByIdDashboard,
+      //   name: AppRoutes.eventByIdDashboard,
+      //   builder: (_, __) => const EventDashboardByID(),
+      // ),
       GoRoute(
-        path: AppRoutes.eventByID,
-        name: AppRoutes.eventByID,
-        builder: (_, __) => MyEventByIDView(),
-      ),
-      GoRoute(
-        path: AppRoutes.eventByIdDashboard,
-        name: AppRoutes.eventByIdDashboard,
-        builder: (_, __) => const EventDashboardByID(),
+        path: AppRoutes.blockedUser,
+        name: AppRoutes.blockedUser,
+        builder: (_, __) => const BlockedUsersView(),
       ),
     ]);

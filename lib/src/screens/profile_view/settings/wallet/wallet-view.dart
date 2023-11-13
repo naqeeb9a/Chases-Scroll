@@ -5,6 +5,7 @@ import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/transaction_model.dart';
 import 'package:chases_scroll/src/repositories/wallet_repository.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/wallet/set_up_paystack_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/wallet/wallet_webView.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -94,7 +95,7 @@ class _WalletViewState extends State<WalletView> {
       if (result['checkout'] != null) {
         ToastResp.toastMsgSuccess(resp: "Fund Account initiated");
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => PaymentStripeFundNGN(
+            builder: (context) => PaymentPaystackFundNGN(
                   url: result['checkout'],
                   urlTransactID: result['transactionID'],
                 )));
@@ -108,7 +109,7 @@ class _WalletViewState extends State<WalletView> {
       final result = await _walletRepository.fundWalletStripe(
         amount: int.parse(amountController.text),
       );
-      if (result['checkout'] == null) {
+      if (result['checkout'] != null) {
         ToastResp.toastMsgSuccess(resp: "Fund Account initiated");
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => PaymentStripeFund(
@@ -120,8 +121,28 @@ class _WalletViewState extends State<WalletView> {
       }
     }
 
+    final paystackCheckAccount = useState<bool>(true);
+
+    void checkPaystackAccount() async {
+      final result = await _walletRepository.checkPaystackAccount();
+      if (result) {
+        setState(() {
+          paystackCheckAccount.value = result;
+          log("is it true or false ====> ${paystackCheckAccount.value.toString()}");
+        });
+      } else {
+        setState(() {
+          paystackCheckAccount.value = result;
+        });
+      }
+    }
+
+    final balance =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.balanceNaira);
+
     useEffect(() {
       getWalletHistory();
+      checkPaystackAccount();
       return null;
     }, []);
 
@@ -306,32 +327,32 @@ class _WalletViewState extends State<WalletView> {
                           child: GestureDetector(
                             onTap: () {
                               animateTo(1);
-                              // bool switchh =
-                              //     StorageUtil.getBool(key: "switch");
-                              // if (switchh == false) {
-                              //   if (accountStatusPaystack == false) {
+                              //bool switchh = StorageUtil.getBool(key: "switch");
+                              // if (_isBlueContainerVisible == false) {
+                              //   if (paystackCheckAccount.value == false) {
                               //     Navigator.of(context).push(
                               //       MaterialPageRoute(
                               //         builder: (context) =>
-                              //             SetupAccountPaystackView(),
+                              //             const SetupAccountPaystackView(),
                               //       ),
                               //     );
                               //   } else {
-                              //     showModalBottomSheet(
-                              //       context: context,
-                              //       builder: (context) => StatefulBuilder(
-                              //         builder: (BuildContext context,
-                              //             StateSetter state) {
-                              //           return WalletAmountWithdrawalScreenView(
-                              //             walletBalanceUSD:
-                              //                 Prefs.getUSD().toString(),
-                              //             walletBalanceNGN:
-                              //                 Prefs.getNGN().toString(),
-                              //           );
-                              //         },
-                              //       ),
-                              //     );
+                              //     // showModalBottomSheet(
+                              //     //   context: context,
+                              //     //   builder: (context) => StatefulBuilder(
+                              //     //     builder: (BuildContext context,
+                              //     //         StateSetter state) {
+                              //     //       return WalletAmountWithdrawalScreenView(
+                              //     //         walletBalanceUSD:
+                              //     //             Prefs.getUSD().toString(),
+                              //     //         walletBalanceNGN:
+                              //     //             Prefs.getNGN().toString(),
+                              //     //       );
+                              //     //     },
+                              //     //   ),
+                              //     // );
                               //   }
+                              // }
                               // } else {
                               //   print(accountStatus);
                               //   if (accountStatus == false) {
@@ -415,6 +436,9 @@ class _WalletViewState extends State<WalletView> {
                               //     },
                               //   ),
                               // );
+                              _isBlueContainerVisible == false
+                                  ? fundWalletNGN()
+                                  : fundWalletUSD();
                             },
                             child: Container(
                               padding: PAD_ALL_5,
@@ -564,7 +588,7 @@ class _WalletViewState extends State<WalletView> {
                                     //     DateFormat('MMM d, y, hh:mm a')
                                     //         .format(dateTime);
 
-                                    int timestampInSeconds = 1699607489;
+                                    int timestampInSeconds = item.timestamp!;
                                     DateTime dateTime =
                                         DateTime.fromMillisecondsSinceEpoch(
                                             timestampInSeconds * 1000);
@@ -743,7 +767,9 @@ class _WalletViewState extends State<WalletView> {
                                       ),
                                       padding: PAD_ALL_15,
                                       child: SvgPicture.asset(
-                                        AppImages.niaraWallett,
+                                        _isBlueContainerVisible == false
+                                            ? AppImages.niaraWallett
+                                            : AppImages.dollerWallett,
                                         color: AppColors.primary,
                                       ),
                                     ),
@@ -758,16 +784,51 @@ class _WalletViewState extends State<WalletView> {
                         ChasescrollButton(
                           buttonText: "Widthdraw",
                           onTap: () async {
-                            bool result =
-                                await _walletRepository.getAccountStatus();
+                            log(amountController.text);
+                            log(balance.toString());
+                            double amount = double.parse(amountController.text);
+                            if (_isBlueContainerVisible == false) {
+                              if (paystackCheckAccount.value == false) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SetupAccountPaystackView(),
+                                  ),
+                                );
+                              } else {
+                                if ((balance / 100) < amount) {
+                                  ToastResp.toastMsgError(
+                                      resp: "Low Naira Balance");
+                                } else {
+                                  final result =
+                                      await _walletRepository.withdrawWallet(
+                                    amount: double.parse(amountController.text),
+                                    currency: "NGN",
+                                  );
 
-                            if (result) {
-                              ToastResp.toastMsgError(
-                                  resp:
-                                      "you dont have an withdrawal account yet. kindly Setup when redirected");
-                            } else {
-                              ToastResp.toastMsgSuccess(resp: "");
+                                  if (result) {
+                                    ToastResp.toastMsgSuccess(
+                                        resp:
+                                            "Withdrawal from naira account successful");
+                                  } else {
+                                    ToastResp.toastMsgError(
+                                        resp:
+                                            "Withdrawal from naira account not successful");
+                                  }
+                                }
+                              }
                             }
+                            // bool result =
+                            //     await _walletRepository.getAccountStatus();
+
+                            // if (result) {
+                            //   ToastResp.toastMsgError(
+                            //       resp:
+                            //           "you dont have an withdrawal account yet. kindly Setup when redirected");
+
+                            // } else {
+                            //   ToastResp.toastMsgSuccess(resp: "");
+                            // }
                           },
                         )
                       ],
@@ -804,7 +865,9 @@ class _WalletViewState extends State<WalletView> {
                                       ),
                                       padding: PAD_ALL_15,
                                       child: SvgPicture.asset(
-                                        AppImages.niaraWallett,
+                                        _isBlueContainerVisible == false
+                                            ? AppImages.niaraWallett
+                                            : AppImages.dollerWallett,
                                         color: AppColors.primary,
                                       ),
                                     ),

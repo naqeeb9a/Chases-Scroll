@@ -10,6 +10,8 @@ class AppKeys {
   static const String haveAccount = "haveAccount";
   static const String escrowNaira = "escrowNaira";
   static const String ecrowUSD = "ecrowUSD";
+  static const String fullName = "fullName";
+  static const String username = "username";
 }
 
 class AwsKeys {

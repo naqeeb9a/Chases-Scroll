@@ -7,6 +7,7 @@ import 'package:chases_scroll/src/utils/constants/helpers/pop_ups.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -75,7 +76,7 @@ class _SettingsScreenViewState extends State<SettingsScreenView> {
                           width,
                           "Event DashBoard",
                           AppImages.eventDashboard,
-                          () {},
+                          () => context.push(AppRoutes.eventByID),
                         ),
                         heightSpace(2),
                         iconTextRowContiner(
@@ -145,7 +146,7 @@ class _SettingsScreenViewState extends State<SettingsScreenView> {
                           width,
                           "Blocked Users",
                           AppImages.block,
-                          () {},
+                          () => context.push(AppRoutes.blockedUser),
                         ),
                       ],
                     ),
@@ -153,51 +154,50 @@ class _SettingsScreenViewState extends State<SettingsScreenView> {
                 ),
                 heightSpace(2),
                 Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () => showDialogDelete(context),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              AppImages.deleteAccount,
-                              height: 25,
-                              width: 25,
-                            ),
-                            widthSpace(5),
-                            customText(
-                              text: "Delete Account",
-                              fontSize: 13,
-                              textColor: AppColors.red,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ],
+                  padding: const EdgeInsets.only(left: 20.0, top: 10),
+                  child: GestureDetector(
+                    onTap: () => showDialogLogout(context),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          AppImages.logout,
+                          height: 25,
+                          width: 25,
                         ),
-                      ),
-                      heightSpace(2),
-                      GestureDetector(
-                        onTap: () => showDialogLogout(context),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              AppImages.logout,
-                              height: 25,
-                              width: 25,
-                            ),
-                            widthSpace(5),
-                            customText(
-                              text: "Logout",
-                              fontSize: 13,
-                              textColor: AppColors.primary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ],
+                        widthSpace(5),
+                        customText(
+                          text: "Logout",
+                          fontSize: 14,
+                          textColor: AppColors.primary,
+                          fontWeight: FontWeight.w700,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0, bottom: 5.h),
+                  child: GestureDetector(
+                    onTap: () => showDialogDelete(context),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          AppImages.deleteAccount,
+                          height: 25,
+                          width: 25,
+                        ),
+                        widthSpace(5),
+                        customText(
+                          text: "Delete Account",
+                          fontSize: 13,
+                          textColor: AppColors.red,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

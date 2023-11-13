@@ -287,19 +287,19 @@ Widget suggestedUserHoriShimmer() {
     baseColor: const Color.fromARGB(255, 233, 233, 233),
     highlightColor: const Color.fromARGB(255, 255, 251, 251),
     child: Container(
-        margin: const EdgeInsets.fromLTRB(5, 20, 15, 10),
-        width: double.infinity,
-        height: 7.h,
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 255, 251, 251),
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(0),
-            bottomRight: Radius.circular(0),
-            topLeft: Radius.circular(0),
-            topRight: Radius.circular(0),
-          ),
+      margin: const EdgeInsets.fromLTRB(5, 20, 15, 10),
+      width: double.infinity,
+      height: 7.h,
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 255, 251, 251),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(0),
+          bottomRight: Radius.circular(0),
+          topLeft: Radius.circular(0),
+          topRight: Radius.circular(0),
         ),
-        child: Container()),
+      ),
+    ),
   );
 }
 

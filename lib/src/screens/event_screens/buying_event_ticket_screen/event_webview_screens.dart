@@ -1,8 +1,12 @@
 import 'dart:developer';
 
+import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
+import 'package:chases_scroll/src/screens/widgets/success_screen.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -33,8 +37,8 @@ class PaymentStripeView extends StatefulWidget {
 class _PaymentPaystackViewState extends State<PaymentPaystackView> {
   final _key = UniqueKey();
   final EventRepository _eventRepository = EventRepository();
-
   bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     print(widget.url);
@@ -43,12 +47,16 @@ class _PaymentPaystackViewState extends State<PaymentPaystackView> {
       if (result['verification'] == "Order verification success") {
         log("Payment Verified...await change sdnjsnkcskncsk");
         ToastResp.toastMsgSuccess(resp: result['verification']);
-        _router.pop();
+        onTapFreeSuccess();
       } else {
         ToastResp.toastMsgError(resp: result['verification']);
         _router.pop();
       }
     }
+
+    //orderID
+    String orderCode =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.orderCode);
 
     return Scaffold(
       body: SafeArea(
@@ -60,7 +68,7 @@ class _PaymentPaystackViewState extends State<PaymentPaystackView> {
           gestureNavigationEnabled: true,
           navigationDelegate: (NavigationRequest request) {
             if (request.url.startsWith(
-                "https://chasescroll-new.netlify.app/payment/verification?orderCode=")) {
+                "https://chasescroll-new.netlify.app/payment/verification?orderCode=$orderCode")) {
               onVerify();
             }
             return NavigationDecision.navigate;
@@ -71,6 +79,15 @@ class _PaymentPaystackViewState extends State<PaymentPaystackView> {
             });
           },
         ),
+      ),
+    );
+  }
+
+  void onTapFreeSuccess() {
+    context.push(
+      AppRoutes.threeLoadingDotsScreen,
+      extra: const EventSuccessScreenView(
+        widgetScreenString: AppRoutes.refundBoughtDetailScreen,
       ),
     );
   }
@@ -84,6 +101,9 @@ class _PaymentStripeViewState extends State<PaymentStripeView> {
 
   @override
   Widget build(BuildContext context) {
+    //orderID
+    String orderID =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.orderID);
     return Scaffold(
       body: SafeArea(
         child: WebView(
@@ -94,7 +114,7 @@ class _PaymentStripeViewState extends State<PaymentStripeView> {
           gestureNavigationEnabled: true,
           navigationDelegate: (NavigationRequest request) {
             if (request.url.startsWith(
-                "https://chasescroll-new.netlify.app/payment/verification?orderCode=")) {
+                "https://chasescroll-new.netlify.app/payment/verification?orderId=$orderID")) {
               onVerify();
             }
             return NavigationDecision.navigate;
@@ -109,12 +129,21 @@ class _PaymentStripeViewState extends State<PaymentStripeView> {
     );
   }
 
+  void onTapFreeSuccess() {
+    context.push(
+      AppRoutes.threeLoadingDotsScreen,
+      extra: const EventSuccessScreenView(
+        widgetScreenString: AppRoutes.refundBoughtDetailScreen,
+      ),
+    );
+  }
+
   onVerify() async {
     final result = await _eventRepository.createWebUrlStripe();
     if (result['verification'] == "Order verification success") {
       log("Payment Verified...await change sdnjsnkcskncsk");
       ToastResp.toastMsgSuccess(resp: result['verification']);
-      _router.pop();
+      onTapFreeSuccess();
     } else {
       ToastResp.toastMsgError(resp: result['verification']);
       _router.pop();

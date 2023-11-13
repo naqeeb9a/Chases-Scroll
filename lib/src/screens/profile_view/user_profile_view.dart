@@ -83,6 +83,19 @@ class UserMainProfileView extends HookWidget {
     final allUsers = useState<List<ContentUser>>([]);
     final foundUsers = useState<List<ContentUser>>([]);
 
+    final userRequestModel = useState<List<dynamic>>([]);
+    final allUsersRequest = useState<List<dynamic>>([]);
+    final foundUsersRequest = useState<List<dynamic>>([]);
+
+    getUsersConnectionRequests() {
+      _profileRepository.getConnectionRequest("10").then((value) {
+        usersLoading.value = false;
+        userRequestModel.value = value;
+        allUsersRequest.value = value;
+        foundUsersRequest.value = value;
+      });
+    }
+
     getUsersConnection() {
       _profileRepository.getUserConnections().then((value) {
         usersLoading.value = false;
@@ -163,6 +176,7 @@ class UserMainProfileView extends HookWidget {
     useEffect(() {
       getUsersPost();
       getUsersConnection();
+      getUsersConnectionRequests();
       getMyEvents();
       getAllCommunities();
       getUsersProfile();
@@ -660,7 +674,7 @@ class UserMainProfileView extends HookWidget {
                                           children: [
                                             usersLoading.value
                                                 ? usersHoriShimmerWithlength(
-                                                    count: 6,
+                                                    count: 1,
                                                   )
                                                 : Expanded(
                                                     child: SizedBox(

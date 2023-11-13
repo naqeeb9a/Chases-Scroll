@@ -90,23 +90,32 @@ class Endpoints {
   static String leaveCommunity = "/group/leave-group";
 
   //for profile settings
-  static String getUserConnections = "/user/get-users-connections";
-  static String getUserConnectionRequests = "/user/friend-requests";
-  static String editProfile = "/user/update-profile";
-  static String editProfileImage = "/user/update-main-profile-image";
-  static String resetPassword = "/chasescroll/verification/reset-password";
-  static String getPrivateUserProfile = "/user/privateprofile";
-  static String getTransactions = "/payments/transactions";
-  static String getEventsDashboard = "/events/events";
+  static String getUserConnections = "user/get-users-connections";
+  static String getUserConnectionRequests = "user/friend-requests";
+  static String editProfile = "user/update-profile";
+  static String editProfileImage = "user/update-main-profile-image";
+  static String resetPassword = "chasescroll/verification/reset-password";
+  static String getPrivateUserProfile = "user/privateprofile";
+  static String getTransactions = "payments/transactions";
+  static String getEventsDashboard = "events/events";
+  static String report = "report/report";
+  static String blockedList = "user/blocklist";
+  static String blockedUsers = "user/delete-block";
+  static String getConnectionRequest = "user/friend-requests";
 
   //wallet
-  static String getTransactionsWallet = "/payments/history";
-  static String escrowAddStatus = "/payments/orders";
-  static String getEscrowBalances = "/escrow/balances";
-  static String fundWallet = "/payments/api/wallet/fundWallet";
-  static String withdrawWallet = "/payments/account/withdraw";
-  static String walletBalances = "/payments/api/wallet/balance";
-  static String accountStatus = "/payments/account/check";
+  static String getTransactionsWallet = "payments/history";
+  static String escrowAddStatus = "payments/orders";
+  static String getEscrowBalances = "escrow/balances";
+  static String fundWallet = "payments/api/wallet/fundWallet";
+  static String onboardPaystack = "payments/account/onboardPaystack";
+  static String checkPaystack = "payments/account/checkPaystack";
+  static String withdrawWallet = "payments/account/withdraw";
+  static String walletBalances = "payments/api/wallet/balance";
+  static String accountStatus = "payments/account/check";
+  static String deleteBlock = "user/delete-block";
+  static String verifyFund = "payments/api/wallet/verifyFundWallet";
 
-  static String verifyFund = "/payments/api/wallet/verifyFundWallet";
+  //analytics
+  static String analyticEvent = "payments/analytics/tickets";
 }

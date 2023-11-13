@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chases_scroll/src/repositories/profile_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/drop_down_widget_view.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -22,9 +23,11 @@ class ReportBugScreenView extends StatefulWidget {
 class _ReportBugScreenViewState extends State<ReportBugScreenView> {
   final _searchController = TextEditingController();
 
+  final ProfileRepository _profileRepository = ProfileRepository();
+
   //int currentIndex = 0;
 
-  String? myListDaysValue = "Select option";
+  String? myListDaysValue = "";
   final bool _isBlueContainerVisible = true;
 
   List<String> myListDays = [
@@ -67,7 +70,9 @@ class _ReportBugScreenViewState extends State<ReportBugScreenView> {
           child: Column(
             children: [
               DropDownListViewString(
-                typeValue: myListDaysValue,
+                typeValue: myListDaysValue!.isNotEmpty
+                    ? myListDaysValue
+                    : "Select Option",
                 typeList: myListDays,
                 onChanged: (value) {
                   setState(() {
@@ -86,16 +91,27 @@ class _ReportBugScreenViewState extends State<ReportBugScreenView> {
               heightSpace(3),
               ChasescrollButton(
                 buttonText: "Submit Suggestion",
-                onTap: () {
-                  if (_searchController.text.isNotEmpty) {
-                    ToastResp.toastMsgSuccess(
-                        resp: "Report submitted successfully");
+                onTap: () async {
+                  if (_searchController.text.isEmpty) {
+                    ToastResp.toastMsgError(resp: "Report with description");
                   } else if (myListDaysValue!.isEmpty) {
                     ToastResp.toastMsgError(
                         resp: "Please select value from dropdown list");
                   } else {
-                    ToastResp.toastMsgError(
-                        resp: "Write feature details please");
+                    final result = await _profileRepository.reportBug(
+                      title: myListDaysValue,
+                      description: _searchController.text,
+                    );
+
+                    if (result) {
+                      ToastResp.toastMsgSuccess(
+                          resp: "Report Bug Went Successfully");
+
+                      _searchController.clear();
+                    } else {
+                      ToastResp.toastMsgError(
+                          resp: "Reporting bugs not available now. Try later");
+                    }
                   }
                 },
               ),

@@ -55,4 +55,5 @@ class AppRoutes {
   static const String fundWalletUSD = "/fundWalletUSD";
   static const String eventByID = "/eventByID";
   static const String eventByIdDashboard = "/eventByIdDashboard";
+  static const String blockedUser = "/blockedUser";
 }

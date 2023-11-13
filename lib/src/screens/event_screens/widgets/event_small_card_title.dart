@@ -21,6 +21,7 @@ class EventSmallTitleCard extends StatefulWidget {
   final String? category;
   final bool? isOrganser;
   final Function()? onSave;
+
   const EventSmallTitleCard({
     super.key,
     this.eventName,

@@ -17,7 +17,7 @@ class EscrowModel {
   String? seller;
   String? buyer;
   bool? isDeleted;
-  String? timeOfOrder;
+  int? timeOfOrder;
 
   EscrowModel({
     this.id,
@@ -62,9 +62,7 @@ class EscrowModel {
     seller = json['seller'];
     buyer = json['buyer'];
     isDeleted = json['isDeleted'];
-    timeOfOrder = json['timeOfOrder'] != null
-        ? (json['timeOfOrder'] as List<dynamic>).join('-')
-        : null;
+    timeOfOrder = json['timeOfOrder'];
   }
 
   Map<String, dynamic> toJson() {

@@ -86,4 +86,5 @@ class AppImages {
   static const String walletRemove = "assets/svgs/money-remove.svg";
   static const String receipt = "assets/svgs/receipt.svg";
   static const String niaraWallett = "assets/svgs/naira_sign.svg";
+  static const String dollerWallett = "assets/svgs/dollar-sign.svg";
 }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
+import 'package:chases_scroll/src/models/escrow_model.dart';
 import 'package:chases_scroll/src/models/transaction_model.dart';
 import 'package:chases_scroll/src/repositories/api/api_clients.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
@@ -12,9 +13,9 @@ class WalletRepository {
   List<TransactionHistory> getWalletHistory = [];
 
   //escrow
-  List<dynamic> inEscrow = [];
-  List<dynamic> inEscrowFinilized = [];
-  List<dynamic> inEscrowRefund = [];
+  List<EscrowModel> inEscrow = [];
+  List<EscrowModel> inEscrowFinilized = [];
+  List<EscrowModel> inEscrowRefund = [];
 
   //get escrow balance USD
   Future<bool> checkAccountStatus() async {
@@ -27,6 +28,19 @@ class WalletRepository {
       // log(allEvents.toString());
       log("checkAccountStatus ======>${response.message}");
 
+      return response.message;
+    }
+    return response.message;
+  }
+
+  //get checkPAyStack Account
+  Future<bool> checkPaystackAccount() async {
+    final response = await ApiClient.get(
+      Endpoints.checkPaystack,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
       return response.message;
     }
     return response.message;
@@ -93,7 +107,7 @@ class WalletRepository {
   }
 
   //get escrow finilized
-  Future<List<dynamic>> getEscrowRefundCompleted() async {
+  Future<List<EscrowModel>> getEscrowRefundCompleted() async {
     String url = "${Endpoints.escrowAddStatus}?escrowStatus=REFUND_COMPLETED";
     final response = await ApiClient.get(
       url,
@@ -101,8 +115,12 @@ class WalletRepository {
     );
 
     if (response.status == 200 || response.status == 201) {
-      final inEscrowRefund = response.message['content'];
+      final List<dynamic> getCompletedEscrow = response.message['content'];
       // log(allEvents.toString());
+      inEscrowRefund = getCompletedEscrow
+          .map<EscrowModel>((post) => EscrowModel.fromJson(post))
+          .toList();
+
       log("getEscrowRefundCompleted ======>${response.message['content']}");
 
       return inEscrowRefund;
@@ -111,7 +129,7 @@ class WalletRepository {
   }
 
   //get escrow inEscrow
-  Future<List<dynamic>> getInEscrow() async {
+  Future<List<EscrowModel>> getInEscrow() async {
     String url = "${Endpoints.escrowAddStatus}?escrowStatus=IN_ESCROW";
     final response = await ApiClient.get(
       url,
@@ -119,9 +137,13 @@ class WalletRepository {
     );
 
     if (response.status == 200 || response.status == 201) {
-      final inEscrow = response.message['content'];
-      log("getInEscrow ======>${response.message['content']}");
+      final List<dynamic> getInEscrow = response.message['content'];
       // log(allEvents.toString());
+      inEscrow = getInEscrow
+          .map<EscrowModel>((post) => EscrowModel.fromJson(post))
+          .toList();
+
+      log("getInEscrow ======>${response.message['content']}");
 
       return inEscrow;
     }
@@ -129,7 +151,7 @@ class WalletRepository {
   }
 
   //get escrow finilized
-  Future<List<dynamic>> getInFinalized() async {
+  Future<List<EscrowModel>> getInFinalized() async {
     String url = "${Endpoints.escrowAddStatus}?escrowStatus=FINALIZED";
     final response = await ApiClient.get(
       url,
@@ -137,8 +159,12 @@ class WalletRepository {
     );
 
     if (response.status == 200 || response.status == 201) {
-      final inEscrowFinilized = response.message['content'];
+      final List<dynamic> finalizedEscrow = response.message['content'];
       // log(allEvents.toString());
+      inEscrowFinilized = finalizedEscrow
+          .map<EscrowModel>((post) => EscrowModel.fromJson(post))
+          .toList();
+
       log("getInFinalized ======>${response.message['content']}");
 
       return inEscrowFinilized;
@@ -206,6 +232,25 @@ class WalletRepository {
     return response.message;
   }
 
+  //onboard paystack
+  Future<bool> onBoardPayStack({
+    String? accountNumber,
+    String? code,
+  }) async {
+    final data = {"account_number": accountNumber, "bank_code": code};
+    final response = await ApiClient.post(
+      Endpoints.onboardPaystack,
+      body: data,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      log("onBoardPayStack ======>${response.message}");
+      return true;
+    }
+    return false;
+  }
+
   //fundWallet paystack
   Future<dynamic> verifyPaymentWellet({String? transactID}) async {
     String url = "${Endpoints.verifyFund}?transactionID=$transactID";
@@ -238,5 +283,26 @@ class WalletRepository {
       return getWalletHistory;
     }
     return [];
+  }
+
+  //withdrawl paystack amount
+  Future<bool> withdrawWallet({
+    double? amount,
+    String? currency,
+  }) async {
+    final data = {};
+    String url =
+        "${Endpoints.withdrawWallet}?currency=$currency&amount=$amount";
+    final response = await ApiClient.post(
+      url,
+      body: data,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      log("withdrawPaystack ======>${response.message}");
+      return true;
+    }
+    return false;
   }
 }

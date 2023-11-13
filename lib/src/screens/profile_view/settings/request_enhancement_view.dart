@@ -10,6 +10,8 @@ import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 
+import '../../../repositories/profile_repository.dart';
+
 class RequestEnhancementScreenView extends StatefulWidget {
   int? currentIndex;
 
@@ -27,13 +29,15 @@ class _RequestEnhancementScreenViewState
 
   //int currentIndex = 0;
 
-  String? myListDaysValue = "Select option";
+  String? myListDaysValue = "";
   final bool _isBlueContainerVisible = true;
 
   List<String> myListDays = [
     "Update ",
     "New Feature",
   ];
+
+  final ProfileRepository _profileRepository = ProfileRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +73,9 @@ class _RequestEnhancementScreenViewState
           child: Column(
             children: [
               DropDownListViewString(
-                typeValue: myListDaysValue,
+                typeValue: myListDaysValue!.isNotEmpty
+                    ? myListDaysValue
+                    : "Select Option",
                 typeList: myListDays,
                 onChanged: (value) {
                   setState(() {
@@ -88,16 +94,28 @@ class _RequestEnhancementScreenViewState
               heightSpace(3),
               ChasescrollButton(
                 buttonText: "Submit Suggestion",
-                onTap: () {
-                  if (_searchController.text.isNotEmpty) {
-                    ToastResp.toastMsgSuccess(
-                        resp: "Report submitted successfully");
+                onTap: () async {
+                  if (_searchController.text.isEmpty) {
+                    ToastResp.toastMsgError(resp: "Report with description");
                   } else if (myListDaysValue!.isEmpty) {
                     ToastResp.toastMsgError(
                         resp: "Please select value from dropdown list");
                   } else {
-                    ToastResp.toastMsgError(
-                        resp: "Write feature details please");
+                    final result = await _profileRepository.reportBug(
+                      title: myListDaysValue,
+                      description: _searchController.text,
+                    );
+
+                    if (result) {
+                      ToastResp.toastMsgSuccess(
+                          resp: "Report Enhancement sent Successfully");
+
+                      _searchController.clear();
+                    } else {
+                      ToastResp.toastMsgError(
+                          resp:
+                              "Reporting Enhancement not available now. Try later");
+                    }
                   }
                 },
               ),
