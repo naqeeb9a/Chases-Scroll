@@ -12,6 +12,7 @@ class AppKeys {
   static const String ecrowUSD = "ecrowUSD";
   static const String fullName = "fullName";
   static const String username = "username";
+  static const String email = "email";
 }
 
 class AwsKeys {

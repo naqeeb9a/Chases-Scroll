@@ -177,82 +177,123 @@ class _EventBigCardState extends State<EventBigCard> {
                 ),
                 heightSpace(0.8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 30,
-                          width: 80,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                child: Container(
-                                  width: 6.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: Colors.blue,
-                                  ),
+                    // SizedBox(
+                    //   height: 30,
+                    //   width: 80,
+                    //   child: Stack(
+                    //     children: [
+                    // Positioned(
+                    //   top: 0,
+                    //   left: 0,
+                    //   child: Container(
+                    //     width: 6.w,
+                    //     height: 3.h,
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(30),
+                    //       color: Colors.blue,
+                    //     ),
+                    //   ),
+                    // ),
+                    //       Positioned(
+                    //         left: 15,
+                    //         child: Container(
+                    //           width: 6.w,
+                    //           height: 3.h,
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             color: Colors.green,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Positioned(
+                    //         left: 30,
+                    //         child: Container(
+                    //           width: 6.w,
+                    //           height: 3.h,
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             color: Colors.orange,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Positioned(
+                    //         left: 45,
+                    //         child: Container(
+                    //           width: 6.w,
+                    //           height: 3.h,
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             color: AppColors.deepPrimary,
+                    //           ),
+                    //           child: Center(
+                    //             child: customText(
+                    //               text: "+${widget.eventDetails!.memberCount}",
+                    //               fontSize: 9,
+                    //               textColor: AppColors.white,
+                    //               fontWeight: FontWeight.w500,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    Expanded(
+                      flex: widget.eventDetails!.interestedUsers!.length < 2
+                          ? 1
+                          : widget.eventDetails!.interestedUsers!.length < 3
+                              ? 2
+                              : 3,
+                      child: SizedBox(
+                        // color: Colors.amber,
+                        height: 35,
+                        width: double.infinity,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount:
+                              widget.eventDetails!.interestedUsers!.length < 3
+                                  ? widget.eventDetails!.interestedUsers!.length
+                                  : 3, // Replace with your actual item count
+                          itemBuilder: (context, index) {
+                            InterestedUsers indiv =
+                                widget.eventDetails!.interestedUsers![index];
+                            // Replace this with your actual list item widget
+                            return Container(
+                              width: 8.w,
+                              height: 6.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: AppColors.primary.withOpacity(0.5),
+                                image: DecorationImage(
+                                  scale: 1.0,
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(
+                                      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}"),
                                 ),
                               ),
-                              Positioned(
-                                left: 15,
-                                child: Container(
-                                  width: 6.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 30,
-                                child: Container(
-                                  width: 6.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: Colors.orange,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 45,
-                                child: Container(
-                                  width: 6.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: AppColors.deepPrimary,
-                                  ),
+                              child: Visibility(
                                   child: Center(
-                                    child: customText(
-                                      text:
-                                          "+${widget.eventDetails!.memberCount}",
-                                      fontSize: 9,
-                                      textColor: AppColors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                                child: Text(
+                                    "${indiv.firstName![0]}${indiv.lastName![0]}"
+                                        .toUpperCase()),
+                              )),
+                            );
+                          },
                         ),
-                        Container(
-                          child: customText(
-                            text: "Interested",
-                            fontSize: 12,
-                            textColor: AppColors.deepPrimary,
-                            fontWeight: FontWeight.w400,
-                          ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Container(
+                        child: customText(
+                          text: "Interested",
+                          fontSize: 12,
+                          textColor: AppColors.deepPrimary,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 )

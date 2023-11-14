@@ -56,6 +56,9 @@ class Endpoints {
 
   static const String connectFriend = "/user/send-friend-request";
   static const String disconnectFriend = "/user/remove-friend";
+  static const String acceptFriend = "user/accept-friend-request";
+  static const String rejectFriend = "user/reject-friend-request";
+  static const String blockFriend = "/user/block";
 
   //--------------------------- Event Endpoint ------------------------------//
   static const String saveEvent = "/events/save-event";
@@ -78,8 +81,16 @@ class Endpoints {
   static String festivalEvents = "/events/events?eventType=Festival";
   static String communityEvents = "/events/events?eventType=Community_Event";
   static String createEventTicket = "/events/create-ticket";
-  static String createWebUrlPaystack = "/payments/payWithPaystack";
-  static String createWebUrlStripe = "/payments/payWithStripe";
+  static String createWebUrlPaystack = "payments/payWithPaystack";
+  static String createWebUrlStripe = "payments/payWithStripe";
+
+  //----------------------- draft ------------------------------
+  static String createDraft = "events/create-draft";
+  static String updateDraft = "/events/update-draft";
+
+  //verifyEventPayment
+  static String verifyEventPaystack = "payments/verifyPaystackTx";
+  static String verifyEventStripe = "payments/stripePaySuccess";
 
   static String createEvent = "/events/create-event";
   static String deleteFriend = "/user/remove-friend";
@@ -90,7 +101,7 @@ class Endpoints {
   static String leaveCommunity = "/group/leave-group";
 
   //for profile settings
-  static String getUserConnections = "user/get-users-connections";
+  static String getUserConnections = "/user/get-users-connections";
   static String getUserConnectionRequests = "user/friend-requests";
   static String editProfile = "user/update-profile";
   static String editProfileImage = "user/update-main-profile-image";

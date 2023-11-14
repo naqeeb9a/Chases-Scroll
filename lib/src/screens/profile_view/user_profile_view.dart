@@ -7,13 +7,14 @@ import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/models/post_model.dart';
 import 'package:chases_scroll/src/models/user_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
-import 'package:chases_scroll/src/repositories/post_repository.dart';
+import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/repositories/profile_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_small_card_title.dart';
 import 'package:chases_scroll/src/screens/profile_view/widgets/icon_row_profile.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
@@ -28,7 +29,7 @@ import 'package:go_router/go_router.dart';
 class UserMainProfileView extends HookWidget {
   static final EventRepository _eventRepository = EventRepository();
   static final ProfileRepository _profileRepository = ProfileRepository();
-  static final PostRepository _postRepository = PostRepository();
+  static final ExploreRepository _exploreRepository = ExploreRepository();
   const UserMainProfileView({super.key});
 
   @override
@@ -105,7 +106,13 @@ class UserMainProfileView extends HookWidget {
       });
     }
 
-    //for events filtered list
+    refreshConnection() {
+      usersLoading.value = false;
+      getUsersConnection();
+      getUsersConnectionRequests();
+    }
+
+    //for _runUsersFilter filtered list
     void _runUsersFilter(String enteredKeyword) {
       log(enteredKeyword);
       if (enteredKeyword.isEmpty) {
@@ -118,6 +125,22 @@ class UserMainProfileView extends HookWidget {
             .toList();
 
         foundUsers.value = found;
+      }
+    }
+
+    //for _runUsersConnectionFilter filtered list
+    void _runUsersConnectionFilter(String enteredKeyword) {
+      log(enteredKeyword);
+      if (enteredKeyword.isEmpty) {
+        foundUsersRequest.value = allUsersRequest.value;
+      } else {
+        final found = allUsersRequest.value
+            .where((event) => event['firstName']!
+                .toLowerCase()
+                .contains(enteredKeyword.toLowerCase()))
+            .toList();
+
+        foundUsersRequest.value = found;
       }
     }
 
@@ -825,8 +848,224 @@ class UserMainProfileView extends HookWidget {
                                                       ),
                                                     ),
                                                   ),
-                                            Container(
-                                              color: Colors.red,
+                                            Expanded(
+                                              child: SizedBox(
+                                                height: double.infinity,
+                                                width: double.infinity,
+                                                child: ListView.builder(
+                                                  itemCount: foundUsersRequest
+                                                      .value.length,
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    final content =
+                                                        foundUsersRequest
+                                                            .value[index];
+                                                    return Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 15,
+                                                              left: 15,
+                                                              right: 15),
+                                                      padding: PAD_ALL_5,
+                                                      color: AppColors.white,
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 2,
+                                                                child: Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      height:
+                                                                          50,
+                                                                      width: 50,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        borderRadius:
+                                                                            const BorderRadius.only(
+                                                                          bottomLeft:
+                                                                              Radius.circular(40),
+                                                                          bottomRight:
+                                                                              Radius.circular(40),
+                                                                          topLeft:
+                                                                              Radius.circular(40),
+                                                                          topRight:
+                                                                              Radius.circular(0),
+                                                                        ),
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade300,
+                                                                        image:
+                                                                            DecorationImage(
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                          image:
+                                                                              NetworkImage("http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content['fromUserID']['data']['imgMain']['value'].toString()}"),
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Center(
+                                                                        child: customText(
+                                                                            text: content['fromUserID']['data']['imgMain']['objectPublic'] == false
+                                                                                ? content['fromUserID']['firstName']!.isEmpty
+                                                                                    ? ""
+                                                                                    : "${content['fromUserID']['firstName'][0]}${content['fromUserID']['lastName'][0]}".toUpperCase()
+                                                                                : "",
+                                                                            fontSize: 12,
+                                                                            textColor: AppColors.deepPrimary,
+                                                                            fontWeight: FontWeight.w500),
+                                                                      ),
+                                                                    ),
+                                                                    widthSpace(
+                                                                        2),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          40.w,
+                                                                      //color: Colors.amber,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          customText(
+                                                                              text: "${content['fromUserID']['firstName']} ${content['fromUserID']['lastName']}",
+                                                                              fontSize: 11,
+                                                                              textColor: AppColors.black,
+                                                                              fontWeight: FontWeight.w700),
+                                                                          customText(
+                                                                              text: "@${content['fromUserID']['username']} ",
+                                                                              fontSize: 11,
+                                                                              textColor: AppColors.searchTextGrey,
+                                                                              fontWeight: FontWeight.w400),
+                                                                        ],
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                padding:
+                                                                    PAD_ALL_15,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: AppColors
+                                                                      .primary,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              45),
+                                                                ),
+                                                                child: Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () async {
+                                                                        final result =
+                                                                            await _exploreRepository.acceptFriendRequest(friendID: content['fromUserID']['userId']);
+                                                                        if (result['updated'] ==
+                                                                            true) {
+                                                                          ToastResp.toastMsgSuccess(
+                                                                              resp: result['message']);
+
+                                                                          log(result
+                                                                              .toString());
+                                                                          refreshConnection();
+                                                                        } else {
+                                                                          log(result
+                                                                              .toString());
+                                                                          ToastResp.toastMsgError(
+                                                                              resp: result['message']);
+                                                                        }
+                                                                      },
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                        AppImages
+                                                                            .addOrganizer,
+                                                                        color: content['fromUserID']['joinStatus'] ==
+                                                                                "FRIEND_REQUEST_RECIEVED"
+                                                                            ? AppColors.white
+                                                                            : AppColors.white,
+                                                                      ),
+                                                                    ),
+                                                                    widthSpace(
+                                                                        2),
+                                                                    PopupMenuButton(
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(15),
+                                                                      ),
+                                                                      position:
+                                                                          PopupMenuPosition
+                                                                              .under,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      child:
+                                                                          Container(
+                                                                        child: const Padding(
+                                                                            padding: EdgeInsets.all(2.0),
+                                                                            child: Icon(
+                                                                              Icons.more_vert_outlined,
+                                                                              color: Colors.white,
+                                                                            )),
+                                                                      ),
+                                                                      itemBuilder:
+                                                                          (ctx) =>
+                                                                              [
+                                                                        buildPopupMenuItem2(
+                                                                          'Disconnect',
+                                                                          AppColors
+                                                                              .black,
+                                                                          function:
+                                                                              () async {
+                                                                            final result =
+                                                                                await _exploreRepository.rejectFriendRequest(friendID: content['fromUserID']['userId']);
+                                                                            if (result['updated'] ==
+                                                                                true) {
+                                                                              ToastResp.toastMsgSuccess(resp: result['message']);
+
+                                                                              log(result.toString());
+                                                                              refreshConnection();
+                                                                            } else {
+                                                                              log(result.toString());
+                                                                              ToastResp.toastMsgError(resp: result['message']);
+                                                                            }
+                                                                          },
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          heightSpace(0.2),
+                                                          const Divider(
+                                                            thickness: 0.5,
+                                                            color: AppColors
+                                                                .iconGrey,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),

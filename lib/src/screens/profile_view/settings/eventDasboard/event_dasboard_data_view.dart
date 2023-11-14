@@ -113,40 +113,66 @@ class _OrganizerAnalyticsScreenViewState
       });
     }
 
-    // // Create a list of unique ticket types
-    // final uniqueTicketTypes = dashboardModel.value['tickets']
-    //     .map((ticketStat) => ticketStat['ticketType'])
-    //     .where((type) => type != null) // Filter out null values
-    //     .cast<String>() // Cast the list to List<String>
-    //     .toSet()
-    //     .toList();
+    // Create a list of unique ticket types
+    final uniqueTicketTypes = dashboardModel.value['tickets'] != null
+        ? dashboardModel.value['tickets']
+            .map((ticketStat) => ticketStat['ticketType'])
+            .where((type) => type != null)
+            .cast<String>()
+            .toSet()
+            .toList()
+        : <String>[];
 
-    // List<BarChartData> data = [];
-    // if (dashboardModel.value['tickets'] != null) {
-    //   // Cast the list to List<Map<String, dynamic>>
-    //   List<Map<String, dynamic>> ticketStats =
-    //       List<Map<String, dynamic>>.from(dashboardModel.value['tickets']);
+    List<BarChartData> data = [];
+    if (dashboardModel.value['tickets'] != null) {
+      // Cast the list to List<Map<String, dynamic>>
+      List<Map<String, dynamic>> ticketStats =
+          List<Map<String, dynamic>>.from(dashboardModel.value['tickets']);
 
-    //   // Use the casted list to create BarChartData objects
-    //   data = ticketStats.map((ticketStat) {
-    //     return BarChartData(
-    //       ticketType: ticketStat['ticketType'] ?? "",
-    //       value: ticketStat['qtyActiveSold'] ?? 0,
-    //     );
-    //   }).toList();
-    // }
+      // Use the casted list to create BarChartData objects
+      data = ticketStats.map((ticketStat) {
+        return BarChartData(
+          ticketType: ticketStat['ticketType'] ?? "",
+          value: ticketStat['qtyActiveSold'] ?? 0,
+        );
+      }).toList();
+    }
 
-    // final series = [
-    //   charts.Series(
-    //     id: 'Ticket Sales',
-    //     data: data,
-    //     domainFn: (BarChartData sales, _) => sales.ticketType,
-    //     measureFn: (BarChartData sales, _) => sales.value,
-    //     colorFn: (BarChartData sales, _) =>
-    //         _getColor(sales.ticketType, uniqueTicketTypes),
-    //     labelAccessorFn: (BarChartData sales, _) => '${sales.value}',
-    //   ),
-    // ];
+    final series = [
+      charts.Series(
+        id: 'Ticket Sales',
+        data: data,
+        domainFn: (BarChartData sales, _) => sales.ticketType,
+        measureFn: (BarChartData sales, _) => sales.value,
+        colorFn: (BarChartData sales, _) =>
+            _getColor(sales.ticketType, uniqueTicketTypes),
+        labelAccessorFn: (BarChartData sales, _) => '${sales.value}',
+      ),
+    ];
+
+    String formatNumber(int number) {
+      if (number >= 1000000) {
+        double result = number / 1000000;
+        return '${result.toStringAsFixed(result.truncateToDouble() == result ? 0 : 1)}M';
+      } else if (number >= 1000) {
+        double result = number / 1000;
+        return '${result.toStringAsFixed(result.truncateToDouble() == result ? 0 : 1)}K';
+      } else {
+        return number.toString();
+      }
+    }
+
+    String formatDoubleNumber(double number) {
+      if (number >= 1000000) {
+        double result = number / 1000000;
+        return '${result.toStringAsFixed(result.truncateToDouble() == result ? 0 : 1)}M';
+      } else if (number >= 1000) {
+        double result = number / 1000;
+        return '${result.toStringAsFixed(result.truncateToDouble() == result ? 0 : 1)}K';
+      } else {
+        return number.toString();
+      }
+    }
 
     useEffect(() {
       getUsersConnectionRequests();
@@ -336,27 +362,46 @@ class _OrganizerAnalyticsScreenViewState
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          CircleAvatar(
-                                            radius: 20,
-                                            backgroundColor:
-                                                const Color(0xff101828)
-                                                    .withOpacity(0.7),
-                                            child: Center(
-                                              child: SvgPicture.asset(
-                                                AppImages.profileEvent,
-                                                height: 22,
-                                                width: 22,
-                                                color: Colors.white,
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 20,
+                                                backgroundColor:
+                                                    const Color(0xff101828)
+                                                        .withOpacity(0.7),
+                                                child: Center(
+                                                  child: SvgPicture.asset(
+                                                    AppImages.profileEvent,
+                                                    height: 22,
+                                                    width: 22,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              widthSpace(2),
+                                              customText(
+                                                text: widget.eventName,
+                                                fontSize: 14,
+                                                textColor:
+                                                    const Color(0xff101828),
+                                              ),
+                                            ],
                                           ),
-                                          widthSpace(2),
                                           customText(
-                                            text: widget.eventName,
-                                            fontSize: 14,
-                                            textColor: const Color(0xff101828),
+                                            text: widget.location,
+                                            fontSize: 12,
+                                            textColor: const Color(0xff101828)
+                                                .withOpacity(0.5),
+                                          ),
+                                          customText(
+                                            text: widget.date,
+                                            fontSize: 12,
+                                            textColor: const Color(0xff101828)
+                                                .withOpacity(0.5),
                                           ),
                                         ],
                                       ),
@@ -373,9 +418,9 @@ class _OrganizerAnalyticsScreenViewState
                                                 ),
                                                 heightSpace(2),
                                                 customText(
-                                                  text: dashboardModel.value![
-                                                          "totalNumberOfAvailableTickets"]
-                                                      .toString(),
+                                                  text: formatNumber(dashboardModel
+                                                          .value![
+                                                      "totalNumberOfAvailableTickets"]),
                                                   fontSize: 14,
                                                   textColor:
                                                       const Color(0xff101828),
@@ -396,8 +441,8 @@ class _OrganizerAnalyticsScreenViewState
                                                 heightSpace(2),
                                                 Text(
                                                   widget.currency == "USD"
-                                                      ? "\$${dashboardModel.value['totalActiveSales'].toString()}"
-                                                      : "₦${dashboardModel.value["totalActiveSales"].toString()}",
+                                                      ? "\$${formatDoubleNumber(dashboardModel.value['totalActiveSales'])}"
+                                                      : "₦${formatDoubleNumber(dashboardModel.value['totalActiveSales'])}",
                                                   style: GoogleFonts.montserrat(
                                                     color: Colors.black87,
                                                     fontSize: 16,
@@ -420,8 +465,8 @@ class _OrganizerAnalyticsScreenViewState
                                                 heightSpace(2),
                                                 Text(
                                                   widget.currency == "USD"
-                                                      ? "\$${dashboardModel.value['qtyRefunded'].toString()}"
-                                                      : "₦${dashboardModel.value["qtyRefunded"].toString()}",
+                                                      ? "\$${formatNumber(dashboardModel.value['qtyRefunded'])}"
+                                                      : "₦${formatNumber(dashboardModel.value['qtyRefunded'])}",
                                                   style: GoogleFonts.montserrat(
                                                     color: Colors.black87,
                                                     fontSize: 16,
@@ -443,9 +488,9 @@ class _OrganizerAnalyticsScreenViewState
                                                 ),
                                                 heightSpace(2),
                                                 customText(
-                                                  text: dashboardModel.value[
-                                                          'totalPendingSales']
-                                                      .toString(),
+                                                  text: formatDoubleNumber(
+                                                      dashboardModel.value[
+                                                          'totalPendingSales']),
                                                   fontSize: 16,
                                                   textColor:
                                                       const Color(0xff101828),
@@ -462,11 +507,11 @@ class _OrganizerAnalyticsScreenViewState
                               heightSpace(2),
                               const Divider(),
                               heightSpace(2),
-                              // Expanded(
-                              //   child: Container(
-                              //     child: SimpleBarChart(series, animate: true),
-                              //   ),
-                              // )
+                              Expanded(
+                                child: Container(
+                                  child: SimpleBarChart(series, animate: true),
+                                ),
+                              )
                             ],
                           ),
                         ),

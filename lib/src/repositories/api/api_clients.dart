@@ -201,6 +201,38 @@ class ApiClient {
     }
   }
 
+  //some network calls wont go through unless there's no body sent as part of the request
+  static Future postWithoutBody(String endpoint,
+      {bool useToken = true,
+      Function(int, int)? onSendProgress,
+      Color? backgroundColor,
+      Widget? widget}) async {
+    final result = await _makeRequest(
+      () async {
+        final header = _defaultHeader;
+
+        if (useToken) {
+          header.addAll(
+            {'Authorization': 'Bearer $_token'},
+          );
+        }
+
+        final options = Options(headers: header);
+        log("${_dio.options.baseUrl}$endpoint");
+        AppHelper.showOverlayLoader(
+            backgroundColor: backgroundColor, widget: widget);
+        final response = await _dio.post(endpoint,
+            options: options, onSendProgress: onSendProgress);
+        log("$response");
+
+        OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+        return response;
+      },
+    );
+
+    return result;
+  }
+
   static Future postWithoutOverlay(String endpoint,
       {required dynamic body,
       bool useToken = true,

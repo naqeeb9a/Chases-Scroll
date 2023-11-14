@@ -25,6 +25,10 @@ class EventRepository {
   //orderID
   static String orderCode =
       locator<LocalStorageService>().getDataFromDisk(AppKeys.orderCode);
+
+  //email
+  static String email =
+      locator<LocalStorageService>().getDataFromDisk(AppKeys.email);
   //this is to get all events
   List<EventContent> allEventList = [];
 
@@ -188,15 +192,14 @@ class EventRepository {
   }
 
   //to create event ticket
-  Future<dynamic> createWebUrlPayStack() async {
-    final data = {};
+  Future<dynamic> createWebUrlPayStack(
+      {required String? amount, required String? currency}) async {
     final url =
-        "${Endpoints.createWebUrlPaystack}?orderCode=$orderCode&email=jken04680@gmail.com";
-    final response = await ApiClient.post(url,
-        body: data,
-        useToken: true,
-        backgroundColor: Colors.transparent,
-        widget: Container());
+        "${Endpoints.createWebUrlPaystack}?orderCode=$orderCode&email=$email&amount=$amount&currency=$currency";
+    final response = await ApiClient.postWithoutBody(
+      url,
+      useToken: true,
+    );
 
     if (response.status == 200 || response.status == 201) {
       //log("webUrlPaystack ======> ${response.message}");
@@ -207,11 +210,10 @@ class EventRepository {
 
   Future<dynamic> createWebUrlStripe() async {
     final url = "${Endpoints.createWebUrlStripe}?orderId=$orderID";
-    final response = await ApiClient.post(url,
-        useToken: true,
-        backgroundColor: Colors.transparent,
-        widget: Container(),
-        body: {});
+    final response = await ApiClient.postWithoutBody(
+      url,
+      useToken: true,
+    );
 
     if (response.status == 200 || response.status == 201) {
       log("webUrlStripe ======> ${response.message}");
@@ -641,6 +643,36 @@ class EventRepository {
     );
 
     if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
+
+  //verify event payment paystack
+  Future<dynamic> verifyEventPaymentPaystack() async {
+    final url = "${Endpoints.verifyEventPaystack}?orderCode=$orderCode";
+    final response = await ApiClient.postWithoutBody(
+      url,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      log("verifyEventPaymentPaystack ======> ${response.message}");
+      return response.message;
+    }
+    return response.message;
+  }
+
+  //verify event payment Stripe
+  Future<dynamic> verifyEventPaymentStripe() async {
+    final url = "${Endpoints.verifyEventStripe}?orderId=$orderID";
+    final response = await ApiClient.postWithoutBody(
+      url,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      log("verifyEventPaymentStripe ======> ${response.message}");
       return response.message;
     }
     return response.message;

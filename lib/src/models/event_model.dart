@@ -313,6 +313,7 @@ class EventContent {
   int? memberCount;
   Location? location;
   List<ProductTypeData>? productTypeData;
+  List<InterestedUsers>? interestedUsers;
 
   EventContent({
     this.id,
@@ -351,6 +352,7 @@ class EventContent {
     this.memberCount,
     this.location,
     this.productTypeData,
+    this.interestedUsers,
   });
 
   factory EventContent.fromJson(Map<String, dynamic> json) {
@@ -400,12 +402,79 @@ class EventContent {
               .map((v) => ProductTypeData.fromJson(v))
               .toList()
           : null,
+      interestedUsers: json['interestedUsers'] != null
+          ? (json['interestedUsers'] as List)
+              .map((v) => InterestedUsers.fromJson(v))
+              .toList()
+          : null,
     );
   }
 
   @override
   String toString() {
-    return 'Content{id: $id, createdDate: $createdDate, lastModifiedBy: $lastModifiedBy, createdBy: $createdBy, lastModifiedDate: $lastModifiedDate, isDeleted: $isDeleted, picUrls: $picUrls, eventName: $eventName, eventDescription: $eventDescription, eventType: $eventType, locationType: $locationType, currency: $currency, currentPicUrl: $currentPicUrl, eventFunnelGroupID: $eventFunnelGroupID, mediaType: $mediaType, currentVideoUrl: $currentVideoUrl, isPublic: $isPublic, isExclusive: $isExclusive, mask: $mask, isOrganizer: $isOrganizer, attendeesVisibility: $attendeesVisibility, isJoined: $isJoined, isSaved: $isSaved, isFree: $isFree, isBought: $isBought, ticketBought: $ticketBought, minPrice: $minPrice, maxPrice: $maxPrice, startTime: $startTime, endTime: $endTime, startDate: $startDate, endDate: $endDate, expirationDate: $expirationDate, memberCount: $memberCount, location: $location, productTypeData: $productTypeData}';
+    return 'Content{id: $id, createdDate: $createdDate, lastModifiedBy: $lastModifiedBy, createdBy: $createdBy, lastModifiedDate: $lastModifiedDate, isDeleted: $isDeleted, picUrls: $picUrls, eventName: $eventName, eventDescription: $eventDescription, eventType: $eventType, locationType: $locationType, currency: $currency, currentPicUrl: $currentPicUrl, eventFunnelGroupID: $eventFunnelGroupID, mediaType: $mediaType, currentVideoUrl: $currentVideoUrl, isPublic: $isPublic, isExclusive: $isExclusive, mask: $mask, isOrganizer: $isOrganizer, attendeesVisibility: $attendeesVisibility, isJoined: $isJoined, isSaved: $isSaved, isFree: $isFree, isBought: $isBought, ticketBought: $ticketBought, minPrice: $minPrice, maxPrice: $maxPrice, startTime: $startTime, endTime: $endTime, startDate: $startDate, endDate: $endDate, expirationDate: $expirationDate, memberCount: $memberCount, location: $location, productTypeData: $productTypeData, interestedUsers: $interestedUsers}';
+  }
+}
+
+class InterestedUsers {
+  String? userId;
+  String? firstName;
+  String? lastName;
+  String? username;
+  String? dob;
+  bool? publicProfile;
+  String? joinStatus;
+  Data? data;
+
+  InterestedUsers(
+      {this.userId,
+      this.firstName,
+      this.lastName,
+      this.username,
+      this.dob,
+      this.publicProfile,
+      this.joinStatus,
+      this.data});
+
+  factory InterestedUsers.fromJson(Map<String, dynamic> json) {
+    return InterestedUsers(
+      userId: json['userId'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      username: json['username'],
+      dob: json['dob'],
+      publicProfile: json['publicProfile'],
+      joinStatus: json['joinStatus'],
+      data: json['data'] != null ? Data.fromJson(json['data']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userId'] = userId;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['username'] = username;
+    data['dob'] = dob;
+    data['publicProfile'] = publicProfile;
+    data['joinStatus'] = joinStatus;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'InterestedUsers { '
+        'userId: $userId, '
+        'firstName: $firstName, '
+        'lastName: $lastName, '
+        'username: $username, '
+        'dob: $dob, '
+        'publicProfile: $publicProfile, '
+        'joinStatus: $joinStatus, '
+        'data: $data }';
   }
 }
 

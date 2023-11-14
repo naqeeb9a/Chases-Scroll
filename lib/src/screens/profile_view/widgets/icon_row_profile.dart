@@ -32,6 +32,32 @@ PopupMenuItem buildPopupMenuItem(String title, Color color,
   );
 }
 
+//this is for pop up menu item
+PopupMenuItem buildPopupMenuItem2(String title, Color color,
+    {Function()? function}) {
+  return PopupMenuItem(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: function,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              customText(
+                text: title,
+                fontSize: 12,
+                textColor: color,
+                fontWeight: FontWeight.w500,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 GestureDetector gestureTextContiner(
     double width, String title, VoidCallback function) {
   return GestureDetector(

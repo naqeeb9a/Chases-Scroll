@@ -50,7 +50,7 @@ class BlockObject {
   String? userId;
   String? firstName;
   String? lastName;
-  String? showEmail;
+  bool? showEmail;
   String? username;
   String? email;
   bool? active;

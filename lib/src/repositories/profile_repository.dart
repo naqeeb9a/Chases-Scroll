@@ -188,7 +188,7 @@ class ProfileRepository {
     final response = await ApiClient.get(url, useToken: true);
 
     if (response.status == 200) {
-      final List<dynamic> userConnections = response.message;
+      final List<dynamic> userConnections = response.message['content'];
       // log(allEvents.toString());
       allUserConnections = userConnections
           .map<ContentUser>((user) => ContentUser.fromJson(user))
@@ -278,7 +278,7 @@ class ProfileRepository {
     final response = await ApiClient.get(url, useToken: true);
 
     if (response.status == 200) {
-      final List<dynamic> userConnections = response.message;
+      final List<dynamic> userConnections = response.message['content'];
       // log(allEvents.toString());
       allUserConnections = userConnections
           .map<ContentUser>((user) => ContentUser.fromJson(user))
@@ -337,6 +337,7 @@ class ProfileRepository {
       log("here is the user profile ====> $userProfile");
       _storage.saveDataToDisk(
           AppKeys.fullName, "${userProfile.firstName} ${userProfile.lastName}");
+      _storage.saveDataToDisk(AppKeys.email, response.message['email']);
       _storage.saveDataToDisk(AppKeys.username, "${userProfile.username}");
       return userProfile;
     }
@@ -417,9 +418,8 @@ class ProfileRepository {
       useToken: true,
     );
 
-    log(response.message);
-
     if (response.status == 200 || response.status == 201) {
+      log(response.message.toString());
       return true;
     }
     return false;

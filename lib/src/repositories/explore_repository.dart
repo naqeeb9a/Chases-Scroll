@@ -23,6 +23,41 @@ class ExploreRepository {
   //this is for community
   List<CommContent> allCommunityList = [];
 
+  //accept friend request
+  Future<dynamic> acceptFriendRequest({String? friendID}) async {
+    final data = {
+      "friendRequestID": friendID,
+    };
+    final response = await ApiClient.post(Endpoints.acceptFriend,
+        body: data,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    log("response here saying  acceptFriendRequest... =>>>${response.message}");
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
+
+  Future<dynamic> blockFriend({String? friendID}) async {
+    final data = {"blockType": "USER", "typeID": friendID};
+    final response = await ApiClient.post(
+      Endpoints.blockFriend,
+      body: data,
+      useToken: true,
+    );
+
+    log("response here saying blockFriend... =>>>${response.message}");
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
+
   Future<dynamic> connectWithFriend({String? friendID}) async {
     final data = {
       "toUserID": friendID,
@@ -123,5 +158,21 @@ class ExploreRepository {
     } else {
       return [];
     }
+  }
+
+  //reject friend request
+  Future<dynamic> rejectFriendRequest({String? friendID}) async {
+    String url = "${Endpoints.rejectFriend}/$friendID";
+    final response = await ApiClient.delete(url,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    log("response here saying rejectFriendRequest... =>>>${response.message}");
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
   }
 }

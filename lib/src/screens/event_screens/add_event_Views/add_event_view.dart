@@ -275,32 +275,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                               ),
                                               Positioned(
                                                 right: 15,
-                                                top: 15,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    //getImage(context);
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      color:
-                                                          AppColors.deepPrimary,
-                                                    ),
-                                                    child: const Padding(
-                                                      padding: PAD_ALL_10,
-                                                      child: Icon(
-                                                        Icons.camera_alt,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                right: 15,
-                                                top: 70,
+                                                top: 20,
                                                 child: GestureDetector(
                                                   onTap: () {
                                                     // image!.delete();

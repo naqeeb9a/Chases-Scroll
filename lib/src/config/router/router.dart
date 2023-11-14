@@ -10,6 +10,7 @@ import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
 import 'package:chases_scroll/src/screens/bottom_nav.dart';
+import 'package:chases_scroll/src/screens/event_screens/add_event_Views/add_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/get_community_id_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/event_webview_screens.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/privacy_policy_screen.dart';
@@ -190,14 +191,14 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.webEventPayStack,
         name: AppRoutes.webEventPayStack,
-        builder: (_, __) => PaymentPaystackView(
+        builder: (_, __) => WebViewPaystack(
           url: __.extra as String,
         ),
       ),
       GoRoute(
         path: AppRoutes.webEventStripe,
         name: AppRoutes.webEventStripe,
-        builder: (_, __) => PaymentStripeView(
+        builder: (_, __) => WebViewEventStripe(
           url: __.extra as String,
         ),
       ),
@@ -300,11 +301,11 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         name: AppRoutes.eventByID,
         builder: (_, __) => const MyEventByIDView(),
       ),
-      // GoRoute(
-      //   path: AppRoutes.eventByIdDashboard,
-      //   name: AppRoutes.eventByIdDashboard,
-      //   builder: (_, __) => const EventDashboardByID(),
-      // ),
+      GoRoute(
+        path: AppRoutes.addEventView,
+        name: AppRoutes.addEventView,
+        builder: (_, __) => const AddEventView(),
+      ),
       GoRoute(
         path: AppRoutes.blockedUser,
         name: AppRoutes.blockedUser,

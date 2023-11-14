@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
+import 'package:chases_scroll/src/screens/profile_view/widgets/icon_row_profile.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
@@ -217,6 +218,42 @@ class SuggestionFriendMore extends HookWidget {
                                         ),
                                       ),
                                       widthSpace(1),
+                                      PopupMenuButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        position: PopupMenuPosition.under,
+                                        color: Colors.white,
+                                        child: Container(
+                                          child: const Padding(
+                                              padding: EdgeInsets.all(2.0),
+                                              child: Icon(
+                                                  Icons.more_vert_outlined)),
+                                        ),
+                                        itemBuilder: (ctx) => [
+                                          buildPopupMenuItem2(
+                                              'Block User', AppColors.black,
+                                              function: () async {
+                                            final result =
+                                                await _exploreRepository
+                                                    .blockFriend(
+                                                        friendID:
+                                                            content.userId);
+                                            if (result['updated'] == true) {
+                                              ToastResp.toastMsgSuccess(
+                                                  resp: result['message']);
+
+                                              log(result.toString());
+                                              refreshSuggestedUsers();
+                                            } else {
+                                              log(result.toString());
+                                              ToastResp.toastMsgError(
+                                                  resp: result['message']);
+                                            }
+                                          }),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ],

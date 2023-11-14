@@ -2,19 +2,25 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chases_scroll/src/models/event_model.dart';
+import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/repositories/profile_repository.dart';
+import 'package:chases_scroll/src/screens/profile_view/widgets/icon_row_profile.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
+import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SeeMoreUserView extends HookWidget {
   static final ProfileRepository _profileRepository = ProfileRepository();
+  static final ExploreRepository _exploreRepository = ExploreRepository();
   const SeeMoreUserView({super.key});
 
   @override
@@ -32,6 +38,15 @@ class SeeMoreUserView extends HookWidget {
     final allUsersRequest = useState<List<dynamic>>([]);
     final foundUsersRequest = useState<List<dynamic>>([]);
 
+    getUsersConnectionRequests() {
+      _profileRepository.getConnectionRequest("10").then((value) {
+        usersLoading.value = false;
+        userRequestModel.value = value;
+        allUsersRequest.value = value;
+        foundUsersRequest.value = value;
+      });
+    }
+
     getUsersConnection() {
       _profileRepository.getUserConnections().then((value) {
         usersLoading.value = false;
@@ -41,13 +56,10 @@ class SeeMoreUserView extends HookWidget {
       });
     }
 
-    getUsersConnectionRequests() {
-      _profileRepository.getConnectionRequest("10").then((value) {
-        userRequestLoading.value = false;
-        userRequestModel.value = value;
-        allUsersRequest.value = value;
-        foundUsersRequest.value = value;
-      });
+    refreshConnection() {
+      usersLoading.value = false;
+      getUsersConnection();
+      getUsersConnectionRequests();
     }
 
     //for events filtered list
@@ -66,13 +78,14 @@ class SeeMoreUserView extends HookWidget {
       }
     }
 
-    void _runUsersRequestFilter(String enteredKeyword) {
+    //for _runUsersConnectionFilter filtered list
+    void _runUsersConnectionFilter(String enteredKeyword) {
       log(enteredKeyword);
       if (enteredKeyword.isEmpty) {
         foundUsersRequest.value = allUsersRequest.value;
       } else {
         final found = allUsersRequest.value
-            .where((event) => event.firstName!
+            .where((event) => event['firstName']!
                 .toLowerCase()
                 .contains(enteredKeyword.toLowerCase()))
             .toList();
@@ -125,6 +138,7 @@ class SeeMoreUserView extends HookWidget {
                     //_runUsersFilter(value);
 
                     _runUsersFilter(value);
+                    _runUsersConnectionFilter(value);
                   },
                 ),
               ),
@@ -325,147 +339,231 @@ class SeeMoreUserView extends HookWidget {
                                 height: double.infinity,
                                 width: double.infinity,
                                 child: ListView.builder(
-                                  itemCount: foundUsers.value.length,
+                                  itemCount: foundUsersRequest.value.length,
                                   scrollDirection: Axis.vertical,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    ContentUser? content =
-                                        foundUsers.value[index];
+                                    final content =
+                                        foundUsersRequest.value[index];
                                     return Container(
                                       margin: const EdgeInsets.only(
                                           bottom: 15, left: 15, right: 15),
                                       padding: PAD_ALL_5,
                                       color: AppColors.white,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                      child: Column(
                                         children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  height: 50,
-                                                  width: 50,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                      bottomLeft:
-                                                          Radius.circular(40),
-                                                      bottomRight:
-                                                          Radius.circular(40),
-                                                      topLeft:
-                                                          Radius.circular(40),
-                                                      topRight:
-                                                          Radius.circular(0),
-                                                    ),
-                                                    color: Colors.grey.shade300,
-                                                    image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: NetworkImage(
-                                                          "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content.data!.imgMain!.value.toString()}"),
-                                                    ),
-                                                  ),
-                                                  child: Center(
-                                                    child: customText(
-                                                        text: content
-                                                                    .data!
-                                                                    .imgMain!
-                                                                    .objectPublic ==
-                                                                false
-                                                            ? content.firstName!
-                                                                    .isEmpty
-                                                                ? ""
-                                                                : "${content.firstName![0]}${content.lastName![0]}"
-                                                                    .toUpperCase()
-                                                            : "",
-                                                        fontSize: 12,
-                                                        textColor: AppColors
-                                                            .deepPrimary,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                ),
-                                                widthSpace(2),
-                                                SizedBox(
-                                                  width: 40.w,
-                                                  //color: Colors.amber,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      customText(
-                                                          text:
-                                                              "${content.firstName} ${content.lastName}",
-                                                          fontSize: 11,
-                                                          textColor:
-                                                              AppColors.black,
-                                                          fontWeight:
-                                                              FontWeight.w700),
-                                                      customText(
-                                                          text:
-                                                              "Shared Affilations",
-                                                          fontSize: 11,
-                                                          textColor: AppColors
-                                                              .searchTextGrey,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  // if (content.joinStatus !=
-                                                  //     "FRIEND_REQUEST_SENT") {
-                                                  //   connectFriend(content.userId!);
-                                                  // } else {
-                                                  //   disconnectFriend(content.userId!);
-                                                  // }
-                                                },
-                                                child: Container(
-                                                  height: 40,
-                                                  width: 100,
-                                                  decoration: BoxDecoration(
-                                                    color: content.joinStatus ==
-                                                            "CONNECTED"
-                                                        ? AppColors.red
-                                                        : AppColors.primary,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: Center(
-                                                    child: customText(
-                                                      text: content
-                                                                  .joinStatus ==
-                                                              "CONNECTED"
-                                                          ? "Disconnect"
-                                                          : content.joinStatus ==
-                                                                  "NOT_CONNECTED"
-                                                              ? "Connect"
-                                                              : content.joinStatus ==
-                                                                      "FRIEND_REQUEST_SENT"
-                                                                  ? "Pending"
-                                                                  : "",
-                                                      fontSize: 12,
-                                                      textColor:
-                                                          AppColors.white,
+                                              Expanded(
+                                                flex: 2,
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .only(
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  40),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  40),
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  40),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  0),
+                                                        ),
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage(
+                                                              "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content['fromUserID']['data']['imgMain']['value'].toString()}"),
+                                                        ),
+                                                      ),
+                                                      child: Center(
+                                                        child: customText(
+                                                            text: content['fromUserID']
+                                                                                ['data']
+                                                                            [
+                                                                            'imgMain']
+                                                                        [
+                                                                        'objectPublic'] ==
+                                                                    false
+                                                                ? content['fromUserID']
+                                                                            [
+                                                                            'firstName']!
+                                                                        .isEmpty
+                                                                    ? ""
+                                                                    : "${content['fromUserID']['firstName'][0]}${content['fromUserID']['lastName'][0]}"
+                                                                        .toUpperCase()
+                                                                : "",
+                                                            fontSize: 12,
+                                                            textColor: AppColors
+                                                                .deepPrimary,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
                                                     ),
-                                                  ),
+                                                    widthSpace(2),
+                                                    SizedBox(
+                                                      width: 40.w,
+                                                      //color: Colors.amber,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          customText(
+                                                              text:
+                                                                  "${content['fromUserID']['firstName']} ${content['fromUserID']['lastName']}",
+                                                              fontSize: 11,
+                                                              textColor:
+                                                                  AppColors
+                                                                      .black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                          customText(
+                                                              text:
+                                                                  "@${content['fromUserID']['username']} ",
+                                                              fontSize: 11,
+                                                              textColor: AppColors
+                                                                  .searchTextGrey,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
                                               ),
-                                              widthSpace(1),
+                                              Container(
+                                                padding: PAD_ALL_15,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.primary,
+                                                  borderRadius:
+                                                      BorderRadius.circular(45),
+                                                ),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        final result = await _exploreRepository
+                                                            .acceptFriendRequest(
+                                                                friendID: content[
+                                                                        'fromUserID']
+                                                                    ['userId']);
+                                                        if (result['updated'] ==
+                                                            true) {
+                                                          ToastResp
+                                                              .toastMsgSuccess(
+                                                                  resp: result[
+                                                                      'message']);
+
+                                                          log(result
+                                                              .toString());
+                                                          refreshConnection();
+                                                        } else {
+                                                          log(result
+                                                              .toString());
+                                                          ToastResp.toastMsgError(
+                                                              resp: result[
+                                                                  'message']);
+                                                        }
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                        AppImages.addOrganizer,
+                                                        color: content['fromUserID']
+                                                                    [
+                                                                    'joinStatus'] ==
+                                                                "FRIEND_REQUEST_RECIEVED"
+                                                            ? AppColors.white
+                                                            : AppColors.white,
+                                                      ),
+                                                    ),
+                                                    widthSpace(2),
+                                                    PopupMenuButton(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                      ),
+                                                      position:
+                                                          PopupMenuPosition
+                                                              .under,
+                                                      color: Colors.white,
+                                                      child: Container(
+                                                        child: const Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    2.0),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .more_vert_outlined,
+                                                              color:
+                                                                  Colors.white,
+                                                            )),
+                                                      ),
+                                                      itemBuilder: (ctx) => [
+                                                        buildPopupMenuItem2(
+                                                          'Disconnect',
+                                                          AppColors.black,
+                                                          function: () async {
+                                                            final result = await _exploreRepository
+                                                                .rejectFriendRequest(
+                                                                    friendID: content[
+                                                                            'fromUserID']
+                                                                        [
+                                                                        'userId']);
+                                                            if (result[
+                                                                    'updated'] ==
+                                                                true) {
+                                                              ToastResp.toastMsgSuccess(
+                                                                  resp: result[
+                                                                      'message']);
+
+                                                              log(result
+                                                                  .toString());
+                                                              refreshConnection();
+                                                            } else {
+                                                              log(result
+                                                                  .toString());
+                                                              ToastResp.toastMsgError(
+                                                                  resp: result[
+                                                                      'message']);
+                                                            }
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
                                             ],
                                           ),
+                                          heightSpace(0.2),
+                                          const Divider(
+                                            thickness: 0.5,
+                                            color: AppColors.iconGrey,
+                                          )
                                         ],
                                       ),
                                     );
