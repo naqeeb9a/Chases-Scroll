@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/models/list_model.dart';
 import 'package:chases_scroll/src/models/product_data_type.dart';
 import 'package:chases_scroll/src/providers/eventicket_provider.dart';
@@ -11,7 +13,6 @@ import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/community_widget_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/drop_down_widget_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/dropdown_list_string_view.dart';
-import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/emptyImage_container_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/get_community_id_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/pageview_animate_text.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/radio_button_view.dart';
@@ -27,18 +28,23 @@ import 'package:chases_scroll/src/utils/constants/helpers/validations.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-class AddEventView extends ConsumerStatefulWidget {
-  const AddEventView({super.key});
+class EditEventView extends StatefulHookConsumerWidget {
+  final EventContent eventDetails;
+
+  const EditEventView({
+    super.key,
+    required this.eventDetails,
+  });
 
   @override
-  ConsumerState<AddEventView> createState() => _WidgetState();
+  ConsumerState<EditEventView> createState() => _WidgetState();
 }
 
 class TextButtonEvent extends StatelessWidget {
@@ -63,7 +69,7 @@ class TextButtonEvent extends StatelessWidget {
   }
 }
 
-class _WidgetState extends ConsumerState<AddEventView> {
+class _WidgetState extends ConsumerState<EditEventView> {
   static final eventTitle = TextEditingController();
   static final eventDesc = TextEditingController();
   static final location = TextEditingController();
@@ -116,9 +122,11 @@ class _WidgetState extends ConsumerState<AddEventView> {
 
   //start date
   DateTime sDate = DateTime.now();
+  String? startDateString;
 
   //end date
   DateTime eDate = DateTime.now();
+  String? endDateString;
 
 //start time
   TimeOfDay startTime = TimeOfDay.now();
@@ -139,6 +147,8 @@ class _WidgetState extends ConsumerState<AddEventView> {
     "Online Location",
     "Hybrid Location",
   ];
+
+  String? isJoinValue;
 
   void animateTo(int page) {
     pageController.animateToPage(
@@ -343,8 +353,78 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                             ],
                                           ),
                                         )
-                                      : EmptyImageContainerWidget(
-                                          function: () => uploadImages(),
+                                      : Container(
+                                          height: height / 3.8,
+                                          width: width,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                              bottomLeft: Radius.circular(24),
+                                              bottomRight: Radius.circular(24),
+                                              topLeft: Radius.circular(24),
+                                              topRight: Radius.circular(0),
+                                            ),
+                                            color: Colors.grey.shade200,
+                                            image: DecorationImage(
+                                              scale: 1.0,
+                                              fit: BoxFit.fill,
+                                              image: CachedNetworkImageProvider(
+                                                  "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.eventDetails.currentPicUrl}"),
+                                            ),
+                                          ),
+                                          child: Stack(
+                                            children: [
+                                              Positioned(
+                                                right: 15,
+                                                top: 15,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    uploadImages();
+                                                    setState(() {});
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                      color: AppColors.primary,
+                                                    ),
+                                                    child: const Padding(
+                                                      padding: PAD_ALL_10,
+                                                      child: Icon(
+                                                        Icons.camera_alt,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                right: 15,
+                                                top: 70,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    image!.deleteSync();
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                      color: AppColors.primary,
+                                                    ),
+                                                    child: const Padding(
+                                                      padding: PAD_ALL_10,
+                                                      child: Icon(
+                                                        Icons.close,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         );
                                 },
                               ),
@@ -496,7 +576,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                     ToastResp.toastMsgError(
                                         resp: "Show visibility Not Selected");
                                   } else {
-                                    createEventDraft();
+                                    animateTo(1);
                                   }
                                 }
                               }),
@@ -717,7 +797,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                                 resp: "Select Valid End Date");
                                           } else {
                                             log("whats happeninng");
-                                            updateEventDraft();
+                                            animateTo(2);
                                           }
                                         }
                                       },
@@ -1122,78 +1202,28 @@ class _WidgetState extends ConsumerState<AddEventView> {
     }
   }
 
-  //create draft
-  createEventDraft() async {
-    bool result = await eventRepository.createEventDraft(
-      address: location.text,
-      attendeesVisibility: _radioShowEventVisibility == "show" ? true : false,
-      currency: eventCurrencyType,
-      currentPicUrl: imageString,
-      endDate: convertDateTimeToEpoch(eDate),
-      startDate: convertDateTimeToEpoch(sDate),
-      endTime: convertTimeOfDayToEpoch(startTime),
-      startTime: convertTimeOfDayToEpoch(endTime),
-      eventDescription: desc.text,
-      eventFunnelGroupID: "",
-      eventName: eventTitle.text,
-      eventType: eventTypeValue,
-      isExclusive: isExclusive,
-      isPublic: _radioShowEventVisibility == "show" ? true : false,
-      link: link.text,
-      locationDetails: desc.text,
-      locationType: link.text.isEmpty ? "Physical" : "Virtual",
-      picUrls: [],
-      toBeAnnounced: announcedBox,
-      productTypeData: formDataList,
-    );
-    if (result) {
-      if (context.mounted) {
-        ToastResp.toastMsgSuccess(resp: "Event Details Saved");
-        animateTo(1);
-      }
-    } else {
-      return;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     formDataList.add(ProductTypeDataa());
-  }
 
-  //create draft
-  updateEventDraft() async {
-    bool result = await eventRepository.updateEventDraft(
-      address: location.text,
-      attendeesVisibility: _radioShowEventVisibility == "show" ? true : false,
-      currency: eventCurrencyType,
-      currentPicUrl: imageString,
-      endDate: convertDateTimeToEpoch(eDate),
-      startDate: convertDateTimeToEpoch(sDate),
-      endTime: convertTimeOfDayToEpoch(startTime),
-      startTime: convertTimeOfDayToEpoch(endTime),
-      eventDescription: desc.text,
-      eventFunnelGroupID: "",
-      eventName: eventTitle.text,
-      eventType: eventTypeValue,
-      isExclusive: isExclusive,
-      isPublic: _radioShowEventVisibility == "show" ? true : false,
-      link: link.text,
-      locationDetails: desc.text,
-      locationType: link.text.isEmpty ? "Physical" : "Virtual",
-      picUrls: [],
-      toBeAnnounced: announcedBox,
-      productTypeData: formDataList,
-    );
-    if (result) {
-      if (context.mounted) {
-        ToastResp.toastMsgSuccess(resp: "Event Details Saved");
-        animateTo(2);
-      }
-    } else {
-      return;
-    }
+    isJoinValue = widget.eventDetails.isJoined == true ? "public" : "private";
+    _radioJoinValue = isJoinValue;
+    eventTitle.text = widget.eventDetails.eventName.toString();
+    eventTypeValue = widget.eventDetails.eventType.toString();
+    eventDesc.text = widget.eventDetails.eventDescription.toString();
+    _radioJoinValue =
+        widget.eventDetails.attendeesVisibility == true ? "show" : "hide";
+    _radioShowEventVisibility =
+        widget.eventDetails.isPublic == true ? "public" : "private";
+    //second page
+
+    link.text = widget.eventDetails.location!.link.toString();
+    location.text = widget.eventDetails.location!.address.toString();
+    desc.text = widget.eventDetails.location!.locationDetails.toString();
+    startDateString = widget.eventDetails.startDate.toString();
+    endDateString = widget.eventDetails.endDate.toString();
+    eventCurrencyType = widget.eventDetails.currency;
   }
 
   void uploadImages() async {

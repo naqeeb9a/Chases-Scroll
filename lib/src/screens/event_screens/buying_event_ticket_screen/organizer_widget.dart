@@ -21,6 +21,7 @@ class OrganizerContainerWidget extends StatefulWidget {
   final String orgFName;
   final String orgLName;
   final String orgImage;
+  final String joinStatus;
   final bool isCreator;
   const OrganizerContainerWidget({
     Key? key,
@@ -31,6 +32,7 @@ class OrganizerContainerWidget extends StatefulWidget {
     required this.orgLName,
     required this.orgImage,
     required this.isCreator,
+    required this.joinStatus,
   }) : super(key: key);
 
   @override
@@ -151,13 +153,17 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                     onTap: () {
                       // String? name = value.name;
 
-                      follow
+                      widget.joinStatus == "NOT_CONNECTED"
                           ? connectFriend(widget.orgId)
                           : disconnectFriend(widget.orgId);
                     },
                     child: SvgPicture.asset(
                       AppImages.addOrganizer,
-                      color: follow ? Colors.green : AppColors.primary,
+                      color: widget.joinStatus == "FRIEND_REQUEST_SENT"
+                          ? AppColors.btnOrange.withOpacity(0.8)
+                          : widget.joinStatus == "NOT_CONNECTED"
+                              ? AppColors.black
+                              : AppColors.green,
                     ),
                   ),
                   widthSpace(2.5),

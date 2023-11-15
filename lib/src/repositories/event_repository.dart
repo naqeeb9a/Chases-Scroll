@@ -59,6 +59,9 @@ class EventRepository {
   //to get virtualList events
   List<EventContent> virtualList = [];
 
+  //to get draft events
+  List<EventContent> draftList = [];
+
   //to get religiousList events
   List<EventContent> religiousList = [];
 
@@ -168,6 +171,72 @@ class EventRepository {
     }
   }
 
+  Future<bool> createEventDraft({
+    final List<String>? picUrls,
+    final String? eventType,
+    final String? eventName,
+    final String? eventDescription,
+    final String? locationType,
+    final String? currency,
+    final String? currentPicUrl,
+    final String? eventFunnelGroupID,
+    final String? link,
+    final String? address,
+    final String? locationDetails,
+    final int? startTime,
+    final int? endTime,
+    final int? startDate,
+    final int? endDate,
+    final bool? isPublic,
+    final bool? isExclusive,
+    final bool? attendeesVisibility,
+    final bool? toBeAnnounced,
+    final List<ProductTypeDataa>? productTypeData,
+  }) async {
+    final data = {
+      "picUrls": picUrls,
+      "eventType": eventType,
+      "eventName": eventName,
+      "eventDescription": eventDescription,
+      "locationType": locationType,
+      "currency": currency,
+      "currentPicUrl": currentPicUrl,
+      "eventFunnelGroupID": eventFunnelGroupID,
+      "mediaType": "PICTURE",
+      "currentVideoUrl": "",
+      "isPublic": isPublic,
+      "isExclusive": isExclusive,
+      "mask": true,
+      "attendeesVisibility": attendeesVisibility,
+      "startTime": startTime,
+      "endTime": endTime,
+      "startDate": startDate,
+      "endDate": endDate,
+      "expirationDate": 0,
+      "location": {
+        "link": link,
+        "address": address,
+        "locationDetails": locationDetails,
+        "latlng": "string",
+        "placeIds": "string",
+        "toBeAnnounced": toBeAnnounced
+      },
+      "productTypeData": productTypeData
+    };
+    final response = await ApiClient.post(Endpoints.createDraft,
+        body: data,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    if (response.status == 200 || response.status == 201) {
+      //log("Create event response ===> ${response.message}");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   //to create event ticket
   Future<dynamic> createTicket({
     final int? numberOfTickets,
@@ -217,6 +286,21 @@ class EventRepository {
 
     if (response.status == 200 || response.status == 201) {
       log("webUrlStripe ======> ${response.message}");
+      return response.message;
+    }
+    return response.message;
+  }
+
+  //verify event payment Stripe
+  Future<dynamic> deleteDraft({String? draftID}) async {
+    final url = "${Endpoints.deleteDraft}/$draftID";
+    final response = await ApiClient.delete(
+      url,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      log("verifyEventPaymentStripe ======> ${response.message}");
       return response.message;
     }
     return response.message;
@@ -310,13 +394,31 @@ class EventRepository {
     }
   }
 
+  //getDraft events
+  Future<List<EventContent>> getDraftEvents() async {
+    String url = "${Endpoints.getDraftEvent}?createdBy=$userId&size=10";
+    final response = await ApiClient.get(url, useToken: true);
+
+    if (response.status == 200) {
+      final List<dynamic> draft = response.message['content'];
+      log("getDraftEvents ====> ${draft.toString()}");
+      draftList = draft
+          .map<EventContent>((event) => EventContent.fromJson(event))
+          .toList();
+
+      return draftList;
+    } else {
+      return [];
+    }
+  }
+
   Future<List<EventAttendeesModel>> getEventAttendes({String? eventId}) async {
     String url = "${Endpoints.getEventMembers}/$eventId";
     final response = await ApiClient.get(url, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEventUsers = response.message['content'];
-      log("getting full attedee details ====> ${response.message['content']}");
+      //log("getting full attedee details ====> ${response.message['content']}");
       getEventAttendees = allEventUsers
           .map<EventAttendeesModel>(
               (event) => EventAttendeesModel.fromJson(event))
@@ -646,6 +748,73 @@ class EventRepository {
       return response.message;
     }
     return response.message;
+  }
+
+  //update event  draft
+  Future<bool> updateEventDraft({
+    final List<String>? picUrls,
+    final String? eventType,
+    final String? eventName,
+    final String? eventDescription,
+    final String? locationType,
+    final String? currency,
+    final String? currentPicUrl,
+    final String? eventFunnelGroupID,
+    final String? link,
+    final String? address,
+    final String? locationDetails,
+    final int? startTime,
+    final int? endTime,
+    final int? startDate,
+    final int? endDate,
+    final bool? isPublic,
+    final bool? isExclusive,
+    final bool? attendeesVisibility,
+    final bool? toBeAnnounced,
+    final List<ProductTypeDataa>? productTypeData,
+  }) async {
+    final data = {
+      "picUrls": picUrls,
+      "eventType": eventType,
+      "eventName": eventName,
+      "eventDescription": eventDescription,
+      "locationType": locationType,
+      "currency": currency,
+      "currentPicUrl": currentPicUrl,
+      "eventFunnelGroupID": eventFunnelGroupID,
+      "mediaType": "PICTURE",
+      "currentVideoUrl": "",
+      "isPublic": isPublic,
+      "isExclusive": isExclusive,
+      "mask": true,
+      "attendeesVisibility": attendeesVisibility,
+      "startTime": startTime,
+      "endTime": endTime,
+      "startDate": startDate,
+      "endDate": endDate,
+      "expirationDate": 0,
+      "location": {
+        "link": link,
+        "address": address,
+        "locationDetails": locationDetails,
+        "latlng": "string",
+        "placeIds": "string",
+        "toBeAnnounced": toBeAnnounced
+      },
+      "productTypeData": productTypeData
+    };
+    final response = await ApiClient.put(
+      Endpoints.updateDraft,
+      body: data,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      //log("Create event response ===> ${response.message}");
+      return true;
+    } else {
+      return false;
+    }
   }
 
   //verify event payment paystack

@@ -1,8 +1,20 @@
+import 'dart:developer';
+
 import 'package:chases_scroll/src/repositories/wallet_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+//----------------- Set up stripe account -------------------------------//
+class OnboardStripeAccount extends StatefulWidget {
+  final String? url;
+
+  const OnboardStripeAccount({super.key, required this.url});
+
+  @override
+  State<OnboardStripeAccount> createState() => _OnboardStripeAccountState();
+}
 
 class PaymentPaystackFundNGN extends StatefulWidget {
   final String? url;
@@ -30,6 +42,28 @@ class PaymentStripeFund extends StatefulWidget {
 
   @override
   State<PaymentStripeFund> createState() => _PaymentStripeFundState();
+}
+
+class _OnboardStripeAccountState extends State<OnboardStripeAccount> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: WebView(
+          javascriptMode: JavascriptMode.unrestricted,
+          zoomEnabled: true,
+          gestureNavigationEnabled: true,
+          initialUrl: widget.url,
+          navigationDelegate: (NavigationRequest request) async {
+            if (request.url.startsWith("https://example.com/success")) {
+              log("set up account");
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      ),
+    );
+  }
 }
 
 class _PaymentPaystackFundNGNState extends State<PaymentPaystackFundNGN> {
@@ -63,17 +97,6 @@ class _PaymentPaystackFundNGNState extends State<PaymentPaystackFundNGN> {
         ),
       ),
     );
-  }
-
-  verifyFundAccount() async {
-    dynamic result =
-        _repository.verifyPaymentWellet(transactID: widget.urlTransactID);
-    if (result['verification'] == "Transaction verification success") {
-      ToastResp.toastMsgSuccess(resp: "Payment Verified");
-      context.pop();
-    } else {
-      ToastResp.toastMsgSuccess(resp: "Payment Verification failed");
-    }
   }
 }
 
@@ -109,16 +132,5 @@ class _PaymentStripeFundState extends State<PaymentStripeFund> {
         ),
       ),
     );
-  }
-
-  verifyFundAccount() async {
-    dynamic result =
-        _repository.verifyPaymentWellet(transactID: widget.urlTransactID);
-    if (result['verification'] == "Transaction verification success") {
-      ToastResp.toastMsgSuccess(resp: "Payment Verified");
-      context.pop();
-    } else {
-      ToastResp.toastMsgSuccess(resp: "Payment Verification failed");
-    }
   }
 }

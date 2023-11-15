@@ -251,6 +251,20 @@ class WalletRepository {
     return false;
   }
 
+  //Onboard Stripe
+  Future<dynamic> onboardStripe() async {
+    final response = await ApiClient.get(
+      Endpoints.onboardStripe,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      log("verifyPaymentWellet ======>${response.message}");
+      return response.message;
+    }
+    return response.message;
+  }
+
   //fundWallet paystack
   Future<dynamic> verifyPaymentWellet({String? transactID}) async {
     String url = "${Endpoints.verifyFund}?transactionID=$transactID";

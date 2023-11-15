@@ -481,6 +481,7 @@ class EventDetailsMainView extends ConsumerWidget {
                                     "",
                             orgFName: eventDetails.createdBy!.firstName!,
                             orgLName: eventDetails.createdBy!.lastName!,
+                            joinStatus: eventDetails.createdBy!.joinStatus!,
                           ),
                           heightSpace(2),
                           customText(

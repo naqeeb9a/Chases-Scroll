@@ -584,7 +584,10 @@ class UserMainProfileView extends HookWidget {
                                   Content contentPost = postModel.value[index];
                                   //print(contentPost);
                                   return GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      context.push(AppRoutes.seeMoreUserPost,
+                                          extra: userProfileModel.value.userId);
+                                    },
                                     child: Card(
                                       color: Colors.grey.shade200,
                                       shadowColor: Colors.transparent,

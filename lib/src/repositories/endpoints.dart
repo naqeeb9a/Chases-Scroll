@@ -24,7 +24,7 @@ class Endpoints {
   static const String changePassword =
       'chasescroll/verification/change-password';
   static const String getPost = 'feed/get-user-and-friends-posts';
-  static const String getUserPost = '/feed/get-users-media-posts';
+  static const String getUserPost = 'feed/get-users-media-posts';
   static const String getUserProfile = 'user/privateprofile';
   static const String getOtherUsersProfile = '/user/publicprofile';
   static const String createPost = 'feed/create-post';
@@ -84,15 +84,16 @@ class Endpoints {
   static String createWebUrlPaystack = "payments/payWithPaystack";
   static String createWebUrlStripe = "payments/payWithStripe";
 
-  //----------------------- draft ------------------------------
+  //-----------------------create && draft ------------------------------
   static String createDraft = "events/create-draft";
   static String updateDraft = "/events/update-draft";
+  static String createEvent = "events/create-event-from-draft";
+  static String getDraftEvent = "events/drafts";
+  static String deleteDraft = "/events/delete-draft";
 
   //verifyEventPayment
   static String verifyEventPaystack = "payments/verifyPaystackTx";
   static String verifyEventStripe = "payments/stripePaySuccess";
-
-  static String createEvent = "/events/create-event";
   static String deleteFriend = "/user/remove-friend";
   static String getEventMembers = "/events/get-event-members";
 
@@ -126,6 +127,7 @@ class Endpoints {
   static String accountStatus = "payments/account/check";
   static String deleteBlock = "user/delete-block";
   static String verifyFund = "payments/api/wallet/verifyFundWallet";
+  static String onboardStripe = "payments/account/oauthOnboard";
 
   //analytics
   static String analyticEvent = "payments/analytics/tickets";

@@ -137,12 +137,29 @@ class _WalletViewState extends State<WalletView> {
       }
     }
 
+    //to check stripe account
+    final stripeCheckAccount = useState<bool>(true);
+    void checkStripeAccount() async {
+      final result = await _walletRepository.checkAccountStatus();
+      if (result) {
+        setState(() {
+          stripeCheckAccount.value = result;
+          log("is it true or false ====> ${stripeCheckAccount.value.toString()}");
+        });
+      } else {
+        setState(() {
+          stripeCheckAccount.value = result;
+        });
+      }
+    }
+
     final balance =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.balanceNaira);
 
     useEffect(() {
       getWalletHistory();
       checkPaystackAccount();
+      checkStripeAccount();
       return null;
     }, []);
 
@@ -817,7 +834,28 @@ class _WalletViewState extends State<WalletView> {
                                   }
                                 }
                               }
+                            } else {
+                              if (stripeCheckAccount.value == false) {
+                                registerStripe();
+                              } else {
+                                final result =
+                                    await _walletRepository.withdrawWallet(
+                                  amount: double.parse(amountController.text),
+                                  currency: "USD",
+                                );
+
+                                if (result) {
+                                  ToastResp.toastMsgSuccess(
+                                      resp:
+                                          "Withdrawal from dollar account successful");
+                                } else {
+                                  ToastResp.toastMsgError(
+                                      resp:
+                                          "Withdrawal from dollar account not successful");
+                                }
+                              }
                             }
+
                             // bool result =
                             //     await _walletRepository.getAccountStatus();
 
@@ -899,10 +937,6 @@ class _WalletViewState extends State<WalletView> {
     );
   }
 
-  // void checkAccountStatus() async {
-  //   await _walletRepository.getNairaBalance();
-  // }
-
   void checkAccountStatusPaystack() async {
     // await context.read<WalletProvider>().checkAccountStatusPayStack();
   }
@@ -948,15 +982,18 @@ class _WalletViewState extends State<WalletView> {
     );
   }
 
+  // void checkAccountStatus() async {
+  //   await _walletRepository.getNairaBalance();
+  // }
   void registerStripe() async {
-    // final status = await context.read<WalletProvider>().registerpaymentStripe();
-    // if (status['checkout'] != null) {
-    //   Navigator.of(context).push(
-    //     MaterialPageRoute(
-    //       builder: (context) => OAuthWebview(webUrl: status['checkout']),
-    //     ),
-    //   );
-    // }
+    final status = await _walletRepository.onboardStripe();
+    if (status['checkout'] != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => OnboardStripeAccount(url: status['checkout']),
+        ),
+      );
+    }
   }
 
   Container usdContainer() {

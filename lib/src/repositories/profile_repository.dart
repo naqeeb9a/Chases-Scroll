@@ -116,6 +116,18 @@ class ProfileRepository {
     return false;
   }
 
+  //to get user post
+  Future<PostModel> getAllUserPosts({String? page}) async {
+    String? url = "${Endpoints.getUserPost}?userID=$userId&page=$page";
+    final response = await ApiClient.get(url, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      log(response.message.toString());
+      return PostModel.fromJson(response.message);
+    }
+    return PostModel();
+  }
+
   //get bloackedUsers
   Future<List<BlockedModel>> getblockedUsers() async {
     String url = "${Endpoints.blockedList}?size=10";

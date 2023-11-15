@@ -259,6 +259,24 @@ class ExploreMainView extends HookWidget {
                                                     friend.userId!);
                                               }
                                             },
+                                            blockfunction: () async {
+                                              final result =
+                                                  await _exploreRepository
+                                                      .blockFriend(
+                                                          friendID:
+                                                              friend.userId!);
+                                              if (result['updated'] == true) {
+                                                ToastResp.toastMsgSuccess(
+                                                    resp: result['message']);
+
+                                                log(result.toString());
+                                                refreshSuggestedUsers();
+                                              } else {
+                                                log(result.toString());
+                                                ToastResp.toastMsgError(
+                                                    resp: result['message']);
+                                              }
+                                            },
                                           );
                                   },
                                 ),

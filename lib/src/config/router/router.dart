@@ -11,9 +11,11 @@ import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
 import 'package:chases_scroll/src/screens/bottom_nav.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/add_event_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/add_event_Views/edit_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/get_community_id_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/event_webview_screens.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/privacy_policy_screen.dart';
+import 'package:chases_scroll/src/screens/event_screens/draft_event_views/draft_event_views.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_attendance_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
@@ -26,6 +28,7 @@ import 'package:chases_scroll/src/screens/profile_view/other_users_profile_main_
 import 'package:chases_scroll/src/screens/profile_view/see_more_community.dart';
 import 'package:chases_scroll/src/screens/profile_view/see_more_event.dart';
 import 'package:chases_scroll/src/screens/profile_view/see_more_user.dart';
+import 'package:chases_scroll/src/screens/profile_view/see_more_user_post.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/account_settings_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/blocked_users_view.dart';
@@ -310,5 +313,24 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         path: AppRoutes.blockedUser,
         name: AppRoutes.blockedUser,
         builder: (_, __) => const BlockedUsersView(),
+      ),
+      GoRoute(
+        path: AppRoutes.draftEvent,
+        name: AppRoutes.draftEvent,
+        builder: (_, __) => MyDraftEventView(),
+      ),
+      GoRoute(
+        path: AppRoutes.draftEditEvent,
+        name: AppRoutes.draftEditEvent,
+        builder: (_, __) => EditEventView(
+          eventDetails: __.extra as EventContent,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.seeMoreUserPost,
+        name: AppRoutes.seeMoreUserPost,
+        builder: (_, __) => SeeMoreUserPost(
+          userID: __.extra as String,
+        ),
       ),
     ]);

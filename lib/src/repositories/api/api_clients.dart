@@ -319,7 +319,6 @@ class ApiClient {
         // locator<GoRouter>().push(AppRoutes.login);
       }
       log(e.response.toString());
-      log(e.response!.data.toString());
       OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
       if (e.response?.data is String) {
         ToastResp.toastMsgError(resp: e.response?.data.toString());

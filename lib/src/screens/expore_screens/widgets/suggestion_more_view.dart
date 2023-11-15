@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/profile_view/widgets/icon_row_profile.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -11,6 +12,7 @@ import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../models/event_model.dart';
 import '../../widgets/app_bar.dart';
@@ -100,68 +102,79 @@ class SuggestionFriendMore extends HookWidget {
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 50,
-                                          width: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                              bottomLeft: Radius.circular(40),
-                                              bottomRight: Radius.circular(40),
-                                              topLeft: Radius.circular(40),
-                                              topRight: Radius.circular(0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        context.push(
+                                            AppRoutes.otherUsersProfile,
+                                            extra: content.userId);
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            height: 50,
+                                            width: 50,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                bottomLeft: Radius.circular(40),
+                                                bottomRight:
+                                                    Radius.circular(40),
+                                                topLeft: Radius.circular(40),
+                                                topRight: Radius.circular(0),
+                                              ),
+                                              color: Colors.grey.shade300,
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                    "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content.data!.imgMain!.value.toString()}"),
+                                              ),
                                             ),
-                                            color: Colors.grey.shade300,
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                  "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content.data!.imgMain!.value.toString()}"),
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: customText(
-                                                text: content.data!.imgMain!
-                                                            .objectPublic ==
-                                                        false
-                                                    ? content.firstName!.isEmpty
-                                                        ? ""
-                                                        : "${content.firstName![0]}${content.lastName![0]}"
-                                                            .toUpperCase()
-                                                    : "",
-                                                fontSize: 12,
-                                                textColor:
-                                                    AppColors.deepPrimary,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ),
-                                        widthSpace(2),
-                                        SizedBox(
-                                          width: 40.w,
-                                          //color: Colors.amber,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              customText(
-                                                  text:
-                                                      "${content.firstName} ${content.lastName}",
-                                                  fontSize: 11,
-                                                  textColor: AppColors.black,
-                                                  fontWeight: FontWeight.w700),
-                                              customText(
-                                                  text: "Shared Affilations",
-                                                  fontSize: 11,
+                                            child: Center(
+                                              child: customText(
+                                                  text: content.data!.imgMain!
+                                                              .objectPublic ==
+                                                          false
+                                                      ? content.firstName!
+                                                              .isEmpty
+                                                          ? ""
+                                                          : "${content.firstName![0]}${content.lastName![0]}"
+                                                              .toUpperCase()
+                                                      : "",
+                                                  fontSize: 12,
                                                   textColor:
-                                                      AppColors.searchTextGrey,
-                                                  fontWeight: FontWeight.w400),
-                                            ],
+                                                      AppColors.deepPrimary,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
                                           ),
-                                        )
-                                      ],
+                                          widthSpace(2),
+                                          SizedBox(
+                                            width: 40.w,
+                                            //color: Colors.amber,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                customText(
+                                                    text:
+                                                        "${content.firstName} ${content.lastName}",
+                                                    fontSize: 11,
+                                                    textColor: AppColors.black,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                                customText(
+                                                    text: "Shared Affilations",
+                                                    fontSize: 11,
+                                                    textColor: AppColors
+                                                        .searchTextGrey,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   Row(

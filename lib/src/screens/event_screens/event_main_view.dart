@@ -6,6 +6,7 @@ import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/models/user_model.dart';
 import 'package:chases_scroll/src/repositories/profile_repository.dart';
+import 'package:chases_scroll/src/screens/event_screens/draft_event_views/draft_event_views.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/find_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/my_events/my_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/past_events/past_events_view.dart';
@@ -142,9 +143,7 @@ class EventMainView extends HookWidget {
                   MyEventView(),
                   SavedEventsView(),
                   PastEventView(),
-                  Container(
-                    color: Colors.amber,
-                  )
+                  MyDraftEventView()
                 ],
               ),
             ),
