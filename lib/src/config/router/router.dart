@@ -1,4 +1,5 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/models/commdata.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/screens/auth_screens/data.dart';
 import 'package:chases_scroll/src/screens/auth_screens/email_screen.dart';
@@ -10,6 +11,16 @@ import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
 import 'package:chases_scroll/src/screens/bottom_nav.dart';
+import 'package:chases_scroll/src/screens/chat/chat.dart';
+import 'package:chases_scroll/src/screens/chat/group_chat.dart';
+import 'package:chases_scroll/src/screens/chat/group_chat_message.dart';
+import 'package:chases_scroll/src/screens/chat/model.dart';
+import 'package:chases_scroll/src/screens/chat/private_chat.dart';
+import 'package:chases_scroll/src/screens/community/community_chat.dart';
+import 'package:chases_scroll/src/screens/community/community_info.dart';
+import 'package:chases_scroll/src/screens/community/create_community.dart';
+import 'package:chases_scroll/src/screens/community/model/group_model.dart';
+import 'package:chases_scroll/src/screens/community/report_community.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/get_community_id_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/event_webview_screens.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/privacy_policy_screen.dart';
@@ -18,6 +29,8 @@ import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/trending_event.dart';
 import 'package:chases_scroll/src/screens/home/comment/comment.dart';
+import 'package:chases_scroll/src/screens/home/report_user.dart';
+import 'package:chases_scroll/src/screens/notification/notification.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
@@ -78,6 +91,22 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
                 isSignup: __.extra as bool,
               )),
       GoRoute(
+          path: AppRoutes.communityChat,
+          name: AppRoutes.communityChat,
+          builder: (_, __) =>
+              CommunityChat(communityData: __.extra as CommunityData)),
+      GoRoute(
+          path: AppRoutes.communityInfo,
+          name: AppRoutes.communityInfo,
+          builder: (_, __) => CommunityInfo(
+                communityInfoModel: __.extra as CommunityInfoModel,
+              )),
+      GoRoute(
+          path: AppRoutes.createCommunity,
+          name: AppRoutes.createCommunity,
+          builder: (_, __) => CreateCommunity(
+              communityInfoModel: __.extra as CommunityInfoModel)),
+      GoRoute(
         path: AppRoutes.newPassword,
         name: AppRoutes.newPassword,
         builder: (_, __) => NewPassword(
@@ -105,6 +134,16 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         builder: (_, __) => const SearchExploreView(),
       ),
       GoRoute(
+        path: AppRoutes.chatScreen,
+        name: AppRoutes.chatScreen,
+        builder: (_, __) => const ChatScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.createChat,
+        name: AppRoutes.createChat,
+        builder: (_, __) => CreateChat(),
+      ),
+      GoRoute(
         path: AppRoutes.comment,
         name: AppRoutes.comment,
         builder: (_, __) => Comment(
@@ -118,6 +157,20 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         path: AppRoutes.eventView,
         name: AppRoutes.eventView,
         builder: (_, __) => const EventMainView(),
+      ),
+      GoRoute(
+        path: AppRoutes.reportCommunity,
+        name: AppRoutes.reportCommunity,
+        builder: (_, __) => ReportCommunity(
+          typeId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.reportPostUser,
+        name: AppRoutes.reportPostUser,
+        builder: (_, __) => ReportPostUser(
+          typeId: __.extra as String,
+        ),
       ),
       GoRoute(
         path: AppRoutes.allEventView,
@@ -194,4 +247,20 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         name: AppRoutes.findTrendingEvent,
         builder: (_, __) => const FindTrendingEvents(),
       ),
+      GoRoute(
+          path: AppRoutes.privateChat,
+          name: AppRoutes.privateChat,
+          builder: (_, __) => PrivateChat(
+                chatDataModel: __.extra as ChatDataModel,
+              )),
+      GoRoute(
+          path: AppRoutes.groupChatMessage,
+          name: AppRoutes.groupChatMessage,
+          builder: (_, __) => GroupChatMessage(
+                chatDataModel: __.extra as ChatDataModel,
+              )),
+      GoRoute(
+          path: AppRoutes.notification,
+          name: AppRoutes.notification,
+          builder: (_, __) => const NotificationView()),
     ]);

@@ -29,7 +29,9 @@ class RequestCommunity extends HookWidget {
           locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
       log(keys.toString());
 
-      _communityRepo.requestGroup(userId: json.decode(keys)).then((value) {
+      _communityRepo
+          .requestGroup(userId: json.decode(json.encode(keys)))
+          .then((value) {
         isLoading.value = false;
         communityModel.value = value;
       });

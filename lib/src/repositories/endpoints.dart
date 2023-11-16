@@ -44,12 +44,23 @@ class Endpoints {
   static const String joinCommunity = 'group/join-group';
   static const String leaveGroup = '/group/leave-group';
   static const String getGroupMembers = 'group/get-group-members?groupID=';
+  static const String subComment = 'feed/add-sub-comment';
+  static const String editCommunity = '/group/update-group';
+  static const String getChat = "chat/chat";
+  static const String sendChat = "chat/message";
+  static const String getChatMessage = "chat/message";
+  static const String getSuggestedUsers = "user/suggest-connections";
+  static const String userFriends = "user/get-users-connections";
+  static const String likeComment = "feed/like-comment";
+  static const String getSubComment = "feed/get-all-sub-comments";
+  static const String notifications = "notifications/notification";
+  static const String report = "report/report";
 
   //-------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//
   static const String getTopEvents = "$port84/events/get-top-events";
   static const String getAllEvents = "$port84/events/events";
-  static const String getSuggestedUsers = "$port82/user/suggest-connections";
+
   static const String getAllCommunities = "$port83/group/group";
 
   static const String connectFriend = "$port82/user/send-friend-request";

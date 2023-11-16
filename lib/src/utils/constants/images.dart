@@ -57,5 +57,9 @@ class AppImages {
   static const String stripe = "assets/svgs/Stripe.svg";
   static const String addOrganizer = "assets/svgs/profile-add.svg";
   static const String messageOrganizer = "assets/svgs/message-text.svg";
+  static const String downloadIcon = 'assets/svgs/download_icon.svg';
+  static const String settings = "assets/svgs/setting.svg";
+  static const String edit = "assets/svgs/edit.svg";
+  static const String check = 'assets/svgs/check.svg';
   //static const String share = "assets/svgs/message-text.svg";
 }

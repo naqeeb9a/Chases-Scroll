@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chases_scroll/src/providers/auth_provider.dart';
 import 'package:chases_scroll/src/repositories/post_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
@@ -13,9 +14,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
-class AddVideoModal extends HookWidget {
+class AddVideoModal extends HookConsumerWidget {
   static final post = TextEditingController();
   final File? video;
   final String? uri;
@@ -25,9 +27,11 @@ class AddVideoModal extends HookWidget {
   AddVideoModal({super.key, this.video, this.uri, this.userId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final refresh = ref.watch(refreshHomeScreen);
     final playerController = useState<VideoPlayerController?>(null);
     final chewieController = useState<ChewieController?>(null);
+    final containerHeight = useState<double?>(null);
     final videoString = useState<String>("");
 
     initializePlayer() {
@@ -37,7 +41,7 @@ class AddVideoModal extends HookWidget {
       chewieController.value = ChewieController(
         videoPlayerController: playerController.value!,
         autoInitialize: true,
-        autoPlay: true,
+        autoPlay: false,
         showControls: true,
       );
     }
@@ -56,13 +60,13 @@ class AddVideoModal extends HookWidget {
       return null;
     }, []);
 
-    return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-        width: double.infinity,
-        height: uri == null ? 600 : 320,
-        child: Column(children: [
+    return Container(
+      padding: uri == null ? const EdgeInsets.all(20) : EdgeInsets.zero,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      width: double.infinity,
+      height: uri == null ? containerHeight.value : 320,
+      child: SingleChildScrollView(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
           if (uri == null)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,25 +87,27 @@ class AddVideoModal extends HookWidget {
               ],
             ),
           heightSpace(2),
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(50),
-                bottomRight: Radius.circular(50),
-                topLeft: Radius.circular(50),
-                topRight: Radius.circular(0),
-              ),
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(50),
+              bottomRight: Radius.circular(50),
+              topLeft: Radius.circular(50),
+              topRight: Radius.circular(0),
             ),
-            height: 270,
-            child: Chewie(
-              controller: chewieController.value!,
+            child: SizedBox(
+              width: double.infinity,
+              height: 270,
+              child: Chewie(
+                controller: chewieController.value!,
+              ),
             ),
           ),
           heightSpace(2),
           if (uri == null)
             TextFormField(
+              onTap: () {
+                containerHeight.value = 800;
+              },
               controller: post,
               decoration: InputDecoration(
                   prefixIcon: Padding(
@@ -124,10 +130,10 @@ class AddVideoModal extends HookWidget {
                   ),
                   suffixIcon: InkWell(
                     onTap: () async {
-                      if (post.text.isEmpty) {
-                        ToastResp.toastMsgError(resp: "Post can't be empty");
-                        return;
-                      }
+                      // if (post.text.isEmpty) {
+                      //   ToastResp.toastMsgError(resp: "Post can't be empty");
+                      //   return;
+                      // }
                       bool result = await postRepository.createPost(
                           post.text,
                           userId!,
@@ -137,6 +143,7 @@ class AddVideoModal extends HookWidget {
 
                       if (result) {
                         ToastResp.toastMsgSuccess(resp: "Successfully Posted");
+                        ref.read(refreshHomeScreen.notifier).state = !refresh;
                         post.clear();
                         if (context.mounted) Navigator.of(context).pop();
                       }

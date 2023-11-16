@@ -10,11 +10,11 @@ import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class ReportCommunity extends HookWidget {
+class ReportPostUser extends HookWidget {
   static final CommunityRepo _communityRepository = CommunityRepo();
   static final description = TextEditingController();
   final String typeId;
-  const ReportCommunity({super.key, required this.typeId});
+  const ReportPostUser({super.key, required this.typeId});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class ReportCommunity extends HookWidget {
           typeId: typeId,
           title: reason.value,
           description: description.text,
-          reportType: "REPORT_COMMUNITY");
+          reportType: "REPORT_USER");
 
       if (result) {
         ToastResp.toastMsgSuccess(resp: "Successful");
@@ -45,9 +45,7 @@ class ReportCommunity extends HookWidget {
       backgroundColor: AppColors.white,
       appBar: AppBar(
           title: customText(
-              text: "Report Community",
-              fontSize: 17,
-              textColor: AppColors.black)),
+              text: "Report Post", fontSize: 17, textColor: AppColors.black)),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

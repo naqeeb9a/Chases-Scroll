@@ -1,7 +1,7 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/screens/community/model/group_model.dart';
 import 'package:chases_scroll/src/screens/community/request_community.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
-import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
@@ -9,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../providers/auth_provider.dart';
 import 'find_community.dart';
 import 'my_community.dart';
 
@@ -20,77 +22,99 @@ class Community extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF6F6F6),
-        appBar: AppBar(
-          actions: [
-            InkWell(
-              onTap: () => context.push(AppRoutes.createCommunity),
-              child: Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: SvgPicture.asset(
-                  AppImages.community,
-                  color: AppColors.primary,
+      child: Consumer(builder: (context, WidgetRef ref, __) {
+        return Scaffold(
+          backgroundColor: const Color(0xFFF6F6F6),
+          appBar: AppBar(
+            actions: [
+              InkWell(
+                onTap: () => context.push(AppRoutes.createCommunity,
+                    extra: CommunityInfoModel()),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: SvgPicture.asset(
+                    AppImages.community,
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-            )
-          ],
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: customText(
-              text: "Community", fontSize: 15, textColor: AppColors.black),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(100),
-            child: Container(
-              color: AppColors.white,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    AppTextFormField(
-                      prefixIcon: SvgPicture.asset(AppImages.search),
-                      hintText: "Search for Communities",
-                      hasBorder: true,
-                    ),
-                    TabBar(
-                        indicator: const BoxDecoration(),
-                        unselectedLabelColor: AppColors.textGrey,
-                        labelColor: AppColors.primary,
-                        labelStyle: GoogleFonts.dmSans(
-                          textStyle: const TextStyle(
-                              fontSize: 11, fontWeight: FontWeight.w600),
-                        ),
-                        tabs: const [
-                          Tab(
-                            text: "My Community",
+              )
+            ],
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            title: customText(
+                text: "Community", fontSize: 15, textColor: AppColors.black),
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(100),
+              child: Container(
+                color: AppColors.white,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        onChanged: (value) {
+                          ref.read(communitySearch.notifier).state = value;
+                        },
+                        decoration: InputDecoration(
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: SvgPicture.asset(AppImages.search),
+                            ),
+                            // filled: true,
+                            // fillColor: AppColors.textFormColor,
+                            enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            errorBorder: AppColors.errorBorder,
+                            focusedBorder: AppColors.normalBorder,
+                            focusedErrorBorder: AppColors.normalBorder,
+                            contentPadding: const EdgeInsets.all(10),
+                            hintText: "Search for Communities",
+                            hintStyle: GoogleFonts.dmSans(
+                                textStyle: const TextStyle(
+                                    color: AppColors.black, fontSize: 12))),
+                      ),
+                      TabBar(
+                          indicator: const BoxDecoration(),
+                          unselectedLabelColor: AppColors.textGrey,
+                          labelColor: AppColors.primary,
+                          labelStyle: GoogleFonts.dmSans(
+                            textStyle: const TextStyle(
+                                fontSize: 11, fontWeight: FontWeight.w600),
                           ),
-                          Tab(
-                            text: "Find Community",
-                          ),
-                          Tab(
-                            text: "Requests",
-                          )
-                        ]),
-                  ],
+                          tabs: const [
+                            Tab(
+                              text: "My Community",
+                            ),
+                            Tab(
+                              text: "Find Community",
+                            ),
+                            Tab(
+                              text: "Requests",
+                            )
+                          ]),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(children: [
-            heightSpace(2),
-            const Expanded(
-              child: TabBarView(children: [
-                MyCommunity(),
-                FindCommunity(),
-                RequestCommunity()
-              ]),
-            )
-          ]),
-        ),
-      ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(children: [
+              heightSpace(2),
+              const Expanded(
+                child: TabBarView(children: [
+                  MyCommunity(),
+                  FindCommunity(),
+                  RequestCommunity()
+                ]),
+              )
+            ]),
+          ),
+        );
+      }),
     );
   }
 }

@@ -90,6 +90,26 @@ class PostRepository {
     }
   }
 
+  Future<bool> addSubComment(
+    String postId,
+    String comment,
+  ) async {
+    var body = {
+      "commentID": postId,
+      "comment": comment,
+    };
+    log(body.toString());
+    final response =
+        await ApiClient.post(Endpoints.subComment, body: body, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      log("this is the message");
+      log(response.message.toString());
+      return true;
+    }
+    return false;
+  }
+
   Future<String> addVideo(
     File video,
     String userId,
@@ -115,7 +135,7 @@ class PostRepository {
     }
   }
 
-  Future<bool> createPost(String text, String sourceId, String? mediaRef,
+  Future createPost(String text, String sourceId, String? mediaRef,
       List<String>? multipleMediaRef, String? type) async {
     var body = {
       "text": text,
@@ -187,9 +207,9 @@ class PostRepository {
     return CommentModel();
   }
 
-  Future<UserListModel> getFriends() async {
+  Future<UserListModel> getFriends(String id) async {
     final response =
-        await ApiClient.get(Endpoints.getSuggestedUsers, useToken: true);
+        await ApiClient.get("${Endpoints.userFriends}/$id", useToken: true);
 
     if (response.status == 200 || response.status == 201) {
       log("this is the message");
@@ -208,6 +228,31 @@ class PostRepository {
       return PostModel.fromJson(response.message);
     }
     return PostModel();
+  }
+
+  Future<SubComment> getSubComment(String commentId) async {
+    String endpoint = "${Endpoints.getSubComment}?commentID=$commentId";
+    final response = await ApiClient.get(endpoint, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      log("this is the message");
+      log(response.message.toString());
+      return SubComment.fromJson(response.message);
+    }
+    return SubComment();
+  }
+
+  Future<bool> likeComment(String commentId) async {
+    String endpoint = "${Endpoints.likeComment}/$commentId";
+    final response = await ApiClient.postWithoutOverlay(endpoint,
+        body: null, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      log("this is the message");
+      log(response.message.toString());
+      return true;
+    }
+    return false;
   }
 
   Future<bool> likePost(String postId) async {

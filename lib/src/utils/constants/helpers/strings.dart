@@ -109,6 +109,13 @@ GestureDetector payMethodContainerGesture(
   );
 }
 
+String reduceStringLength(String string, int length) {
+  if (string.length > length) {
+    return "${string.characters.take(length).toString()}...";
+  }
+  return string;
+}
+
 Future<dynamic> showDialogBoard(BuildContext context) {
   return showDialog(
     context: context,

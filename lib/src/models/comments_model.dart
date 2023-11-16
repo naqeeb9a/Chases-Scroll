@@ -1,3 +1,5 @@
+import 'package:chases_scroll/src/models/post_model.dart';
+
 class Chronology {
   Zone? zone;
 
@@ -61,28 +63,6 @@ class CommentModel {
     numberOfElements = json['numberOfElements'];
     empty = json['empty'];
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (content != null) {
-      data['content'] = content!.map((v) => v.toJson()).toList();
-    }
-    if (pageable != null) {
-      data['pageable'] = pageable!.toJson();
-    }
-    data['totalPages'] = totalPages;
-    data['totalElements'] = totalElements;
-    data['last'] = last;
-    data['size'] = size;
-    data['number'] = number;
-    if (sort != null) {
-      data['sort'] = sort!.toJson();
-    }
-    data['first'] = first;
-    data['numberOfElements'] = numberOfElements;
-    data['empty'] = empty;
-    return data;
-  }
 }
 
 class Content {
@@ -122,27 +102,6 @@ class Content {
         ? SubComments.fromJson(json['subComments'])
         : null;
     timeInMilliseconds = json['timeInMilliseconds'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    if (time != null) {
-      data['time'] = time!.toJson();
-    }
-    data['postID'] = postID;
-    data['comment'] = comment;
-    if (user != null) {
-      data['user'] = user!.toJson();
-    }
-    data['likeCount'] = likeCount;
-    data['data'] = this.data;
-    data['likeStatus'] = likeStatus;
-    if (subComments != null) {
-      data['subComments'] = subComments!.toJson();
-    }
-    data['timeInMilliseconds'] = timeInMilliseconds;
-    return data;
   }
 }
 
@@ -348,7 +307,7 @@ class Sort {
 }
 
 class SubComments {
-  List<dynamic>? content;
+  List<Commentcontent>? content;
   Pageable? pageable;
   int? totalPages;
   int? totalElements;
@@ -375,9 +334,9 @@ class SubComments {
 
   SubComments.fromJson(Map<String, dynamic> json) {
     if (json['content'] != null) {
-      content = <Null>[];
+      content = <Commentcontent>[];
       json['content'].forEach((v) {
-        content!.add(v);
+        content!.add(Commentcontent.fromJson(v));
       });
     }
     pageable =
@@ -391,28 +350,6 @@ class SubComments {
     first = json['first'];
     numberOfElements = json['numberOfElements'];
     empty = json['empty'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (content != null) {
-      data['content'] = content!.map((v) => v.toJson()).toList();
-    }
-    if (pageable != null) {
-      data['pageable'] = pageable!.toJson();
-    }
-    data['totalPages'] = totalPages;
-    data['totalElements'] = totalElements;
-    data['last'] = last;
-    data['size'] = size;
-    data['number'] = number;
-    if (sort != null) {
-      data['sort'] = sort!.toJson();
-    }
-    data['first'] = first;
-    data['numberOfElements'] = numberOfElements;
-    data['empty'] = empty;
-    return data;
   }
 }
 

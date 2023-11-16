@@ -1,9 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/post_model.dart';
 import 'package:chases_scroll/src/models/user_model.dart';
+import 'package:chases_scroll/src/providers/auth_provider.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
 import 'package:chases_scroll/src/repositories/post_repository.dart';
 import 'package:chases_scroll/src/repositories/user_repository.dart';
@@ -15,6 +18,7 @@ import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/picture_container.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/extensions/index_of_map.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
@@ -24,9 +28,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-class HomeScreen extends HookWidget {
+import '../../config/locator.dart';
+import '../../utils/constants/helpers/change_millepoch.dart';
+
+class HomeScreen extends HookConsumerWidget {
   static final PostRepository _postRepository = PostRepository();
 
   static final UserRepository _userRepository = UserRepository();
@@ -35,7 +43,8 @@ class HomeScreen extends HookWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final refresh = ref.watch(refreshHomeScreen);
     final pageLoading = useState<bool>(true);
     final postLoading = useState<bool>(true);
     final postModel = useState<PostModel?>(null);
@@ -43,11 +52,17 @@ class HomeScreen extends HookWidget {
     final imageList = useState<List<File>>([]);
     final videoFile = useState<File>(File(''));
     final imageToUpload = useState<List<String>>([]);
+    final addImageLoader = useState<bool>(false);
 
     getUserProfile() {
+      final storage = locator<LocalStorageService>();
       _userRepository.getUserProfile().then((value) {
         pageLoading.value = false;
         userModel.value = value;
+        ref.read(userProvider.notifier).state = value;
+        log("###########");
+        log(value.userId.toString());
+        storage.saveDataToDisk(AppKeys.userId, value.userId);
       });
     }
 
@@ -62,15 +77,15 @@ class HomeScreen extends HookWidget {
       await _postRepository.likePost(id);
     }
 
-    imageContainer(File imagePath, int index) => Stack(
+    imageContainer(String imageString, int index) => Stack(
           children: [
             Padding(
               padding: const EdgeInsets.all(5.0),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
-                child: Image.file(
+                child: CachedNetworkImage(
+                  imageUrl: "${Endpoints.displayImages}$imageString",
                   fit: BoxFit.cover,
-                  imagePath,
                   width: 76,
                   height: 53,
                 ),
@@ -104,17 +119,20 @@ class HomeScreen extends HookWidget {
           await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
       if (imageList.value.length < 4) {
         imageList.value = [...imageList.value, File(image!.path)];
+        addImageLoader.value = true;
         String imageName = await _postRepository.addImage(
             File((image.path)), userModel.value!.userId.toString());
 
         log("###########");
         log(imageName);
-        imageToUpload.value.add(imageName);
+        imageToUpload.value = [...imageToUpload.value, imageName];
+        addImageLoader.value = false;
       }
     }
 
     showModalForVideo() {
       showModalBottomSheet(
+          isScrollControlled: true,
           context: context,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -130,9 +148,10 @@ class HomeScreen extends HookWidget {
 
     showModalForShareScreen(String postId) {
       showModalBottomSheet(
+          isScrollControlled: true,
           context: context,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           backgroundColor: Colors.white,
           builder: (context) {
@@ -158,7 +177,7 @@ class HomeScreen extends HookWidget {
       getPost();
       getUserProfile();
       return null;
-    }, []);
+    }, [refresh]);
     Future<dynamic> deletePost(BuildContext context, postID) {
       return showDialog(
         context: context,
@@ -223,21 +242,66 @@ class HomeScreen extends HookWidget {
 
     List<PopupMenuItem> listOfPopups(
         {String? postId,
+        String? sourceId,
         String? imageUrl,
         required String post,
         String? shareId,
         String? videoUrl}) {
       return [
+        if (userModel.value!.userId == sourceId)
+          PopupMenuItem(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    deletePost(context, postId);
+                  },
+                  child: customText(
+                      text: "Delete", fontSize: 12, textColor: AppColors.red)),
+            ),
+          ),
+        if (userModel.value!.userId == sourceId)
+          PopupMenuItem(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        backgroundColor: Colors.white,
+                        builder: (context) {
+                          return EditPostModal(
+                            userId: userModel.value!.userId,
+                            imageUrl: imageUrl,
+                            postText: post,
+                            postId: postId,
+                            videoUrl: videoUrl,
+                          );
+                        });
+                  },
+                  child: customText(
+                      text: "Edit Post",
+                      fontSize: 12,
+                      textColor: AppColors.black)),
+            ),
+          ),
         PopupMenuItem(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
-                  deletePost(context, postId);
+                  context.push(AppRoutes.reportPostUser, extra: postId!);
                 },
                 child: customText(
-                    text: "Delete", fontSize: 12, textColor: AppColors.red)),
+                    text: "Report Content",
+                    fontSize: 12,
+                    textColor: AppColors.black)),
           ),
         ),
         PopupMenuItem(
@@ -245,25 +309,13 @@ class HomeScreen extends HookWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
-                  showModalBottomSheet(
-                      context: context,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      backgroundColor: Colors.white,
-                      builder: (context) {
-                        return EditPostModal(
-                          userId: userModel.value!.userId,
-                          imageUrl: imageUrl,
-                          postText: post,
-                          postId: postId,
-                          videoUrl: videoUrl,
-                        );
-                      });
+                  context.push(
+                    AppRoutes.reportPostUser,
+                    extra: userModel.value!.userId.toString(),
+                  );
                 },
                 child: customText(
-                    text: "Edit Post",
+                    text: "Report User",
                     fontSize: 12,
                     textColor: AppColors.black)),
           ),
@@ -296,18 +348,25 @@ class HomeScreen extends HookWidget {
 
     return Scaffold(
       backgroundColor: AppColors.white,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
           backgroundColor: AppColors.white,
           automaticallyImplyLeading: false,
           elevation: 0.0,
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 30),
-              child: SvgPicture.asset(AppImages.messageIcon),
+            InkWell(
+              onTap: () => context.push(AppRoutes.chatScreen),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 30),
+                child: SvgPicture.asset(AppImages.messageIcon),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 30),
-              child: SvgPicture.asset(AppImages.notificationBell),
+            InkWell(
+              onTap: () => context.push(AppRoutes.notification),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 30),
+                child: SvgPicture.asset(AppImages.notificationBell),
+              ),
             )
           ],
           title: customText(
@@ -332,106 +391,119 @@ class HomeScreen extends HookWidget {
                             spreadRadius: 0,
                           )
                         ]),
-                    child: Column(children: [
-                      TextFormField(
-                        controller: postText,
-                        decoration: InputDecoration(
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ChaseScrollContainer(
-                                name:
-                                    "${userModel.value?.firstName} ${userModel.value?.lastName}",
-                                imageUrl:
-                                    '${Endpoints.displayImages}/${userModel.value?.data?.imgMain?.value}',
-                              ),
-                            ),
-                            suffixIcon: InkWell(
-                              onTap: () async {
-                                if (postText.text.isEmpty) {
-                                  ToastResp.toastMsgError(
-                                      resp: "Post can't be empty");
-                                  return;
-                                }
-                                bool result = await _postRepository.createPost(
-                                    postText.text,
-                                    userModel.value!.userId.toString(),
-                                    imageToUpload.value.isEmpty
-                                        ? null
-                                        : imageToUpload.value.first,
-                                    imageToUpload.value.isEmpty
-                                        ? []
-                                        : imageToUpload.value,
-                                    imageToUpload.value.isEmpty
-                                        ? null
-                                        : "WITH_IMAGE");
-
-                                if (result) {
-                                  ToastResp.toastMsgSuccess(
-                                      resp: "Successfully Posted");
-                                  postText.clear();
-                                  getPost();
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SvgPicture.asset(AppImages.sendIcon),
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: AppColors.textFormColor,
-                            focusedBorder: AppColors.normalBorder,
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: AppColors.textFormColor),
-                                borderRadius: BorderRadius.circular(10)),
-                            contentPadding: const EdgeInsets.all(10),
-                            hintText:
-                                "Add your thoughts ${userModel.value?.firstName}",
-                            hintStyle: GoogleFonts.dmSans(
-                                textStyle: const TextStyle(
-                                    color: AppColors.black, fontSize: 12))),
-                      ),
-                      heightSpace(2),
-                      if (imageList.value.isNotEmpty)
-                        SizedBox(
-                          height: 73,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: imageList.value
-                                .mapIndexed((e, i) => imageContainer(e, i))
-                                .toList(),
-                          ),
-                        ),
-                      heightSpace(1),
-                      Row(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GestureDetector(
-                            onTap: () => uploadImages(),
-                            child: SvgPicture.asset(
-                              AppImages.galleryIcon,
-                              width: 20,
-                              height: 20,
-                            ),
+                          TextFormField(
+                            controller: postText,
+                            decoration: InputDecoration(
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ChaseScrollContainer(
+                                    name:
+                                        "${userModel.value?.firstName} ${userModel.value?.lastName}",
+                                    imageUrl:
+                                        '${Endpoints.displayImages}/${userModel.value?.data?.imgMain?.value}',
+                                  ),
+                                ),
+                                suffixIcon: InkWell(
+                                  onTap: () async {
+                                    // if (postText.text.isEmpty) {
+                                    //   ToastResp.toastMsgError(
+                                    //       resp: "Post can't be empty");
+                                    //   return;
+                                    // }
+                                    bool result =
+                                        await _postRepository.createPost(
+                                            postText.text,
+                                            userModel.value!.userId.toString(),
+                                            imageToUpload.value.isEmpty
+                                                ? null
+                                                : imageToUpload.value.first,
+                                            imageToUpload.value.isEmpty
+                                                ? []
+                                                : imageToUpload.value,
+                                            imageToUpload.value.isEmpty
+                                                ? null
+                                                : "WITH_IMAGE");
+
+                                    if (result) {
+                                      ToastResp.toastMsgSuccess(
+                                          resp: "Successfully Posted");
+                                      postText.clear();
+                                      getPost();
+                                      imageToUpload.value = [];
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: SvgPicture.asset(AppImages.sendIcon),
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: AppColors.textFormColor,
+                                focusedBorder: AppColors.normalBorder,
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: AppColors.textFormColor),
+                                    borderRadius: BorderRadius.circular(10)),
+                                contentPadding: const EdgeInsets.all(10),
+                                hintText:
+                                    "Add your thoughts ${userModel.value?.firstName}",
+                                hintStyle: GoogleFonts.dmSans(
+                                    textStyle: const TextStyle(
+                                        color: AppColors.black, fontSize: 12))),
                           ),
-                          widthSpace(3),
-                          InkWell(
-                            onTap: () {
-                              uploadVideo();
-                            },
-                            child: SvgPicture.asset(
-                              AppImages.videoIcon,
-                              height: 20,
-                              width: 20,
-                            ),
+                          heightSpace(2),
+                          Row(
+                            children: [
+                              if (imageToUpload.value.isNotEmpty)
+                                SizedBox(
+                                  height: 73,
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    children: imageToUpload.value
+                                        .mapIndexed(
+                                            (e, i) => imageContainer(e, i))
+                                        .toList(),
+                                  ),
+                                ),
+                              if (addImageLoader.value)
+                                SizedBox(
+                                    width: 76, height: 53, child: boxShimmer()),
+                            ],
                           ),
-                          widthSpace(3),
-                          customText(
-                              text: "Add Photos/Video to your post",
-                              fontSize: 11,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                    ]),
+                          heightSpace(1),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => uploadImages(),
+                                child: SvgPicture.asset(
+                                  AppImages.galleryIcon,
+                                  width: 20,
+                                  height: 20,
+                                ),
+                              ),
+                              widthSpace(3),
+                              InkWell(
+                                onTap: () {
+                                  uploadVideo();
+                                },
+                                child: SvgPicture.asset(
+                                  AppImages.videoIcon,
+                                  height: 20,
+                                  width: 20,
+                                ),
+                              ),
+                              widthSpace(3),
+                              customText(
+                                  text: "Add Photos/Video to your post",
+                                  fontSize: 11,
+                                  textColor: AppColors.black)
+                            ],
+                          ),
+                        ]),
                   ),
                   heightSpace(2),
                   Expanded(
@@ -478,8 +550,8 @@ class HomeScreen extends HookWidget {
                                                   ChaseScrollContainer(
                                                     name:
                                                         "${e.user?.firstName} ${e.user?.lastName}",
-                                                    imageUrl: e.user?.data
-                                                        ?.imgMain?.value,
+                                                    imageUrl:
+                                                        "${Endpoints.displayImages}${e.user?.data?.imgMain?.value}",
                                                   ),
                                                   widthSpace(3),
                                                   Column(
@@ -503,7 +575,8 @@ class HomeScreen extends HookWidget {
                                                             AppColors.black,
                                                       ),
                                                       customText(
-                                                        text: "56 mins ago",
+                                                        text: timeAgoFromEpoch(e
+                                                            .timeInMilliseconds!),
                                                         fontSize: 8,
                                                         textColor:
                                                             AppColors.textGrey,
@@ -528,6 +601,7 @@ class HomeScreen extends HookWidget {
                                                     ),
                                                     itemBuilder: (context) {
                                                       return listOfPopups(
+                                                          sourceId: e.sourceId,
                                                           postId: e.id!,
                                                           imageUrl:
                                                               '${Endpoints.displayImages}/${e.mediaRef}',
@@ -559,19 +633,31 @@ class HomeScreen extends HookWidget {
                                                   }
                                                   return SizedBox(
                                                     height: 200,
-                                                    child: ListView.builder(
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        itemCount: e
-                                                            .multipleMediaRef
-                                                            ?.length,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          log('${Endpoints.displayImages}/${e.multipleMediaRef![index]}');
-                                                          return PictureContainer(
-                                                              image:
-                                                                  '${e.multipleMediaRef![index]}');
-                                                        }),
+                                                    child: e.multipleMediaRef!
+                                                                .length >
+                                                            1
+                                                        ? PageView.builder(
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            itemCount: e
+                                                                .multipleMediaRef
+                                                                ?.length,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              log('${Endpoints.displayImages}/${e.multipleMediaRef![index]}');
+                                                              return Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child: PictureContainer(
+                                                                    image: e.multipleMediaRef![
+                                                                        index]),
+                                                              );
+                                                            })
+                                                        : PictureContainer(
+                                                            image: e.mediaRef!),
                                                   );
                                                 }
                                                 return const SizedBox.shrink();
@@ -666,7 +752,7 @@ class HomeScreen extends HookWidget {
                                                               userModel.value,
                                                           "postId": e.id,
                                                           "imageUrl":
-                                                              '${Endpoints.displayImages}/${userModel.value?.data?.images}'
+                                                              '${Endpoints.displayImages}${userModel.value?.data?.images}'
                                                         }),
                                                     child: Column(
                                                       children: [
@@ -698,7 +784,7 @@ class HomeScreen extends HookWidget {
                                                   GestureDetector(
                                                     onTap: () =>
                                                         showModalForShareScreen(
-                                                            e.shareID!),
+                                                            e.id!),
                                                     child: Column(
                                                       children: [
                                                         heightSpace(2),

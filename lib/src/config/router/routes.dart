@@ -35,4 +35,10 @@ class AppRoutes {
   static const String eventCommunityId = "/eventCommunityId";
   static const String eventAttendeesView = "/eventAttendeesView";
   static const String findTrendingEvent = "/findTrendingEvent";
+  static const String chatScreen = "/chatScreen";
+  static const String createChat = "/createChat";
+  static const String privateChat = "/privateChat";
+  static const String groupChatMessage = "/group-chat-message";
+  static const String notification = "/notification";
+  static const String reportPostUser = '/report-user-post';
 }
