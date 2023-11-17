@@ -80,19 +80,20 @@ class _SearchEventWidgetState extends State<SearchEventWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                  height: 40,
-                                  width: 150,
-                                  //color: Colors.amber,
-                                  child: customText(
-                                      text: widget.eventName.toString(),
-                                      fontSize: 14,
-                                      textColor: AppColors.black,
-                                      fontWeight: FontWeight.w500),
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: customText(
+                                        text: widget.eventName.toString(),
+                                        fontSize: 12,
+                                        textColor: AppColors.black,
+                                        fontWeight: FontWeight.w500,
+                                        lines: 2),
+                                  ),
                                 ),
                                 customText(
                                     text: "\$${widget.price.toString()}",
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w500),
                               ],

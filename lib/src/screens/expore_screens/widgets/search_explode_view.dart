@@ -294,34 +294,23 @@ class SearchExploreView extends HookWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       //----------first page view ------------------
-                      Expanded(
-                        child: Column(
-                          children: [
-                            usersLoading.value
-                                ? searchUsersShimmerWithlength(
-                                    count: 6,
-                                  )
-                                : Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.fromLTRB(
-                                          15, 0, 15, 0),
-                                      width: double.infinity,
-                                      child: ListView.builder(
-                                        itemCount: foundUsers.value.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          ContentUser user =
-                                              foundUsers.value[index];
-                                          return SearchPeopleWidget(
-                                            user: user,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                          ],
-                        ),
-                      ),
+                      usersLoading.value
+                          ? searchUsersShimmerWithlength(
+                              count: 6,
+                            )
+                          : Container(
+                              margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                              width: double.infinity,
+                              child: ListView.builder(
+                                itemCount: foundUsers.value.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  ContentUser user = foundUsers.value[index];
+                                  return SearchPeopleWidget(
+                                    user: user,
+                                  );
+                                },
+                              ),
+                            ),
 
                       //----------second page view ------------------
                       Container(
