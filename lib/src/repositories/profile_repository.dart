@@ -147,7 +147,7 @@ class ProfileRepository {
   }
 
   Future<List<dynamic>> getConnectionRequest(String? page) async {
-    String url = "${Endpoints.getUserConnectionRequests}/?size=$page";
+    String url = "${Endpoints.getUserConnectionRequests}?page=$page";
     final response = await ApiClient.get(url, useToken: true);
 
     if (response.status == 200) {
@@ -286,7 +286,7 @@ class ProfileRepository {
 
   //get userConnections
   Future<List<ContentUser>> getUserConnections() async {
-    String url = "${Endpoints.getUserConnections}/$userId";
+    String url = "${Endpoints.getUserConnections}/$userId?size=10";
     final response = await ApiClient.get(url, useToken: true);
 
     if (response.status == 200) {
@@ -296,6 +296,7 @@ class ProfileRepository {
           .map<ContentUser>((user) => ContentUser.fromJson(user))
           .toList();
 
+      log("getUserConnections====>${allUserConnections.toString()}");
       return allUserConnections;
     } else {
       return [];
@@ -343,17 +344,21 @@ class ProfileRepository {
     );
 
     if (response.status == 200 || response.status == 201) {
-      final Map<String, dynamic> userProfileMap = response.message;
-      final userProfile = UserModel.fromJson(userProfileMap);
+      final Map<String, dynamic>? userProfileMap = response.message;
 
-      log("here is the user profile ====> $userProfile");
-      _storage.saveDataToDisk(
-          AppKeys.fullName, "${userProfile.firstName} ${userProfile.lastName}");
-      _storage.saveDataToDisk(AppKeys.email, response.message['email']);
-      _storage.saveDataToDisk(AppKeys.username, "${userProfile.username}");
-      return userProfile;
+      if (userProfileMap != null) {
+        final userProfile = UserModel.fromJson(userProfileMap);
+
+        log("here is the user profile ====> $userProfile");
+        _storage.saveDataToDisk(AppKeys.fullName,
+            "${userProfile.firstName} ${userProfile.lastName}");
+        _storage.saveDataToDisk(AppKeys.email, response.message['email']);
+        _storage.saveDataToDisk(AppKeys.username, "${userProfile.username}");
+        return userProfile;
+      }
     }
-    return userProfile;
+
+    return UserModel();
   }
 
   //report bug

@@ -49,26 +49,26 @@ class Endpoints {
 
   //-------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//
-  static const String getTopEvents = "/events/get-top-events";
-  static const String getAllEvents = "/events/events";
-  static const String getSuggestedUsers = "/user/suggest-connections";
-  static const String getAllCommunities = "/group/group";
+  static const String getTopEvents = "events/get-top-events";
+  static const String getAllEvents = "events/events";
+  static const String getSuggestedUsers = "user/suggest-connections";
+  static const String getAllCommunities = "group/group";
 
   static const String connectFriend = "/user/send-friend-request";
-  static const String disconnectFriend = "/user/remove-friend";
+  static const String disconnectFriend = "user/remove-friend";
   static const String acceptFriend = "user/accept-friend-request";
   static const String rejectFriend = "user/reject-friend-request";
-  static const String blockFriend = "/user/block";
+  static const String blockFriend = "user/block";
 
   //--------------------------- Event Endpoint ------------------------------//
-  static const String saveEvent = "/events/save-event";
-  static const String unSaveEvent = "/events/remove-saved-event";
+  static const String saveEvent = "events/save-event";
+  static const String unSaveEvent = "events/remove-saved-event";
 
-  static String savedEvents = "/events/get-saved-events";
+  static String savedEvents = "events/get-saved-events";
 
-  static String myEvents = "/events/joined-events";
+  static String myEvents = "events/joined-events";
 
-  static String pastEvents = "/events/get-past-events";
+  static String pastEvents = "events/get-past-events";
 
   static String corporateEvents = "/events/events?eventType=Corporate_Event";
   static String socialEvents = "/events/events?eventType=Social_Events";

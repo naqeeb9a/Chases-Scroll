@@ -4,6 +4,7 @@ class AppImages {
   static const String map = "assets/pngs/map.PNG";
   static const String chatBackground = "assets/pngs/chat.png";
   static const String successImage = "assets/pngs/success-jump.png";
+  static const String backBG = "assets/pngs/backBG.png";
 
   //jpegs
   static const String mapPic = "assets/jpegs/map_pic.jpg";

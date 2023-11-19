@@ -116,11 +116,11 @@ class PastEventView extends HookWidget {
                           flex: 4,
                           child: Container(
                             child: ListView.builder(
-                              itemCount: pastEventModel.value.length,
+                              itemCount: foundEvents.value.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
                                 EventContent myPastEvent =
-                                    pastEventModel.value[index];
+                                    foundEvents.value[index];
                                 //for formatted time
                                 int startTimeInMillis = myPastEvent.startTime!;
                                 DateTime startTime =

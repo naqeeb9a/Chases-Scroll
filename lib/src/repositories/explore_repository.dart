@@ -68,11 +68,11 @@ class ExploreRepository {
         backgroundColor: Colors.transparent,
         widget: Container());
 
-    log("response here saying  connect friend... =>>>${response.message}");
-
     if (response.status == 200 || response.status == 201) {
+      log("response here saying  connect friend... =>>>${response.message}");
       return response.message;
     }
+    log("response here saying  connect friend... =>>>${response.message}");
     return response.message;
   }
 

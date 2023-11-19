@@ -161,13 +161,16 @@ class _EventSmallTitleCardNonNavigateState
                             Container(
                               padding: PAD_ALL_8,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: AppColors.red.withOpacity(0.8)),
+                                borderRadius: BorderRadius.circular(4),
+                                color: const Color.fromARGB(255, 188, 194, 223),
+                              ),
                               child: customText(
-                                  text: "Attended",
+                                  text: widget.isOrganser == true
+                                      ? "Created"
+                                      : "Attended",
                                   fontSize: 11,
-                                  textColor: AppColors.white,
-                                  fontWeight: FontWeight.w700),
+                                  textColor: AppColors.red,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),

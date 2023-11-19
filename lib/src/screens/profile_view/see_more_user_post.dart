@@ -144,18 +144,6 @@ class SeeMoreUserPost extends HookWidget {
           });
     }
 
-    Future uploadVideo() async {
-      final video = await picker.pickVideo(
-          source: ImageSource.gallery,
-          maxDuration: const Duration(seconds: 30));
-      if (video != null) {
-        videoFile.value = File(video.path);
-
-        log(videoFile.value.path);
-        showModalForVideo();
-      }
-    }
-
     useEffect(() {
       getPost();
       getUserProfile();

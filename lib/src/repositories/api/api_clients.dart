@@ -313,21 +313,34 @@ class ApiClient {
       final result = await request();
 
       return ApiResponse(
-          message: result.data ?? result, status: result.statusCode);
+        message: result.data ?? result,
+        status: result.statusCode,
+      );
     } on DioError catch (e) {
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         // locator<GoRouter>().push(AppRoutes.login);
       }
       log(e.response.toString());
-      OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+
+      if (AppHelper.overlayContext != null) {
+        OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+      } else {
+        // Handle the case when AppHelper.overlayContext is null
+        print("AppHelper.overlayContext is null");
+      }
+
       if (e.response?.data is String) {
         ToastResp.toastMsgError(resp: e.response?.data.toString());
       } else {
-        ToastResp.toastMsgError(resp: e.response?.data["error_description"]);
+        ToastResp.toastMsgError(
+          resp: e.response?.data["error_description"],
+        );
       }
+
       return ApiResponse(
-          message: e.response?.data ?? e.response?.statusMessage,
-          status: e.response?.statusCode);
+        message: e.response?.data ?? e.response?.statusMessage,
+        status: e.response?.statusCode,
+      );
     } on SocketException catch (e) {
       _handleSocketException(e);
       return e.message;

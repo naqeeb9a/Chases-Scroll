@@ -99,8 +99,7 @@ class _SuggestionViewState extends State<SuggestionView> {
                       ),
                       child: Center(
                         child: customText(
-                            text: widget.users!.data!.imgMain!.objectPublic ==
-                                    false
+                            text: widget.users!.data!.imgMain!.value == null
                                 ? widget.users!.firstName!.isEmpty
                                     ? ""
                                     : "${widget.users!.firstName![0]}${widget.users!.lastName![0]}"
@@ -108,7 +107,7 @@ class _SuggestionViewState extends State<SuggestionView> {
                                 : "",
                             fontSize: 14,
                             textColor: AppColors.deepPrimary,
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w700),
                       ),
                     ),
                   ),

@@ -21,11 +21,13 @@ import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/luncher.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -72,8 +74,8 @@ class EventDetailsMainView extends ConsumerWidget {
     final notifier = ref.read(ticketSummaryProvider.notifier);
     final selectedIndex = ref.watch(selectPriceIndexNotifier);
     final boolValue = ref.watch(isOpenProvider);
-    final resetSavedboolValue = ref.watch(isResetBoolStateProvider);
 
+    bool? isEventSaved = eventDetails.isSaved;
     //value for userID
     String userId =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
@@ -107,7 +109,7 @@ class EventDetailsMainView extends ConsumerWidget {
       );
       log(userId);
       if (result['updated'] == true) {
-        ref.read(isResetBoolStateProvider.notifier).resetBoolState(true);
+        isEventSaved = result['updated'];
         ToastResp.toastMsgSuccess(resp: result['message']);
       } else {
         ToastResp.toastMsgError(resp: result['message']);
@@ -121,14 +123,13 @@ class EventDetailsMainView extends ConsumerWidget {
       );
       log(userId);
       if (result['updated'] == true) {
-        ref.read(isResetBoolStateProvider.notifier).resetBoolState(false);
+        isEventSaved = result['updated'];
+
         ToastResp.toastMsgSuccess(resp: result['message']);
       } else {
         ToastResp.toastMsgError(resp: result['message']);
       }
     }
-
-    log(eventDetails.attendeesVisibility.toString());
 
     return Scaffold(
       backgroundColor: AppColors.backgroundSummaryScreen,
@@ -167,26 +168,26 @@ class EventDetailsMainView extends ConsumerWidget {
                 ),
               ),
               widthSpace(4),
-              GestureDetector(
-                onTap: () {
-                  eventDetails.isSaved == false
-                      ? saveEvent(eventDetails.id!)
-                      : unSaveEvent(eventDetails.id!);
-                },
-                child: Container(
-                  child: eventDetails.isSaved == true
-                      ? SvgPicture.asset(
-                          AppImages.bookmarkFilled,
-                          height: 2.4.h,
-                          width: 2.4.w,
-                        )
-                      : SvgPicture.asset(
-                          AppImages.bookmark,
-                          height: 2.4.h,
-                          width: 2.4.w,
-                        ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     eventDetails.isSaved == false
+              //         ? saveEvent(eventDetails.id!)
+              //         : unSaveEvent(eventDetails.id!);
+              //   },
+              //   child: Container(
+              //     child: isEventSaved == true
+              //         ? SvgPicture.asset(
+              //             AppImages.bookmarkFilled,
+              //             height: 2.4.h,
+              //             width: 2.4.w,
+              //           )
+              //         : SvgPicture.asset(
+              //             AppImages.bookmark,
+              //             height: 2.4.h,
+              //             width: 2.4.w,
+              //           ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -246,13 +247,21 @@ class EventDetailsMainView extends ConsumerWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              customText(
-                                text:
-                                    "${eventDetails.minPrice.toString()} - ${eventDetails.maxPrice.toString()}",
-                                fontSize: 12,
-                                textColor: AppColors.black,
-                                lines: 2,
-                              ),
+                              eventDetails.currency == "USD"
+                                  ? customText(
+                                      text: "\$${eventDetails.minPrice}",
+                                      fontSize: 13,
+                                      textColor: AppColors.deepPrimary,
+                                      fontWeight: FontWeight.w500,
+                                    )
+                                  : Text(
+                                      "$naira${eventDetails.minPrice}",
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 13,
+                                        color: AppColors.deepPrimary,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                               GestureDetector(
                                 onTap: () => context.push(
                                   AppRoutes.eventAttendeesView,
@@ -503,6 +512,7 @@ class EventDetailsMainView extends ConsumerWidget {
                             height: height,
                             width: width,
                             function: () {
+                              log(eventDetails.location!.address.toString());
                               if (eventDetails.location!.address == null) {
                                 ToastResp.toastMsgError(
                                     resp:
@@ -515,15 +525,21 @@ class EventDetailsMainView extends ConsumerWidget {
                             },
                           ),
                           heightSpace(2),
-                          ChasescrollButton(
-                            buttonText: "Buy Ticket",
-                            onTap: () {
-                              ref
-                                  .read(selectPriceIndexNotifier.notifier)
-                                  .resetState();
-                              //log(notifier.state.name.toString());
-                              context.push(AppRoutes.eventTicketSummaryScreen);
-                            },
+                          Visibility(
+                            visible: eventDetails.createdBy!.userId == userId
+                                ? false
+                                : true,
+                            child: ChasescrollButton(
+                              buttonText: "Buy Ticket",
+                              onTap: () {
+                                ref
+                                    .read(selectPriceIndexNotifier.notifier)
+                                    .resetState();
+                                //log(notifier.state.name.toString());
+                                context
+                                    .push(AppRoutes.eventTicketSummaryScreen);
+                              },
+                            ),
                           ),
                         ],
                       ),

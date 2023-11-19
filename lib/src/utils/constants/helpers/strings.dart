@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 
 import '../spacer.dart';
 
+const String naira = "₦";
+
 List<dynamic> bankList = [
   {"id": '14', "bank_code": '044', "name": 'Access Bank Nigeria Plc'},
   {"id": '16', "bank_code": '063', "name": 'Access Bank(Diamond)'},

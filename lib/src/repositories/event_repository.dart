@@ -507,10 +507,11 @@ class EventRepository {
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
-      //log(allEvents.toString());
+
       myEventList = allEvents
           .map<EventContent>((event) => EventContent.fromJson(event))
           .toList();
+      log("myEventList ====> ${myEventList.toString()}");
 
       return myEventList;
     } else {

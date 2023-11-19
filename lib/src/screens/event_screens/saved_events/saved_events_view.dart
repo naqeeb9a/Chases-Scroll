@@ -58,9 +58,11 @@ class SavedEventsView extends HookWidget {
       if (result['message'] == true) {
         // Trigger a refresh of the events data
         refreshEvent();
-        ToastResp.toastMsgSuccess(resp: result['message']);
+        ToastResp.toastMsgSuccess(
+            resp: "${result['message']}, swipe down to refresh");
       } else {
-        ToastResp.toastMsgError(resp: result['message']);
+        ToastResp.toastMsgError(
+            resp: "${result['message']}, swipe down to refresh");
       }
     }
 
@@ -73,9 +75,11 @@ class SavedEventsView extends HookWidget {
       if (result['message'] == true) {
         // Trigger a refresh of the events data
         refreshEvent();
-        ToastResp.toastMsgSuccess(resp: result['message']);
+        ToastResp.toastMsgSuccess(
+            resp: "${result['message']}, swipe down to refresh");
       } else {
-        ToastResp.toastMsgError(resp: result['message']);
+        ToastResp.toastMsgError(
+            resp: "${result['message']}, swipe down to refresh");
       }
     }
 

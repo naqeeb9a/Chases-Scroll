@@ -2,10 +2,15 @@ import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
+import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../widgets/custom_fonts.dart';
 
@@ -136,22 +141,21 @@ class _EventBigCardState extends State<EventBigCard> {
                       ),
                     ),
                     widthSpace(1.5),
-                    customText(
-                      text: widget.price.toString(),
-                      fontSize: 12,
-                      textColor: AppColors.deepPrimary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    // Text(
-                    //   event['currency'] == "USD"
-                    //       ? "\$${event['minPrice'].toString()}"
-                    //       : "₦${event['minPrice'].toString()}",
-                    //   style: GoogleFonts.montserrat(
-                    //     color: Colors.black,
-                    //     fontSize: 14,
-                    //     fontWeight: FontWeight.w600,
-                    //   ),
-                    // ),
+                    widget.eventDetails!.currency == "USD"
+                        ? customText(
+                            text: "\$${widget.price}",
+                            fontSize: 13,
+                            textColor: AppColors.deepPrimary,
+                            fontWeight: FontWeight.w500,
+                          )
+                        : Text(
+                            "$naira${widget.price}",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 13,
+                              color: AppColors.deepPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                   ],
                 ),
                 heightSpace(0.8),
@@ -179,122 +183,112 @@ class _EventBigCardState extends State<EventBigCard> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // SizedBox(
-                    //   height: 30,
-                    //   width: 80,
-                    //   child: Stack(
-                    //     children: [
-                    // Positioned(
-                    //   top: 0,
-                    //   left: 0,
-                    //   child: Container(
-                    //     width: 6.w,
-                    //     height: 3.h,
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(30),
-                    //       color: Colors.blue,
-                    //     ),
-                    //   ),
-                    // ),
-                    //       Positioned(
-                    //         left: 15,
-                    //         child: Container(
-                    //           width: 6.w,
-                    //           height: 3.h,
-                    //           decoration: BoxDecoration(
-                    //             borderRadius: BorderRadius.circular(30),
-                    //             color: Colors.green,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Positioned(
-                    //         left: 30,
-                    //         child: Container(
-                    //           width: 6.w,
-                    //           height: 3.h,
-                    //           decoration: BoxDecoration(
-                    //             borderRadius: BorderRadius.circular(30),
-                    //             color: Colors.orange,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Positioned(
-                    //         left: 45,
-                    //         child: Container(
-                    //           width: 6.w,
-                    //           height: 3.h,
-                    //           decoration: BoxDecoration(
-                    //             borderRadius: BorderRadius.circular(30),
-                    //             color: AppColors.deepPrimary,
-                    //           ),
-                    //           child: Center(
-                    //             child: customText(
-                    //               text: "+${widget.eventDetails!.memberCount}",
-                    //               fontSize: 9,
-                    //               textColor: AppColors.white,
-                    //               fontWeight: FontWeight.w500,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    Expanded(
-                      flex: widget.eventDetails!.interestedUsers!.length < 2
-                          ? 1
-                          : widget.eventDetails!.interestedUsers!.length < 3
-                              ? 2
-                              : 3,
-                      child: SizedBox(
-                        // color: Colors.amber,
-                        height: 35,
-                        width: double.infinity,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount:
-                              widget.eventDetails!.interestedUsers!.length < 3
-                                  ? widget.eventDetails!.interestedUsers!.length
-                                  : 3, // Replace with your actual item count
-                          itemBuilder: (context, index) {
-                            InterestedUsers indiv =
-                                widget.eventDetails!.interestedUsers![index];
-                            // Replace this with your actual list item widget
-                            return Container(
-                              width: 8.w,
-                              height: 6.h,
+                    SizedBox(
+                      height: 30,
+                      width: 80,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            child: Container(
+                              width: 6.w,
+                              height: 3.h,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
-                                color: AppColors.primary.withOpacity(0.5),
-                                image: DecorationImage(
-                                  scale: 1.0,
-                                  fit: BoxFit.fill,
-                                  image: NetworkImage(
-                                      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}"),
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 15,
+                            child: Container(
+                              width: 6.w,
+                              height: 3.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.green,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 30,
+                            child: Container(
+                              width: 6.w,
+                              height: 3.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 45,
+                            child: Container(
+                              width: 6.w,
+                              height: 3.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: AppColors.deepPrimary,
+                              ),
+                              child: Center(
+                                child: customText(
+                                  text: "+${widget.eventDetails!.memberCount}",
+                                  fontSize: 9,
+                                  textColor: AppColors.white,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              child: Visibility(
-                                  child: Center(
-                                child: Text(
-                                    "${indiv.firstName![0]}${indiv.lastName![0]}"
-                                        .toUpperCase()),
-                              )),
-                            );
-                          },
-                        ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: customText(
+                        text: "Interested",
+                        fontSize: 12,
+                        textColor: AppColors.deepPrimary,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     Expanded(
                       flex: 5,
-                      child: Container(
-                        child: customText(
-                          text: "Interested",
-                          fontSize: 12,
-                          textColor: AppColors.deepPrimary,
-                          fontWeight: FontWeight.w500,
+                      child: GestureDetector(
+                        onTap: () async {
+                          String text =
+                              "https://chasescroll-new.netlify.app/events/${widget.eventDetails!.id}";
+
+                          await Share.share(
+                            text,
+                            subject:
+                                'Check out this user profile from Chasescroll',
+                            sharePositionOrigin: Rect.fromCenter(
+                              center: const Offset(0, 0),
+                              width: 100,
+                              height: 100,
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: SvgPicture.asset(
+                                AppImages.share,
+                                height: 2.7.h,
+                                width: 2.7.w,
+                                color: AppColors.deepPrimary,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    )
                   ],
                 )
               ],

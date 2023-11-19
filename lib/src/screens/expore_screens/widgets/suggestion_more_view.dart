@@ -132,18 +132,18 @@ class SuggestionFriendMore extends HookWidget {
                                             child: Center(
                                               child: customText(
                                                   text: content.data!.imgMain!
-                                                              .objectPublic ==
-                                                          false
+                                                              .value ==
+                                                          null
                                                       ? content.firstName!
                                                               .isEmpty
                                                           ? ""
                                                           : "${content.firstName![0]}${content.lastName![0]}"
                                                               .toUpperCase()
                                                       : "",
-                                                  fontSize: 12,
+                                                  fontSize: 14,
                                                   textColor:
                                                       AppColors.deepPrimary,
-                                                  fontWeight: FontWeight.w500),
+                                                  fontWeight: FontWeight.w700),
                                             ),
                                           ),
                                           widthSpace(2),
