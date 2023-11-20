@@ -324,6 +324,157 @@ class PrivateChat extends HookWidget {
       );
     }
 
+    imageDialogContainer(String imageUrl) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Expanded(
+            child: Dialog(
+                child: Container(
+                    width: 342,
+                    height: 233,
+                    // padding:
+                    //     const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: ShapeDecoration(
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: imageUrl,
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ))),
+          );
+        },
+      );
+    }
+
+    blockDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Expanded(
+            child: Dialog(
+                child: Container(
+              width: 342,
+              height: 233,
+              padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 18),
+              clipBehavior: Clip.antiAlias,
+              decoration: ShapeDecoration(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Exit Community?',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 17,
+                      fontFamily: 'DM Sans',
+                      fontWeight: FontWeight.w700,
+                      height: 0.08,
+                      letterSpacing: -0.41,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  customText(
+                      text: " By exiting this Community, you won’t \n",
+                      textColor: AppColors.black,
+                      fontSize: 12),
+                  customText(
+                      text: " have access to the event and happenings",
+                      textColor: AppColors.black,
+                      fontSize: 12),
+                  // customText(
+                  //     text: "within the ${communityInfoModel.name} Community",
+                  //     textColor: AppColors.black,
+                  //     fontSize: 12),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Cancel',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xB20F1728),
+                              fontSize: 14,
+                              fontFamily: 'DM Sans',
+                              fontWeight: FontWeight.w500,
+                              height: 0,
+                              letterSpacing: -0.23,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  GestureDetector(
+                    // onTap: () => exitGroup(),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Exit',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF007AFF),
+                              fontSize: 14,
+                              fontFamily: 'DM Sans',
+                              fontWeight: FontWeight.w500,
+                              height: 0,
+                              letterSpacing: -0.23,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )),
+          );
+        },
+      );
+    }
+
     createPost() async {
       if (imageToUpload.value.isNotEmpty) {
         postType.value = 'PICTURE';
@@ -575,7 +726,7 @@ class PrivateChat extends HookWidget {
                                                   : Alignment.centerLeft,
                                               child: InkWell(
                                                   onTap: () async {
-                                                    _communityRepo.launchLink(
+                                                    imageDialogContainer(
                                                         "${Endpoints.displayImages}${element.media}");
                                                   },
                                                   child: Container(

@@ -74,7 +74,10 @@ class HomeScreen extends HookConsumerWidget {
     }
 
     likePost(String id) async {
-      await _postRepository.likePost(id);
+      bool result = await _postRepository.likePost(id);
+      if (result) {
+        ref.read(refreshHomeScreen.notifier).state = !refresh;
+      }
     }
 
     imageContainer(String imageString, int index) => Stack(
@@ -431,8 +434,11 @@ class HomeScreen extends HookConsumerWidget {
                                       ToastResp.toastMsgSuccess(
                                           resp: "Successfully Posted");
                                       postText.clear();
-                                      getPost();
+
                                       imageToUpload.value = [];
+                                      ref
+                                          .read(refreshHomeScreen.notifier)
+                                          .state = !refresh;
                                     }
                                   },
                                   child: Padding(
@@ -515,13 +521,14 @@ class HomeScreen extends HookConsumerWidget {
                               : Column(
                                   children: [
                                     ...postModel.value!.content!.map((e) {
-                                      final likedCount =
-                                          useState<int>(e.likeCount!);
+                                      final likedCount = useState<int>(0);
 
-                                      final hasLiked = useState<bool>(
-                                          e.likeStatus == "LIKED"
-                                              ? true
-                                              : false);
+                                      final hasLiked = useState<bool>(false);
+
+                                      likedCount.value = e.likeCount!;
+                                      hasLiked.value = e.likeStatus == "LIKED"
+                                          ? true
+                                          : false;
 
                                       return Container(
                                           margin: const EdgeInsets.symmetric(
@@ -674,10 +681,6 @@ class HomeScreen extends HookConsumerWidget {
                                                         children: [
                                                           InkWell(
                                                               onTap: () {
-                                                                log(hasLiked
-                                                                    .value
-                                                                    .toString());
-
                                                                 if (hasLiked
                                                                     .value) {
                                                                   likedCount
@@ -685,14 +688,12 @@ class HomeScreen extends HookConsumerWidget {
                                                                       likedCount
                                                                               .value -
                                                                           1;
-                                                                  log(likedCount
-                                                                      .value
-                                                                      .toString());
-                                                                  likePost(
-                                                                      e.id!);
                                                                   hasLiked.value =
                                                                       !hasLiked
                                                                           .value;
+                                                                  likePost(
+                                                                      e.id!);
+
                                                                   return;
                                                                 }
                                                                 if (likedCount
