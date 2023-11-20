@@ -41,10 +41,16 @@ class ChatRepository {
     return NotificationModel();
   }
 
-  Future<bool> postChat({String? chatId, String? message}) async {
+  Future<bool> postChat(
+      {String? chatId,
+      String? message,
+      String? media,
+      String? mediaType}) async {
     var body = {
       "message": message,
+      "media": media,
       "chatID": chatId,
+      "mediaType": mediaType
     };
     final response =
         await ApiClient.post(Endpoints.sendChat, useToken: true, body: body);

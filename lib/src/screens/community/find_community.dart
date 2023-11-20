@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chases_scroll/src/models/group_model.dart';
+import 'package:chases_scroll/src/providers/auth_provider.dart';
 import 'package:chases_scroll/src/repositories/community_repo.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_shape.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -12,26 +13,45 @@ import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/keys.dart';
 import '../../config/locator.dart';
 
-class FindCommunity extends HookWidget {
+class FindCommunity extends HookConsumerWidget {
   static final CommunityRepo _communityRepo = CommunityRepo();
   const FindCommunity({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textValue = ref.watch(communitySearch);
+    final initialContent = useState<GroupModel?>(null);
     final communityModel = useState<GroupModel?>(null);
     final isLoading = useState<bool>(true);
     getCommunity() {
       final keys =
           locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
       log(keys.toString());
+      if (communityModel.value != null) {
+        if (textValue!.isNotEmpty) {
+          List<Content> filteredCommunity = communityModel.value!.content!
+              .where((element) => "${element.data?.name}"
+                  .toLowerCase()
+                  .contains(textValue.toLowerCase()))
+              .toList();
+
+          communityModel.value = GroupModel(content: filteredCommunity);
+          return;
+        }
+        communityModel.value = initialContent.value;
+
+        return;
+      }
 
       _communityRepo.findCommunity().then((value) {
         isLoading.value = false;
         communityModel.value = value;
+        initialContent.value = value;
       });
     }
 
@@ -54,7 +74,7 @@ class FindCommunity extends HookWidget {
     useEffect(() {
       getCommunity();
       return null;
-    }, []);
+    }, [textValue]);
     return Container(
       padding: const EdgeInsets.only(bottom: 5),
       decoration: BoxDecoration(
@@ -70,7 +90,10 @@ class FindCommunity extends HookWidget {
       child: ListView(
         children: [
           isLoading.value
-              ? const Center(child: CircularProgressIndicator())
+              ? const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(child: CircularProgressIndicator()),
+                )
               : Column(
                   children: [
                     if (communityModel.value!.content!.isEmpty)
@@ -157,33 +180,35 @@ class FindCommunity extends HookWidget {
                                   ],
                                 ),
                                 const Spacer(),
-                                if (e.joinStatus == "NOT_CONNECTED")
-                                  InkWell(
-                                    onTap: () {
-                                      joinCommunity(e.id!);
-                                    },
-                                    child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16, vertical: 4),
-                                        decoration: ShapeDecoration(
-                                          color: AppColors.primary,
-                                          shape: RoundedRectangleBorder(
-                                            side: const BorderSide(
-                                                width: 0.50,
-                                                color: AppColors.primary),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: customText(
-                                              text: e.data!.isPublic!
-                                                  ? "Join"
-                                                  : "Request",
-                                              fontSize: 10,
-                                              textColor: AppColors.white),
-                                        )),
-                                  )
+                                e.joinStatus == "NOT_CONNECTED"
+                                    ? InkWell(
+                                        onTap: () {
+                                          joinCommunity(e.id!);
+                                        },
+                                        child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 4),
+                                            decoration: ShapeDecoration(
+                                              color: AppColors.primary,
+                                              shape: RoundedRectangleBorder(
+                                                side: const BorderSide(
+                                                    width: 0.50,
+                                                    color: AppColors.primary),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: customText(
+                                                  text: "Join",
+                                                  fontSize: 10,
+                                                  textColor: AppColors.white),
+                                            )),
+                                      )
+                                    : customText(
+                                        text: "Requested",
+                                        fontSize: 10,
+                                        textColor: AppColors.primary)
                               ],
                             ),
                             const Divider(

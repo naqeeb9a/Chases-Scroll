@@ -6,6 +6,7 @@ import 'package:chases_scroll/src/models/commdata.dart';
 import 'package:chases_scroll/src/models/group_model.dart';
 import 'package:chases_scroll/src/providers/auth_provider.dart';
 import 'package:chases_scroll/src/repositories/community_repo.dart';
+import 'package:chases_scroll/src/repositories/endpoints.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_shape.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
@@ -30,34 +31,42 @@ class MyCommunity extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textValue = ref.watch(communitySearch);
     final communityModel = useState<GroupModel?>(null);
-    // if (textValue!.isNotEmpty) {
-    //   List<Content> filteredCommunity = communityModel.value!.content!
-    //       .where((element) => "${element.data?.name}"
-    //           .toLowerCase()
-    //           .contains(textValue.toLowerCase()))
-    //       .toList();
-
-    //   communityModel.value = GroupModel(content: filteredCommunity);
-    // }
+    final initialContent = useState<GroupModel?>(null);
 
     final isLoading = useState<bool>(true);
     getCommunity() {
       final keys =
           locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
       log(keys.toString());
+      if (communityModel.value != null) {
+        if (textValue!.isNotEmpty) {
+          List<Content> filteredCommunity = communityModel.value!.content!
+              .where((element) => "${element.data?.name}"
+                  .toLowerCase()
+                  .contains(textValue.toLowerCase()))
+              .toList();
+
+          communityModel.value = GroupModel(content: filteredCommunity);
+          return;
+        }
+        communityModel.value = initialContent.value;
+
+        return;
+      }
 
       _communityReop
           .getGroup(userId: json.decode(json.encode(keys)))
           .then((value) {
         isLoading.value = false;
         communityModel.value = value;
+        initialContent.value = value;
       });
     }
 
     useEffect(() {
       getCommunity();
       return null;
-    }, []);
+    }, [textValue]);
 
     return Container(
       padding: const EdgeInsets.only(bottom: 5, top: 10),
@@ -153,9 +162,9 @@ class MyCommunity extends HookConsumerWidget {
                                         Positioned(
                                           left: 8,
                                           child: ChaseScrollContainer(
-                                            name: reduceStringLength(
-                                                "${element.data?.name}", 15),
-                                            imageUrl: '${element.data?.imgSrc}',
+                                            name: element.data?.name ?? "",
+                                            imageUrl:
+                                                '${Endpoints.displayImages}${element.data?.imgSrc}',
                                           ),
                                         ),
                                       ],
@@ -167,7 +176,8 @@ class MyCommunity extends HookConsumerWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       customText(
-                                          text: "${element.data?.name}",
+                                          text: reduceStringLength(
+                                              "${element.data?.name}", 15),
                                           fontSize: 14,
                                           textColor: AppColors.black,
                                           fontWeight: FontWeight.w700),

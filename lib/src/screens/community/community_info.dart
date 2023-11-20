@@ -17,7 +17,6 @@ import 'package:chases_scroll/src/utils/constants/helpers/extract_first_letter.d
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +37,7 @@ class CommunityInfo extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final groupMembers = useState<GroupMembers?>(null);
+    final initialContent = useState<GroupMembers?>(null);
     final isLoading = useState<bool>(true);
     final memberCount = useState<int>(0);
     final imageValue = useState<File>(File(''));
@@ -48,6 +48,7 @@ class CommunityInfo extends HookWidget {
         isLoading.value = false;
         groupMembers.value = value;
         memberCount.value = value.content!.length;
+        initialContent.value = value;
       });
     }
 
@@ -199,7 +200,10 @@ class CommunityInfo extends HookWidget {
 
     useEffect(() {
       getGroupMembers();
-      imageString.value = communityInfoModel.image ?? '';
+      imageString.value =
+          "${Endpoints.displayImages}${communityInfoModel.image}";
+
+      log(imageString.value);
       return null;
     }, []);
     return Scaffold(
@@ -299,11 +303,25 @@ class CommunityInfo extends HookWidget {
             AppTextFormField(
               prefixIcon: SvgPicture.asset(AppImages.searchIcon),
               hintText: "Search",
+              onChanged: (query) {
+                if (query.isNotEmpty) {
+                  List<Content> filteredUsers = groupMembers.value!.content!
+                      .where((user) =>
+                          "${user.user?.firstName} ${user.user?.lastName}"
+                              .toLowerCase()
+                              .contains(query.toLowerCase()))
+                      .toList();
+
+                  groupMembers.value = GroupMembers(content: filteredUsers);
+                  return;
+                }
+                groupMembers.value = initialContent.value;
+              },
               hasBorder: true,
             ),
             heightSpace(2),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InkWell(
                   onTap: () => context.push(AppRoutes.createCommunity,
@@ -372,35 +390,35 @@ class CommunityInfo extends HookWidget {
                         ],
                       )),
                 ),
-                Container(
-                    width: 100,
-                    height: 64,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFFF0F2F9),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x19000000),
-                          blurRadius: 3,
-                          offset: Offset(0, 1),
-                          spreadRadius: 1,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(AppImages.settings),
-                        heightSpace(.5),
-                        customText(
-                            text: "Settings",
-                            fontSize: 10,
-                            textColor: AppColors.primary)
-                      ],
-                    ))
+                // Container(
+                //     width: 100,
+                //     height: 64,
+                //     padding:
+                //         const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                //     decoration: ShapeDecoration(
+                //       color: const Color(0xFFF0F2F9),
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(12),
+                //       ),
+                //       shadows: const [
+                //         BoxShadow(
+                //           color: Color(0x19000000),
+                //           blurRadius: 3,
+                //           offset: Offset(0, 1),
+                //           spreadRadius: 1,
+                //         )
+                //       ],
+                //     ),
+                //     child: Column(
+                //       children: [
+                //         SvgPicture.asset(AppImages.settings),
+                //         heightSpace(.5),
+                //         customText(
+                //             text: "Settings",
+                //             fontSize: 10,
+                //             textColor: AppColors.primary)
+                //       ],
+                //     ))
               ],
             ),
             heightSpace(2),
@@ -425,7 +443,8 @@ class CommunityInfo extends HookWidget {
                                     children: [
                                       ChaseScrollContainer(
                                         name:
-                                            "${groupMembers.value?.content?[index].user?.firstName} ${groupMembers.value?.content?[index].user?.lastName}"
+                                            "${groupMembers.value?.content?[index].user?.firstName} ${groupMembers.value?.content?[index].user?.lastName}",
+                                        imageUrl:
                                             "${groupMembers.value?.content?[index].user?.data?.imgMain?.value}",
                                       ),
                                       widthSpace(3),
@@ -442,11 +461,7 @@ class CommunityInfo extends HookWidget {
                                               text: "ADMIN",
                                               fontSize: 12,
                                               textColor: AppColors.primary)
-                                          : const Icon(
-                                              FeatherIcons.moreHorizontal,
-                                              size: 22,
-                                              color: Colors.black87,
-                                            )
+                                          : const SizedBox.shrink()
                                     ],
                                   ),
                                   const Divider(

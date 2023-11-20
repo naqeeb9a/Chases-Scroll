@@ -11,6 +11,20 @@ import '../models/members.dart';
 import 'endpoints.dart';
 
 class CommunityRepo {
+  Future<bool> acceptOrRejectCommunity(
+      {required String communityId, required bool resolve}) async {
+    var body = {"id": communityId, "resolve": resolve};
+
+    final response = await ApiClient.post(Endpoints.resolveRequest,
+        body: body, useToken: true);
+
+    if (response.status == 200 || response.status == 201) {
+      log(response.message.toString());
+      return true;
+    }
+    return false;
+  }
+
   Future<bool> createCommunity(
       {required String name,
       required bool isPublic,

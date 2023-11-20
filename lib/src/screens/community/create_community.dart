@@ -41,6 +41,8 @@ class CreateCommunity extends HookWidget {
     final public = useState<bool>(false);
     final imageValue = useState<File>(File(''));
     final imageString = useState<String>('');
+    final imageToUpload = useState<String>("");
+    final isImageLoading = useState<bool>(false);
     final communityName =
         useState<TextEditingController>(TextEditingController());
     final communityDescription =
@@ -52,7 +54,7 @@ class CreateCommunity extends HookWidget {
           bool result = await communityRepo.createCommunity(
               name: communityName.value.text,
               isPublic: public.value,
-              mulitpleMedia: imageString.value,
+              mulitpleMedia: imageToUpload.value,
               description: communityDescription.value.text);
           if (result) {
             ToastResp.toastMsgSuccess(resp: "Created Successfully");
@@ -62,7 +64,7 @@ class CreateCommunity extends HookWidget {
               communityId: communityInfoModel?.groupId,
               name: communityName.value.text,
               isPublic: public.value,
-              multipleMedia: imageString.value,
+              multipleMedia: imageToUpload.value,
               description: communityDescription.value.text);
           if (result) {
             ToastResp.toastMsgSuccess(resp: "Edited Successfully");
@@ -76,7 +78,11 @@ class CreateCommunity extends HookWidget {
       communityDescription.value.text = communityInfoModel?.description ?? "";
 
       if (communityInfoModel?.image != null) {
-        imageString.value = communityInfoModel!.image!;
+        imageString.value =
+            "${Endpoints.displayImages}${communityInfoModel!.image}";
+
+        log(imageString.value);
+
         log(imageString.value);
       }
     }
@@ -91,10 +97,13 @@ class CreateCommunity extends HookWidget {
           await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
       if (image != null) {
         imageValue.value = File(image.path);
+        isImageLoading.value = true;
         String imageName =
             await _postRepository.addImage(File((image.path)), keys);
 
         imageString.value = '${Endpoints.displayImages}/$imageName';
+        imageToUpload.value = imageName;
+        isImageLoading.value = false;
         log(imageName);
       }
     }
@@ -116,67 +125,70 @@ class CreateCommunity extends HookWidget {
           child: Column(
             children: [
               heightSpace(3),
-              imageString.value.isEmpty
-                  ? Center(
-                      child: GestureDetector(
-                          onTap: () => uploadImages(),
-                          child: SvgPicture.asset(AppImages.communityAdd)))
-                  : SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(50),
-                                  bottomRight: Radius.circular(50),
-                                  topLeft: Radius.circular(50),
-                                  topRight: Radius.circular(0),
-                                ),
-                                border: Border.all(color: AppColors.primary)),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(50),
-                                bottomRight: Radius.circular(50),
-                                topLeft: Radius.circular(50),
-                                topRight: Radius.circular(0),
-                              ),
-                              child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                imageUrl: imageString.value,
-                                height: 100,
-                                width: 150,
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Container(
-                              height: 25,
-                              width: 25,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(40),
-                                border: Border.all(
-                                  width: 1.2,
-                                  color: Colors.black45,
-                                ),
-                              ),
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: uploadImages,
-                                  child: const Icon(
-                                    Icons.camera_alt_rounded,
-                                    size: 15,
+              isImageLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : imageString.value.isEmpty
+                      ? Center(
+                          child: GestureDetector(
+                              onTap: () => uploadImages(),
+                              child: SvgPicture.asset(AppImages.communityAdd)))
+                      : SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(50),
+                                      bottomRight: Radius.circular(50),
+                                      topLeft: Radius.circular(50),
+                                      topRight: Radius.circular(0),
+                                    ),
+                                    border:
+                                        Border.all(color: AppColors.primary)),
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(50),
+                                    bottomRight: Radius.circular(50),
+                                    topLeft: Radius.circular(50),
+                                    topRight: Radius.circular(0),
+                                  ),
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.cover,
+                                    imageUrl: imageString.value,
+                                    height: 100,
+                                    width: 150,
                                   ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  height: 25,
+                                  width: 25,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(40),
+                                    border: Border.all(
+                                      width: 1.2,
+                                      color: Colors.black45,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: GestureDetector(
+                                      onTap: uploadImages,
+                                      child: const Icon(
+                                        Icons.camera_alt_rounded,
+                                        size: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
               heightSpace(2),
               customText(
                   text: "Add Photo",
@@ -204,7 +216,7 @@ class CreateCommunity extends HookWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       customText(
-                          text: "Visibility",
+                          text: "Mode Type",
                           fontSize: 14,
                           textColor: AppColors.black),
                       heightSpace(1),

@@ -89,15 +89,11 @@ class ShareScreen extends HookWidget {
             TextFormField(
               decoration: InputDecoration(
                 focusedBorder: AppColors.normalBorder,
-                border: const OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.grey),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: AppColors.textFormColor),
-                    borderRadius: BorderRadius.circular(10)),
+                enabledBorder: AppColors.normalBorder,
+                errorBorder: AppColors.errorBorder,
+                focusedErrorBorder: AppColors.normalBorder,
                 contentPadding: const EdgeInsets.all(10),
-                hintText: "Gboye Samuel",
+                hintText: "Search friend",
                 hintStyle: GoogleFonts.dmSans(
                     textStyle:
                         const TextStyle(color: AppColors.black, fontSize: 12)),
@@ -107,8 +103,6 @@ class ShareScreen extends HookWidget {
                 ),
               ),
               onChanged: (query) {
-                // Filter the user list based on the query
-
                 if (query.isNotEmpty) {
                   List<Content> filteredUsers = userListModel.value!.content!
                       .where((user) => "${user.firstName} ${user.lastName}"
@@ -116,7 +110,6 @@ class ShareScreen extends HookWidget {
                           .contains(query.toLowerCase()))
                       .toList();
 
-                  // Update the displayed list
                   userListModel.value = UserListModel(content: filteredUsers);
                   return;
                 }

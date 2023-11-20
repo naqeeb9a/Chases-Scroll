@@ -55,6 +55,7 @@ class Endpoints {
   static const String getSubComment = "feed/get-all-sub-comments";
   static const String notifications = "notifications/notification";
   static const String report = "report/report";
+  static const String resolveRequest = "group/resolve-request";
 
   //-------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//
