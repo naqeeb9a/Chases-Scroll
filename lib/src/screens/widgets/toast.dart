@@ -4,6 +4,15 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ToastResp {
+  static toastMsgCustom({String? resp, Color? color}) {
+    return Fluttertoast.showToast(
+        timeInSecForIosWeb: 4,
+        msg: resp.toString(),
+        backgroundColor: color,
+        textColor: Colors.white,
+        fontSize: 11.sp);
+  }
+
   static toastMsgError({String? resp}) {
     return Fluttertoast.showToast(
         timeInSecForIosWeb: 4,

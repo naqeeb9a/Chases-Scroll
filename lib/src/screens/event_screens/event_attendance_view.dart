@@ -16,7 +16,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 
 class EventAttendeesView extends HookWidget {
-  final Content eventDetails;
+  final EventContent eventDetails;
 
   final EventRepository _eventRepository = EventRepository();
 

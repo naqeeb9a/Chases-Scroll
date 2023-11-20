@@ -25,6 +25,8 @@ class AppRoutes {
   static const String eventTicketSummaryScreen = "/eventTicketSummaryScreen";
   static const String eventTicketPrivacyPolicyScreen =
       "/eventTicketPrivacyPolicyScreen";
+  static const String draftEvent = "/draftEvent";
+  static const String draftEditEvent = "/draftEditEvent";
   static const String threeLoadingDotsScreen = "/threeLoadingDotsScreen";
   static const String eventSuccessScreen = "/eventSuccessScreen";
   static const String paymentMethodScreen = "/paymentMethodScreen";
@@ -41,4 +43,26 @@ class AppRoutes {
   static const String groupChatMessage = "/group-chat-message";
   static const String notification = "/notification";
   static const String reportPostUser = '/report-user-post';
+  static const String settings = "/settings";
+  static const String terms = "/terms";
+  static const String privacy = "/privacy";
+  static const String enhancement = "/enhancement";
+  static const String reportBug = "/reportBug";
+  static const String accountSetting = "/accountSetting";
+  static const String changePassword = "/changePassword";
+  static const String settingPayment = "/settingPayment";
+  static const String editProfile = "/editProfile";
+  static const String seeMoreUserPost = "/seeMoreUserPost";
+  static const String profileUsersMore = "/profileUsersMore";
+  static const String profileEventMore = "/profileEventMore";
+  static const String profileCommmunityMore = "/profileCommmunityMore";
+  static const String profilePostMore = "/profilePostMore";
+  static const String otherUsersProfile = "/otherUsersProfile";
+  static const String transactionView = "/transactionView";
+  static const String settingsWallet = "/settingsWallet";
+  static const String fundWalletNGN = "/fundWalletNGN";
+  static const String fundWalletUSD = "/fundWalletUSD";
+  static const String eventByID = "/eventByID";
+  static const String eventByIdDashboard = "/eventByIdDashboard";
+  static const String blockedUser = "/blockedUser";
 }

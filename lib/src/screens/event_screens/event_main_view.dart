@@ -4,6 +4,9 @@ import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
+import 'package:chases_scroll/src/models/user_model.dart';
+import 'package:chases_scroll/src/repositories/profile_repository.dart';
+import 'package:chases_scroll/src/screens/event_screens/draft_event_views/draft_event_views.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/find_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/my_events/my_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/past_events/past_events_view.dart';
@@ -22,6 +25,8 @@ import 'package:go_router/go_router.dart';
 import '../../utils/constants/images.dart';
 
 class EventMainView extends HookWidget {
+  static final ProfileRepository _profileRepository = ProfileRepository();
+
   const EventMainView({super.key});
 
   @override
@@ -31,6 +36,7 @@ class EventMainView extends HookWidget {
       'My Event',
       'Saved Event',
       'Past Event',
+      'Draft',
     ];
 
     final currentPage = useState<int>(0);
@@ -41,6 +47,25 @@ class EventMainView extends HookWidget {
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
 
     log("see result here o ===>$userId");
+
+    //getting user details
+    final userProfileLoading = useState<bool>(true);
+    final userProfileModel = useState<UserModel>(UserModel());
+
+    void getUsersProfile() {
+      _profileRepository.getUserProfile().then((value) {
+        userProfileLoading.value = false;
+        userProfileModel.value = value!;
+      });
+    }
+
+    log("userProfileLoading.value ===>${userProfileModel.value.toString()}");
+
+    useEffect(() {
+      getUsersProfile();
+
+      return null;
+    }, []);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -87,13 +112,21 @@ class EventMainView extends HookWidget {
                     },
                   ),
                   GestureDetector(
-                    onTap: () => context.push(AppRoutes.addEventView),
-                    child: SvgPicture.asset(
-                      AppImages.addEvents,
-                      height: 30,
-                      width: 30,
-                    ),
-                  ),
+                      onTap: () => context.push(AppRoutes.addEventView),
+                      child: Container(
+                        padding: PAD_ALL_8,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                              color: AppColors.deepPrimary, width: 1.3),
+                          color: AppColors.white,
+                        ),
+                        child: customText(
+                          text: "Create Event",
+                          fontSize: 12,
+                          textColor: AppColors.deepPrimary,
+                        ),
+                      )),
                 ],
               ),
             ),
@@ -110,6 +143,7 @@ class EventMainView extends HookWidget {
                   MyEventView(),
                   SavedEventsView(),
                   PastEventView(),
+                  MyDraftEventView()
                 ],
               ),
             ),
@@ -122,7 +156,7 @@ class EventMainView extends HookWidget {
 
 class WideEventCards extends StatefulWidget {
   final String? image;
-  final Content? eventDetails;
+  final EventContent? eventDetails;
   final String? name;
   final double? price;
   final String? location;
@@ -258,73 +292,59 @@ class _WideEventCardsState extends State<WideEventCards> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 30,
-                      width: 100,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
+                    Expanded(
+                      flex: widget.eventDetails!.interestedUsers!.length < 2
+                          ? 1
+                          : widget.eventDetails!.interestedUsers!.length < 2
+                              ? 2
+                              : 3,
+                      child: SizedBox(
+                        // color: Colors.amber,
+                        height: 35,
+                        width: double.infinity,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount:
+                              widget.eventDetails!.interestedUsers!.length < 3
+                                  ? widget.eventDetails!.interestedUsers!.length
+                                  : 3, // Replace with your actual item count
+                          itemBuilder: (context, index) {
+                            InterestedUsers indiv =
+                                widget.eventDetails!.interestedUsers![index];
+                            // Replace this with your actual list item widget
+                            return Container(
+                              width: 8.w,
+                              height: 6.h,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 20,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.green,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 40,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.orange,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 60,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: AppColors.deepPrimary,
-                              ),
-                              child: Center(
-                                child: customText(
-                                  text: "+${widget.users!}",
-                                  fontSize: 5,
-                                  textColor: AppColors.white,
-                                  fontWeight: FontWeight.w500,
+                                color: AppColors.primary.withOpacity(0.5),
+                                image: DecorationImage(
+                                  scale: 1.0,
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(
+                                      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}"),
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
+                              child: Visibility(
+                                  child: Center(
+                                child: Text(
+                                    "${indiv.firstName![0]}${indiv.lastName![0]}"
+                                        .toUpperCase()),
+                              )),
+                            );
+                          },
+                        ),
                       ),
                     ),
-                    Container(
-                      child: customText(
-                        text: "Interested",
-                        fontSize: 12,
-                        textColor: AppColors.deepPrimary,
-                        fontWeight: FontWeight.w400,
+                    Expanded(
+                      flex: 5,
+                      child: Container(
+                        child: customText(
+                          text: "Interested",
+                          fontSize: 12,
+                          textColor: AppColors.deepPrimary,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ],

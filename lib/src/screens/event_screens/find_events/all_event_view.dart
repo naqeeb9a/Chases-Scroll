@@ -29,9 +29,9 @@ class FindAllEventsView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final allEventlLoading = useState<bool>(true);
-    final allEventModel = useState<List<Content>>([]);
-    final allEvents = useState<List<Content>>([]);
-    final foundEvents = useState<List<Content>>([]);
+    final allEventModel = useState<List<EventContent>>([]);
+    final allEvents = useState<List<EventContent>>([]);
+    final foundEvents = useState<List<EventContent>>([]);
 
     getAllMyEvents() {
       _eventRepository.getAllEvents().then((value) {
@@ -157,7 +157,7 @@ class FindAllEventsView extends HookWidget {
                           itemCount: foundEvents.value.length,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (BuildContext context, int index) {
-                            Content event = foundEvents.value[index];
+                            EventContent event = foundEvents.value[index];
                             return WideEventCards(
                               eventDetails: event,
                               name: event.eventName,

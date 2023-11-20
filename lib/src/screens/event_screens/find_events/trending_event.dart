@@ -27,9 +27,9 @@ class FindTrendingEvents extends HookWidget {
   Widget build(BuildContext context) {
     final topEventLoading = useState<bool>(true);
 
-    final topEventModel = useState<List<Content>>([]);
-    final allEvents = useState<List<Content>>([]);
-    final foundEvents = useState<List<Content>>([]);
+    final topEventModel = useState<List<EventContent>>([]);
+    final allEvents = useState<List<EventContent>>([]);
+    final foundEvents = useState<List<EventContent>>([]);
     //value for userID
     String userId =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
@@ -153,7 +153,7 @@ class FindTrendingEvents extends HookWidget {
                           itemCount: foundEvents.value.length,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (BuildContext context, int index) {
-                            Content event = foundEvents.value[index];
+                            EventContent event = foundEvents.value[index];
                             return WideEventCards(
                               eventDetails: event,
                               image: event.currentPicUrl ?? "",

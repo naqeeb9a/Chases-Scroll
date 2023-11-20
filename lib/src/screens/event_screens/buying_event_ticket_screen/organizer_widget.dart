@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -10,6 +11,7 @@ import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class OrganizerContainerWidget extends StatefulWidget {
   final double height;
@@ -19,6 +21,7 @@ class OrganizerContainerWidget extends StatefulWidget {
   final String orgFName;
   final String orgLName;
   final String orgImage;
+  final String joinStatus;
   final bool isCreator;
   const OrganizerContainerWidget({
     Key? key,
@@ -29,6 +32,7 @@ class OrganizerContainerWidget extends StatefulWidget {
     required this.orgLName,
     required this.orgImage,
     required this.isCreator,
+    required this.joinStatus,
   }) : super(key: key);
 
   @override
@@ -71,13 +75,10 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
           children: [
             GestureDetector(
               onTap: () {
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => UserConnectProfilePageScreenView(
-                //       userID: widget.orgId,
-                //     ),
-                //   ),
-                // );
+                context.push(
+                  AppRoutes.otherUsersProfile,
+                  extra: widget.orgId,
+                );
               },
               child: Container(
                 child: Row(
@@ -152,13 +153,17 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                     onTap: () {
                       // String? name = value.name;
 
-                      follow
+                      widget.joinStatus == "NOT_CONNECTED"
                           ? connectFriend(widget.orgId)
                           : disconnectFriend(widget.orgId);
                     },
                     child: SvgPicture.asset(
                       AppImages.addOrganizer,
-                      color: follow ? Colors.green : AppColors.primary,
+                      color: widget.joinStatus == "FRIEND_REQUEST_SENT"
+                          ? AppColors.btnOrange.withOpacity(0.8)
+                          : widget.joinStatus == "NOT_CONNECTED"
+                              ? AppColors.black
+                              : AppColors.green,
                     ),
                   ),
                   widthSpace(2.5),

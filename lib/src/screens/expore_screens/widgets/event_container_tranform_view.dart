@@ -11,7 +11,7 @@ class EventContainerTransformView extends StatefulWidget {
 
   final double? currentPageValue;
   final double? scaleFactor;
-  final Content? event;
+  final EventContent? event;
   const EventContainerTransformView(
       {super.key,
       this.index,

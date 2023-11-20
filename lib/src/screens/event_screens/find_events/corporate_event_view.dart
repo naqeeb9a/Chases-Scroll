@@ -25,7 +25,7 @@ class FindCorporateEventView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myCorporateLoading = useState<bool>(true);
-    final myCorporateModel = useState<List<Content>>([]);
+    final myCorporateModel = useState<List<EventContent>>([]);
 
     getMyEvents() {
       _eventRepository.getCorporateEvents().then((value) {
@@ -112,7 +112,7 @@ class FindCorporateEventView extends HookWidget {
                     itemCount: myCorporateModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      Content event = myCorporateModel.value[index];
+                      EventContent event = myCorporateModel.value[index];
                       return WideEventCards(
                         eventDetails: event,
                         image: event.currentPicUrl,

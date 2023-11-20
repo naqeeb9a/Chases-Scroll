@@ -2,6 +2,8 @@ import 'package:chases_scroll/src/screens/community/community.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/expore_screens/explore_main_view.dart';
 import 'package:chases_scroll/src/screens/home/home.dart';
+import 'package:chases_scroll/src/screens/profile_view/user_profile_view.dart';
+import 'package:chases_scroll/src/screens/widgets/chasescroll_shape.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/extract_first_letter.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
@@ -73,9 +75,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     const ExploreMainView(),
     const EventMainView(),
     const Community(),
-    const Center(
-      child: Text("Option 5"),
-    )
+    const UserMainProfileView(),
   ];
 
   @override
@@ -120,24 +120,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 label: ""),
             BottomNavigationBarItem(
                 icon: selectedIndex == 4
-                    ? containerWithShapeProfile(text: "Samuel Clifford")
-                    : Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.primary),
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(0),
-                            )),
-                        child: Center(
-                          child: customText(
-                              text: extractFirstLetters("Samuel Cliffy"),
-                              fontSize: 12,
-                              textColor: AppColors.primary),
-                        )),
+                    ? const ChaseScrollContainer(name: "Samuel Clifford")
+                    : const ChaseScrollContainer(name: "Samuel Clifford"),
                 label: ""),
           ],
           currentIndex: selectedIndex,

@@ -28,9 +28,9 @@ class SavedEventsView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final mySaveEventLoading = useState<bool>(true);
-    final mySaveEventModel = useState<List<Content>>([]);
-    final allEvents = useState<List<Content>>([]);
-    final foundEvents = useState<List<Content>>([]);
+    final mySaveEventModel = useState<List<EventContent>>([]);
+    final allEvents = useState<List<EventContent>>([]);
+    final foundEvents = useState<List<EventContent>>([]);
 
     getSaveMyEvents() {
       _eventRepository.getSavedEvents().then((value) {
@@ -58,9 +58,11 @@ class SavedEventsView extends HookWidget {
       if (result['message'] == true) {
         // Trigger a refresh of the events data
         refreshEvent();
-        ToastResp.toastMsgSuccess(resp: result['message']);
+        ToastResp.toastMsgSuccess(
+            resp: "${result['message']}, swipe down to refresh");
       } else {
-        ToastResp.toastMsgError(resp: result['message']);
+        ToastResp.toastMsgError(
+            resp: "${result['message']}, swipe down to refresh");
       }
     }
 
@@ -73,9 +75,11 @@ class SavedEventsView extends HookWidget {
       if (result['message'] == true) {
         // Trigger a refresh of the events data
         refreshEvent();
-        ToastResp.toastMsgSuccess(resp: result['message']);
+        ToastResp.toastMsgSuccess(
+            resp: "${result['message']}, swipe down to refresh");
       } else {
-        ToastResp.toastMsgError(resp: result['message']);
+        ToastResp.toastMsgError(
+            resp: "${result['message']}, swipe down to refresh");
       }
     }
 
@@ -161,7 +165,7 @@ class SavedEventsView extends HookWidget {
                                 itemCount: foundEvents.value.length,
                                 scrollDirection: Axis.vertical,
                                 itemBuilder: (BuildContext context, int index) {
-                                  Content mySavedEvent =
+                                  EventContent mySavedEvent =
                                       foundEvents.value[index];
                                   //for formatted time
                                   int startTimeInMillis =

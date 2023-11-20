@@ -219,7 +219,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                 child: PageView(
                   controller: pageController,
                   children: [
-                    //---------------------------------------------///
+                    //---------------- First Phase ---------------------///
                     Container(
                       height: height,
                       width: width,
@@ -275,32 +275,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                               ),
                                               Positioned(
                                                 right: 15,
-                                                top: 15,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    //getImage(context);
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      color:
-                                                          AppColors.deepPrimary,
-                                                    ),
-                                                    child: const Padding(
-                                                      padding: PAD_ALL_10,
-                                                      child: Icon(
-                                                        Icons.camera_alt,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                right: 15,
-                                                top: 70,
+                                                top: 20,
                                                 child: GestureDetector(
                                                   onTap: () {
                                                     // image!.delete();
@@ -521,7 +496,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                     ToastResp.toastMsgError(
                                         resp: "Show visibility Not Selected");
                                   } else {
-                                    animateTo(1);
+                                    createEventDraft();
                                   }
                                 }
                               }),
@@ -531,7 +506,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                         ),
                       ),
                     ),
-                    //---------------------------------------------///
+                    //------------------ Second phase ---------------------///
                     Container(
                       height: height,
                       width: width,
@@ -741,7 +716,8 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                             ToastResp.toastMsgError(
                                                 resp: "Select Valid End Date");
                                           } else {
-                                            animateTo(2);
+                                            log("whats happeninng");
+                                            updateEventDraft();
                                           }
                                         }
                                       },
@@ -749,7 +725,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                     heightSpace(4)
                                   ]))),
                     ),
-                    //---------------------------------------------///
+                    //-----------------  THird Phase ------------------------///
                     SizedBox(
                       height: height,
                       width: width,
@@ -1137,8 +1113,43 @@ class _WidgetState extends ConsumerState<AddEventView> {
     );
     if (result) {
       if (context.mounted) {
+        TextEditingController().clear();
         ToastResp.toastMsgSuccess(resp: "Event Created Successfully");
         context.push(AppRoutes.bottomNav, extra: false);
+      }
+    } else {
+      return;
+    }
+  }
+
+  //create draft
+  createEventDraft() async {
+    bool result = await eventRepository.createEventDraft(
+      address: location.text,
+      attendeesVisibility: _radioShowEventVisibility == "show" ? true : false,
+      currency: eventCurrencyType,
+      currentPicUrl: imageString,
+      endDate: convertDateTimeToEpoch(eDate),
+      startDate: convertDateTimeToEpoch(sDate),
+      endTime: convertTimeOfDayToEpoch(startTime),
+      startTime: convertTimeOfDayToEpoch(endTime),
+      eventDescription: desc.text,
+      eventFunnelGroupID: "",
+      eventName: eventTitle.text,
+      eventType: eventTypeValue,
+      isExclusive: isExclusive,
+      isPublic: _radioShowEventVisibility == "show" ? true : false,
+      link: link.text,
+      locationDetails: desc.text,
+      locationType: link.text.isEmpty ? "Physical" : "Virtual",
+      picUrls: [],
+      toBeAnnounced: announcedBox,
+      productTypeData: formDataList,
+    );
+    if (result) {
+      if (context.mounted) {
+        ToastResp.toastMsgSuccess(resp: "Event Details Saved");
+        animateTo(1);
       }
     } else {
       return;
@@ -1149,6 +1160,40 @@ class _WidgetState extends ConsumerState<AddEventView> {
   void initState() {
     super.initState();
     formDataList.add(ProductTypeDataa());
+  }
+
+  //create draft
+  updateEventDraft() async {
+    bool result = await eventRepository.updateEventDraft(
+      address: location.text,
+      attendeesVisibility: _radioShowEventVisibility == "show" ? true : false,
+      currency: eventCurrencyType,
+      currentPicUrl: imageString,
+      endDate: convertDateTimeToEpoch(eDate),
+      startDate: convertDateTimeToEpoch(sDate),
+      endTime: convertTimeOfDayToEpoch(startTime),
+      startTime: convertTimeOfDayToEpoch(endTime),
+      eventDescription: desc.text,
+      eventFunnelGroupID: "",
+      eventName: eventTitle.text,
+      eventType: eventTypeValue,
+      isExclusive: isExclusive,
+      isPublic: _radioShowEventVisibility == "show" ? true : false,
+      link: link.text,
+      locationDetails: desc.text,
+      locationType: link.text.isEmpty ? "Physical" : "Virtual",
+      picUrls: [],
+      toBeAnnounced: announcedBox,
+      productTypeData: formDataList,
+    );
+    if (result) {
+      if (context.mounted) {
+        ToastResp.toastMsgSuccess(resp: "Event Details Saved");
+        animateTo(2);
+      }
+    } else {
+      return;
+    }
   }
 
   void uploadImages() async {

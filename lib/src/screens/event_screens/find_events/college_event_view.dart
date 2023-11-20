@@ -26,7 +26,7 @@ class FindCollegeEvents extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final myCollegeLoading = useState<bool>(true);
-    final myCollegeModel = useState<List<Content>>([]);
+    final myCollegeModel = useState<List<EventContent>>([]);
 
     getMyEvents() {
       _eventRepository.getCollegeEvents().then((value) {
@@ -86,7 +86,7 @@ class FindCollegeEvents extends HookWidget {
                     itemCount: myCollegeModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      Content event = myCollegeModel.value[index];
+                      EventContent event = myCollegeModel.value[index];
                       return WideEventCards(
                         eventDetails: event,
                         image: event.currentPicUrl,

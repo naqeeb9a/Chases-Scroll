@@ -201,6 +201,38 @@ class ApiClient {
     }
   }
 
+  //some network calls wont go through unless there's no body sent as part of the request
+  static Future postWithoutBody(String endpoint,
+      {bool useToken = true,
+      Function(int, int)? onSendProgress,
+      Color? backgroundColor,
+      Widget? widget}) async {
+    final result = await _makeRequest(
+      () async {
+        final header = _defaultHeader;
+
+        if (useToken) {
+          header.addAll(
+            {'Authorization': 'Bearer $_token'},
+          );
+        }
+
+        final options = Options(headers: header);
+        log("${_dio.options.baseUrl}$endpoint");
+        AppHelper.showOverlayLoader(
+            backgroundColor: backgroundColor, widget: widget);
+        final response = await _dio.post(endpoint,
+            options: options, onSendProgress: onSendProgress);
+        log("$response");
+
+        OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+        return response;
+      },
+    );
+
+    return result;
+  }
+
   static Future postWithoutOverlay(String endpoint,
       {required dynamic body,
       bool useToken = true,
@@ -281,22 +313,34 @@ class ApiClient {
       final result = await request();
 
       return ApiResponse(
-          message: result.data ?? result, status: result.statusCode);
+        message: result.data ?? result,
+        status: result.statusCode,
+      );
     } on DioError catch (e) {
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         // locator<GoRouter>().push(AppRoutes.login);
       }
       log(e.response.toString());
-      log(e.response!.data.toString());
-      OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+
+      if (AppHelper.overlayContext != null) {
+        OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
+      } else {
+        // Handle the case when AppHelper.overlayContext is null
+        print("AppHelper.overlayContext is null");
+      }
+
       if (e.response?.data is String) {
         ToastResp.toastMsgError(resp: e.response?.data.toString());
       } else {
-        ToastResp.toastMsgError(resp: e.response?.data["error_description"]);
+        ToastResp.toastMsgError(
+          resp: e.response?.data["error_description"],
+        );
       }
+
       return ApiResponse(
-          message: e.response?.data ?? e.response?.statusMessage,
-          status: e.response?.statusCode);
+        message: e.response?.data ?? e.response?.statusMessage,
+        status: e.response?.statusCode,
+      );
     } on SocketException catch (e) {
       _handleSocketException(e);
       return e.message;

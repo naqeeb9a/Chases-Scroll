@@ -2,10 +2,15 @@ import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
+import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../widgets/custom_fonts.dart';
 
@@ -17,7 +22,7 @@ class EventBigCard extends StatefulWidget {
   final String? date;
   final String? location;
   final double? price;
-  final Content? eventDetails;
+  final EventContent? eventDetails;
 
   const EventBigCard(
     this.width, {
@@ -136,22 +141,21 @@ class _EventBigCardState extends State<EventBigCard> {
                       ),
                     ),
                     widthSpace(1.5),
-                    customText(
-                      text: widget.price.toString(),
-                      fontSize: 12,
-                      textColor: AppColors.deepPrimary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    // Text(
-                    //   event['currency'] == "USD"
-                    //       ? "\$${event['minPrice'].toString()}"
-                    //       : "₦${event['minPrice'].toString()}",
-                    //   style: GoogleFonts.montserrat(
-                    //     color: Colors.black,
-                    //     fontSize: 14,
-                    //     fontWeight: FontWeight.w600,
-                    //   ),
-                    // ),
+                    widget.eventDetails!.currency == "USD"
+                        ? customText(
+                            text: "\$${widget.price}",
+                            fontSize: 13,
+                            textColor: AppColors.deepPrimary,
+                            fontWeight: FontWeight.w500,
+                          )
+                        : Text(
+                            "$naira${widget.price}",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 13,
+                              color: AppColors.deepPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                   ],
                 ),
                 heightSpace(0.8),
@@ -177,83 +181,114 @@ class _EventBigCardState extends State<EventBigCard> {
                 ),
                 heightSpace(0.8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 30,
-                          width: 80,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                child: Container(
-                                  width: 6.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: Colors.blue,
-                                  ),
-                                ),
+                    SizedBox(
+                      height: 30,
+                      width: 80,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            child: Container(
+                              width: 6.w,
+                              height: 3.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.blue,
                               ),
-                              Positioned(
-                                left: 15,
-                                child: Container(
-                                  width: 6.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 30,
-                                child: Container(
-                                  width: 6.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: Colors.orange,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 45,
-                                child: Container(
-                                  width: 6.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: AppColors.deepPrimary,
-                                  ),
-                                  child: Center(
-                                    child: customText(
-                                      text:
-                                          "+${widget.eventDetails!.memberCount}",
-                                      fontSize: 9,
-                                      textColor: AppColors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                        Container(
-                          child: customText(
-                            text: "Interested",
-                            fontSize: 12,
-                            textColor: AppColors.deepPrimary,
-                            fontWeight: FontWeight.w400,
+                          Positioned(
+                            left: 15,
+                            child: Container(
+                              width: 6.w,
+                              height: 3.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.green,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            left: 30,
+                            child: Container(
+                              width: 6.w,
+                              height: 3.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 45,
+                            child: Container(
+                              width: 6.w,
+                              height: 3.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: AppColors.deepPrimary,
+                              ),
+                              child: Center(
+                                child: customText(
+                                  text: "+${widget.eventDetails!.memberCount}",
+                                  fontSize: 9,
+                                  textColor: AppColors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    Container(
+                      child: customText(
+                        text: "Interested",
+                        fontSize: 12,
+                        textColor: AppColors.deepPrimary,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: GestureDetector(
+                        onTap: () async {
+                          String text =
+                              "https://chasescroll-new.netlify.app/events/${widget.eventDetails!.id}";
+
+                          await Share.share(
+                            text,
+                            subject:
+                                'Check out this user profile from Chasescroll',
+                            sharePositionOrigin: Rect.fromCenter(
+                              center: const Offset(0, 0),
+                              width: 100,
+                              height: 100,
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: SvgPicture.asset(
+                                AppImages.share,
+                                height: 2.7.h,
+                                width: 2.7.w,
+                                color: AppColors.deepPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 )
               ],

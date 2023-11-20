@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/providers/eventicket_provider.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
+import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/event_webview_screens.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
@@ -32,6 +33,7 @@ class CardCurrencyScreenView extends ConsumerWidget {
     }
 
     final notifier = ref.read(ticketSummaryProvider.notifier);
+
     final state = notifier.state;
     return Scaffold(
       backgroundColor: const Color(0xffF1F2F9),
@@ -69,12 +71,15 @@ class CardCurrencyScreenView extends ConsumerWidget {
                       "",
                       AppImages.stripe,
                       () async {
-                        final result =
+                        dynamic result =
                             await _eventRepository.createWebUrlStripe();
 
                         if (result['checkout'].isNotEmpty) {
                           log("result url here======> ${result['checkout']}");
                           onTapCheckoutSuccessPS(result['checkout']);
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  WebViewEventStripe(url: result['checkout'])));
                         } else {
                           ToastResp.toastMsgError(
                               resp: "Unable to create link for payment");
@@ -86,12 +91,17 @@ class CardCurrencyScreenView extends ConsumerWidget {
                       "",
                       AppImages.paystack,
                       () async {
-                        Map<String, dynamic> result =
-                            await _eventRepository.createWebUrlPayStack();
+                        dynamic result =
+                            await _eventRepository.createWebUrlPayStack(
+                          amount: state.price.toString(),
+                          currency: state.currency,
+                        );
 
-                        if (result.isNotEmpty) {
-                          log(result['checkout'].toString());
-                          onTapCheckoutSuccessST(result['checkout']);
+                        if (result['checkout'].isNotEmpty) {
+                          log("result url here======> ${result['checkout']}");
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  WebViewPaystack(url: result['checkout'])));
                         } else {
                           ToastResp.toastMsgError(
                               resp: "Unable to create link for payment");

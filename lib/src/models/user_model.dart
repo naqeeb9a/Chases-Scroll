@@ -282,6 +282,7 @@ class UserModel {
   String? lastName;
   bool? publicProfile;
   String? username;
+  String? joinStatus;
   String? dob;
   Data? data;
 
@@ -296,24 +297,28 @@ class UserModel {
       this.lastName,
       this.publicProfile,
       this.username,
+      this.joinStatus,
       this.dob,
       this.data});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    createdOn = json['createdOn'] != null
-        ? CreatedOn.fromJson(json['createdOn'])
-        : null;
-    userId = json['userId'];
-    email = json['email'];
-    showEmail = json['showEmail'];
-    firstName = json['firstName'];
-    active = json['active'];
-    lastName = json['lastName'];
-    publicProfile = json['publicProfile'];
-    username = json['username'];
-    dob = json['dob'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'],
+      createdOn: json['createdOn'] != null
+          ? CreatedOn.fromJson(json['createdOn'])
+          : null,
+      userId: json['userId'],
+      email: json['email'],
+      showEmail: json['showEmail'],
+      firstName: json['firstName'],
+      active: json['active'],
+      lastName: json['lastName'],
+      joinStatus: json['joinStatus'],
+      publicProfile: json['publicProfile'],
+      username: json['username'],
+      dob: json['dob'],
+      data: json['data'] != null ? Data.fromJson(json['data']) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -331,10 +336,16 @@ class UserModel {
     data['publicProfile'] = publicProfile;
     data['username'] = username;
     data['dob'] = dob;
+    data['joinStatus'] = joinStatus;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'UserModel(id: $id, createdOn: $createdOn, userId: $userId, email: $email, joinStatus: $joinStatus,  showEmail: $showEmail, firstName: $firstName, active: $active, lastName: $lastName, publicProfile: $publicProfile, username: $username, dob: $dob, data: $data)';
   }
 }
 
