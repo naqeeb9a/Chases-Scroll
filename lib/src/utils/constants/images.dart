@@ -4,6 +4,7 @@ class AppImages {
   static const String map = "assets/pngs/map.PNG";
   static const String chatBackground = "assets/pngs/chat.png";
   static const String successImage = "assets/pngs/success-jump.png";
+  static const String backBG = "assets/pngs/backBG.png";
 
   //jpegs
   static const String mapPic = "assets/jpegs/map_pic.jpg";
@@ -58,4 +59,33 @@ class AppImages {
   static const String addOrganizer = "assets/svgs/profile-add.svg";
   static const String messageOrganizer = "assets/svgs/message-text.svg";
   //static const String share = "assets/svgs/message-text.svg";
+
+  //this is for profile
+  static const String post = "assets/svgs/grid-1.svg";
+  static const String network = "assets/svgs/network.svg";
+  static const String event = "assets/svgs/eventIcon.svg";
+  static const String joinedCommunity = "assets/svgs/joinedCommunity.svg";
+
+  //setting
+  static const String payment = "assets/svgs/payment.svg";
+  static const String eventDashboard = "assets/svgs/eventIcon.svg";
+  static const String changePassword = "assets/svgs/change_password.svg";
+  static const String accountSetting = "assets/svgs/profile-circle.svg";
+  static const String shield = "assets/svgs/security.svg";
+  static const String bug = "assets/svgs/Report.svg";
+  static const String block = "assets/svgs/block.svg";
+  static const String arrowUp = "assets/svgs/arrow-up.svg";
+  static const String deleteAccount = "assets/svgs/trash.svg";
+  static const String logout = "assets/svgs/logout.svg";
+  static const String public = "assets/svgs/people.svg";
+
+  //wallet
+  static const String profileEvent = "assets/svgs/profile-event.svg";
+  static const String profileSetting = "assets/svgs/profile-setting.svg";
+  static const String walletAdd = "assets/svgs/wallet-add.svg";
+  static const String transactionFile = "assets/svgs/transaction-file.svg";
+  static const String walletRemove = "assets/svgs/money-remove.svg";
+  static const String receipt = "assets/svgs/receipt.svg";
+  static const String niaraWallett = "assets/svgs/naira_sign.svg";
+  static const String dollerWallett = "assets/svgs/dollar-sign.svg";
 }

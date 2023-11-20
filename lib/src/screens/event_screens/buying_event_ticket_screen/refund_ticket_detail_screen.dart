@@ -123,36 +123,23 @@ class RefundTicketDetailScreen extends ConsumerWidget {
                             padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 45.w,
-                                      child: customText(
-                                        text: state.name!.toUpperCase(),
-                                        fontSize: 14,
-                                        textColor: AppColors.black,
-                                        fontWeight: FontWeight.w600,
-                                        lines: 2,
-                                      ),
-                                    ),
-                                    customText(
-                                      text: state.location ?? "",
-                                      fontSize: 14,
-                                      textColor: AppColors.primary,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
                                 SizedBox(
-                                  width: width / 2,
+                                  width: 45.w,
                                   child: customText(
-                                    text: state.location ?? "",
+                                    text: state.name!.toUpperCase(),
                                     fontSize: 14,
-                                    textColor: AppColors.primary,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.w600,
+                                    lines: 2,
                                   ),
+                                ),
+                                customText(
+                                  text: state.location ?? "",
+                                  fontSize: 14,
+                                  textColor: AppColors.primary,
+                                  lines: 2,
                                 ),
                               ],
                             ),

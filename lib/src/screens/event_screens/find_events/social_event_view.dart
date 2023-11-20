@@ -26,7 +26,7 @@ class FindSocialEventsView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final mySocialLoading = useState<bool>(true);
-    final mySocialModel = useState<List<Content>>([]);
+    final mySocialModel = useState<List<EventContent>>([]);
 
     getMyEvents() {
       _eventRepository.getSocialEvents().then((value) {
@@ -85,7 +85,7 @@ class FindSocialEventsView extends HookWidget {
                     itemCount: mySocialModel.value.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      Content event = mySocialModel.value[index];
+                      EventContent event = mySocialModel.value[index];
                       return WideEventCards(
                         eventDetails: event,
                         image: event.currentPicUrl,

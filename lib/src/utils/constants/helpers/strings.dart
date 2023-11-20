@@ -10,6 +10,61 @@ import 'package:intl/intl.dart';
 
 import '../spacer.dart';
 
+const String naira = "₦";
+
+List<dynamic> bankList = [
+  {"id": '14', "bank_code": '044', "name": 'Access Bank Nigeria Plc'},
+  {"id": '16', "bank_code": '063', "name": 'Access Bank(Diamond)'},
+  {"id": '15', "bank_code": '014', "name": 'Afribank Nigeria Plc'},
+  {"id": '13', "bank_code": '401', "name": 'Aso Savings and Loans Ltd'},
+  {"id": '38', "bank_code": '317\r\n', "name": 'Cellulant'},
+  {"id": '58', "bank_code": '50823', "name": 'CEMCS Microfinance Bank'},
+  {"id": '37', "bank_code": '303', "name": 'Chams Mobile'},
+  {"id": '32', "bank_code": '023', "name": 'Citibank Nigeria'},
+  {"id": '36', "bank_code": '302', "name": 'Eartholeum'},
+  {"id": '17', "bank_code": '050', "name": 'Ecobank Nigeria Plc'},
+  {"id": '54', "bank_code": '562', "name": 'Ekondo Microfinance Bank'},
+  {"id": '18', "bank_code": '084', "name": 'Enterprise Bank Plc'},
+  {"id": '19', 'bank_code': '070', 'name': 'Fidelity Bank Plc'},
+  {"id": '8', "bank_code": '309', "name": 'First Bank Nigeria Mobile'},
+  {"id": '20', "bank_code": '011', "name": 'First Bank Of Nigeria Plc'},
+  {"id": '1', "bank_code": '214', "name": 'First City Monument Bank Plc'},
+  {"id": '53', "bank_code": '00103', "name": 'Globus Bank'},
+  {"id": '21', "bank_code": '058', "name": 'Guaranty Trust Bank Plc'},
+  {"id": '52', "bank_code": '50383', "name": 'Hasal Microfinance Bank'},
+  {"id": '22', "bank_code": '030', "name": 'Heritage Bank'},
+  {'id': '30', 'bank_code': '301', 'name': 'Jaiz Bank Plc'},
+  {'id': '23', "bank_code": '082', "name": 'Keystone Bank Plc'},
+  {"id": '49', "bank_code": '50211', "name": 'Kuda Bank'},
+  {"id": '33', 'bank_code': '014', "name": 'MainStreet Bank'},
+  {"id": '48', "bank_code": '565', "name": 'One Finance'},
+  {"id": '47', "bank_code": '526', "name": 'Parallex Bank'},
+  {"id": '39', "bank_code": '526', "name": 'Parallex Microfinance Bank'},
+  {"id": '9', "bank_code": '311', "name": 'Parkway'},
+  {"id": '6', "bank_code": '305', "name": 'Paycom'},
+  {"id": '46', "bank_code": '076', "name": 'Polaris Bank'},
+  {'id': '31', "bank_code": '101', "name": 'Providus Bank'},
+  {"id": '45', "bank_code": '125', 'name': 'Rubies MFB'},
+  {"id": '24', 'bank_code': '076', "name": 'Skye Bank Plc'},
+  {'id': '44', 'bank_code': '51310', "name": 'Sparkle Microfinance Bank'},
+  {'id': '3', 'bank_code': '221', 'name': 'Stanbic - Ibtc Bank Plc'},
+  {'id': '25', "bank_code": '068', 'name': 'Standard Chartered Bank'},
+  {'id': '4', "bank_code": '232', 'name': 'Sterling Bank Plc'},
+  {"id": '34', 'bank_code': '100', 'name': 'Suntrust Bank Nigeria'},
+  {'id': '43', 'bank_code': '302', 'name': 'TAJ Bank'},
+  {"id": '42', 'bank_code': '51211', 'name': 'TCF MFB'},
+  {"id": '41', 'bank_code': '102', 'name': 'Titan Bank'},
+  {"id": '26', 'bank_code': '032', "name": 'Union Bank Of Nigeria Plc'},
+  {'id': '2', 'bank_code': '032', "name": 'Union Bank Plc'},
+  {"id": '27', "bank_code": '033', "name": 'United Bank for africa Plc'},
+  {"id": '35', "bank_code": '215', "name": 'Unity Bank Plc'},
+  {"id": '40', "bank_code": '566', "name": 'VFD'},
+  {"id": '28', "bank_code": '035', 'name': 'Wema Bank Plc'},
+  {'id': '11', "bank_code": '322', "name": 'Zenith Bank Mobile'},
+  {'id': '29', 'bank_code': '057', "name": 'Zenith Bank Plc'},
+  {'id': '688', 'bank_code': '50515', "name": 'Moniepoint MFB'},
+];
+
 GestureDetector cardPaymentContainerGesture(String title, String iconstring,
     VoidCallback function, double heightWidth) {
   return GestureDetector(
@@ -189,6 +244,52 @@ class PlaceHolderTitle extends StatelessWidget {
           fontWeight: FontWeight.w600,
           lines: 2,
         ),
+      ],
+    );
+  }
+}
+
+class TextToggleFunction extends StatelessWidget {
+  final String title;
+
+  final String? subTitle;
+  final Widget? widget;
+  final Widget? widgetIcon;
+  final Function()? iconFunction;
+  const TextToggleFunction({
+    super.key,
+    required this.title,
+    this.widget,
+    this.subTitle,
+    this.widgetIcon,
+    this.iconFunction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: iconFunction,
+                  child: customText(
+                    text: title,
+                    fontSize: 14,
+                    textColor: AppColors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            Container(child: widget),
+          ],
+        ),
+        heightSpace(0.3),
       ],
     );
   }

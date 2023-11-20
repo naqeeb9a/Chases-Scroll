@@ -1,12 +1,17 @@
 import 'dart:developer';
 
+import 'package:chases_scroll/src/config/keys.dart';
+import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
+import 'package:chases_scroll/src/models/user_model.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
+import 'package:chases_scroll/src/repositories/profile_repository.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/event_container_tranform_view.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/suggestions_view.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +25,7 @@ import '../widgets/custom_fonts.dart';
 
 class ExploreMainView extends HookWidget {
   static final ExploreRepository _exploreRepository = ExploreRepository();
+  static final ProfileRepository _profileRepository = ProfileRepository();
 
   const ExploreMainView({super.key});
 
@@ -31,7 +37,7 @@ class ExploreMainView extends HookWidget {
     const double scaleFactor = 0.8;
 
     final eventLoading = useState<bool>(true);
-    final eventModel = useState<List<Content>>([]);
+    final eventModel = useState<List<EventContent>>([]);
     final currentPageValue = useState<double>(currentPageValue0);
 
     getEvents() {
@@ -85,7 +91,23 @@ class ExploreMainView extends HookWidget {
       }
     }
 
+    //get user profile
+    //getting user details
+    final userProfileLoading = useState<bool>(true);
+    final userProfileModel = useState<UserModel>(UserModel());
+
+    void getUsersProfile() {
+      _profileRepository.getUserProfile().then((value) {
+        userProfileLoading.value = false;
+        userProfileModel.value = value!;
+      });
+    }
+
+    String fullName =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.fullName);
+
     useEffect(() {
+      getUsersProfile();
       getEvents();
       getSuggestedUsers();
       return null;
@@ -98,8 +120,9 @@ class ExploreMainView extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              heightSpace(2),
               customText(
-                  text: "Hello David",
+                  text: "Hello $fullName",
                   fontSize: 20,
                   textColor: AppColors.black,
                   fontWeight: FontWeight.w700),
@@ -168,7 +191,7 @@ class ExploreMainView extends HookWidget {
                                           },
                                           itemBuilder: (BuildContext context,
                                               int index) {
-                                            Content event =
+                                            EventContent event =
                                                 eventModel.value[index];
                                             return EventContainerTransformView(
                                               index: index,
@@ -213,7 +236,7 @@ class ExploreMainView extends HookWidget {
                   GestureDetector(
                     onTap: () => context.push(AppRoutes.suggestionFriendMore),
                     child: customText(
-                        text: "Sell all",
+                        text: "See All",
                         fontSize: 12,
                         textColor: AppColors.deepPrimary,
                         fontWeight: FontWeight.w500),
@@ -257,6 +280,24 @@ class ExploreMainView extends HookWidget {
                                               } else {
                                                 disconnectFriend(
                                                     friend.userId!);
+                                              }
+                                            },
+                                            blockfunction: () async {
+                                              final result =
+                                                  await _exploreRepository
+                                                      .blockFriend(
+                                                          friendID:
+                                                              friend.userId!);
+                                              if (result['updated'] == true) {
+                                                ToastResp.toastMsgSuccess(
+                                                    resp: result['message']);
+
+                                                log(result.toString());
+                                                refreshSuggestedUsers();
+                                              } else {
+                                                log(result.toString());
+                                                ToastResp.toastMsgError(
+                                                    resp: result['message']);
                                               }
                                             },
                                           );

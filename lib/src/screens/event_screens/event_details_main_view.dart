@@ -1,6 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
@@ -9,6 +9,7 @@ import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/providers/event_statenotifier.dart';
 import 'package:chases_scroll/src/providers/eventicket_provider.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
+import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/drop_down_widget_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/organizer_widget.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_detail_map_locationCard.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_details_iconText.dart';
@@ -20,11 +21,13 @@ import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/luncher.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -59,7 +62,7 @@ List<String> wrapTicketTypeList = [
 class EventDetailsMainView extends ConsumerWidget {
   static final EventRepository _eventRepository = EventRepository();
 
-  final Content eventDetails;
+  final EventContent eventDetails;
   const EventDetailsMainView({super.key, required this.eventDetails});
 
   @override
@@ -71,12 +74,14 @@ class EventDetailsMainView extends ConsumerWidget {
     final notifier = ref.read(ticketSummaryProvider.notifier);
     final selectedIndex = ref.watch(selectPriceIndexNotifier);
     final boolValue = ref.watch(isOpenProvider);
-    final resetSavedboolValue = ref.watch(isResetBoolStateProvider);
 
+    bool? isEventSaved = eventDetails.isSaved;
     //value for userID
     String userId =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
     log(selectedIndex.toString());
+
+    String selectedValue = "";
 
     dynamic sDate =
         DateTimeUtils.convertMillisecondsToDateTime(eventDetails.startDate!);
@@ -95,20 +100,6 @@ class EventDetailsMainView extends ConsumerWidget {
 
     final controller = ScreenshotController();
 
-    Future saveAndShare(Uint8List bytes) async {
-      final directory = await getApplicationDocumentsDirectory();
-      final image = File('${directory.path}/chasescoll.png');
-      image.writeAsBytesSync(bytes);
-
-      String text = "https://chasescroll-new.netlify.app/";
-
-      // ignore: deprecated_member_use
-      await Share.shareFiles(
-        [image.path],
-        text: text,
-      );
-    }
-
     log("event id here==> ${eventDetails.id!}");
 
     saveEvent(String eventId) async {
@@ -118,7 +109,7 @@ class EventDetailsMainView extends ConsumerWidget {
       );
       log(userId);
       if (result['updated'] == true) {
-        ref.read(isResetBoolStateProvider.notifier).resetBoolState(true);
+        isEventSaved = result['updated'];
         ToastResp.toastMsgSuccess(resp: result['message']);
       } else {
         ToastResp.toastMsgError(resp: result['message']);
@@ -132,14 +123,13 @@ class EventDetailsMainView extends ConsumerWidget {
       );
       log(userId);
       if (result['updated'] == true) {
-        ref.read(isResetBoolStateProvider.notifier).resetBoolState(false);
+        isEventSaved = result['updated'];
+
         ToastResp.toastMsgSuccess(resp: result['message']);
       } else {
         ToastResp.toastMsgError(resp: result['message']);
       }
     }
-
-    log(eventDetails.attendeesVisibility.toString());
 
     return Scaffold(
       backgroundColor: AppColors.backgroundSummaryScreen,
@@ -155,7 +145,18 @@ class EventDetailsMainView extends ConsumerWidget {
 
                   log(image.toString());
 
-                  saveAndShare(image as Uint8List);
+                  final directory = await getApplicationDocumentsDirectory();
+                  final images = File('${directory.path}/chasescoll.png');
+                  images.writeAsBytesSync(image!);
+
+                  String text =
+                      "https://chasescroll-new.netlify.app/event/${eventDetails.id}";
+
+                  // ignore: deprecated_member_use
+                  await Share.shareFiles(
+                    [images.path],
+                    text: text,
+                  );
                 },
                 child: Container(
                   child: SvgPicture.asset(
@@ -167,26 +168,26 @@ class EventDetailsMainView extends ConsumerWidget {
                 ),
               ),
               widthSpace(4),
-              GestureDetector(
-                onTap: () {
-                  eventDetails.isSaved == false
-                      ? saveEvent(eventDetails.id!)
-                      : unSaveEvent(eventDetails.id!);
-                },
-                child: Container(
-                  child: eventDetails.isSaved == true
-                      ? SvgPicture.asset(
-                          AppImages.bookmarkFilled,
-                          height: 2.4.h,
-                          width: 2.4.w,
-                        )
-                      : SvgPicture.asset(
-                          AppImages.bookmark,
-                          height: 2.4.h,
-                          width: 2.4.w,
-                        ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     eventDetails.isSaved == false
+              //         ? saveEvent(eventDetails.id!)
+              //         : unSaveEvent(eventDetails.id!);
+              //   },
+              //   child: Container(
+              //     child: isEventSaved == true
+              //         ? SvgPicture.asset(
+              //             AppImages.bookmarkFilled,
+              //             height: 2.4.h,
+              //             width: 2.4.w,
+              //           )
+              //         : SvgPicture.asset(
+              //             AppImages.bookmark,
+              //             height: 2.4.h,
+              //             width: 2.4.w,
+              //           ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -246,13 +247,21 @@ class EventDetailsMainView extends ConsumerWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              customText(
-                                text:
-                                    "${eventDetails.minPrice.toString()} - ${eventDetails.maxPrice.toString()}",
-                                fontSize: 12,
-                                textColor: AppColors.black,
-                                lines: 2,
-                              ),
+                              eventDetails.currency == "USD"
+                                  ? customText(
+                                      text: "\$${eventDetails.minPrice}",
+                                      fontSize: 13,
+                                      textColor: AppColors.deepPrimary,
+                                      fontWeight: FontWeight.w500,
+                                    )
+                                  : Text(
+                                      "$naira${eventDetails.minPrice}",
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 13,
+                                        color: AppColors.deepPrimary,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                               GestureDetector(
                                 onTap: () => context.push(
                                   AppRoutes.eventAttendeesView,
@@ -350,96 +359,115 @@ class EventDetailsMainView extends ConsumerWidget {
                             title: "Select ticket Type",
                           ),
                           heightSpace(2),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Wrap(
-                              spacing: 12,
-                              children: eventDetails.productTypeData!
-                                  .asMap()
-                                  .entries
-                                  .map((e) {
-                                int index = e.key;
-                                ProductTypeData ticket = e.value;
+                          // SizedBox(
+                          //   width: double.infinity,
+                          //   child: Wrap(
+                          //     spacing: 12,
+                          //     children: eventDetails.productTypeData!
+                          //         .asMap()
+                          //         .entries
+                          //         .map((e) {
+                          //       int index = e.key;
+                          //       ProductTypeData ticket = e.value;
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    ref
-                                        .read(selectPriceIndexNotifier.notifier)
-                                        .updateIndex(index);
-                                    log(e.value.ticketType!);
-                                    log(e.value.ticketPrice.toString());
+                          //       return GestureDetector(
+                          //         onTap: () {
+                          //           ref
+                          //               .read(selectPriceIndexNotifier.notifier)
+                          //               .updateIndex(index);
+                          //           log(e.value.ticketType!);
+                          //           log(e.value.ticketPrice.toString());
 
-                                    ref
-                                        .read(isOpenProvider.notifier)
-                                        .resetState(true);
+                          //         },
+                          //         child: IntrinsicWidth(
+                          //           child: Container(
+                          //             margin: const EdgeInsets.only(bottom: 7),
+                          //             decoration: BoxDecoration(
+                          //               color: selectedIndex == index
+                          //                   ? AppColors.primary
+                          //                   : Colors.white,
+                          //               border: Border.all(
+                          //                 width: 1.5,
+                          //                 color: AppColors.primary,
+                          //               ),
+                          //               borderRadius: const BorderRadius.only(
+                          //                 bottomLeft: Radius.circular(10),
+                          //                 bottomRight: Radius.circular(10),
+                          //                 topLeft: Radius.circular(10),
+                          //                 topRight: Radius.circular(10),
+                          //               ),
+                          //             ),
+                          //             child: Center(
+                          //               child: Padding(
+                          //                 padding: PAD_ALL_10,
+                          //                 child: Row(
+                          //                   children: [
+                          //                     customText(
+                          //                       text: ticket.ticketType
+                          //                           .toString(),
+                          //                       fontSize: 12,
+                          //                       textColor:
+                          //                           selectedIndex == index
+                          //                               ? AppColors.white
+                          //                               : AppColors.deepPrimary,
+                          //                       fontWeight: FontWeight.w400,
+                          //                     ),
+                          //                     widthSpace(0.5),
+                          //                     customText(
+                          //                       text: ticket.ticketPrice
+                          //                           .toString(),
+                          //                       fontSize: 12,
+                          //                       textColor:
+                          //                           selectedIndex == index
+                          //                               ? AppColors.white
+                          //                               : AppColors.deepPrimary,
+                          //                       fontWeight: FontWeight.w400,
+                          //                     ),
+                          //                   ],
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       );
+                          //     }).toList(),
+                          //   ),
+                          // ),
+                          DropDownEventType(
+                            typeValue: selectedValue.isEmpty
+                                ? "Please select ticket option"
+                                : selectedValue,
+                            typeList: eventDetails.productTypeData!,
+                            onChanged: (value) {
+                              selectedValue = value!;
+                              Map<String, dynamic> selectedTicket =
+                                  jsonDecode(value);
+                              String ticketType = selectedTicket['ticketType'];
 
-                                    log(formattedStartTime);
+                              double ticketPrice =
+                                  selectedTicket['ticketPrice'];
+                              // Now you have the ticketType
+                              log("ticketType ======$ticketType ${ticketPrice.toString()}");
 
-                                    notifier.updateTicketSummary(
-                                      currency: eventDetails.currency,
-                                      eventId: eventDetails.id,
-                                      image: eventDetails.currentPicUrl,
-                                      location: eventDetails.location!.address,
-                                      name: eventDetails.eventName,
-                                      numberOfTickets: 0,
-                                      price: e.value.ticketPrice,
-                                      ticketType: e.value.ticketType,
-                                      time: formattedStartTime,
-                                    );
-                                  },
-                                  child: IntrinsicWidth(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(bottom: 7),
-                                      decoration: BoxDecoration(
-                                        color: selectedIndex == index
-                                            ? AppColors.primary
-                                            : Colors.white,
-                                        border: Border.all(
-                                          width: 1.5,
-                                          color: AppColors.primary,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: PAD_ALL_10,
-                                          child: Row(
-                                            children: [
-                                              customText(
-                                                text: ticket.ticketType
-                                                    .toString(),
-                                                fontSize: 12,
-                                                textColor:
-                                                    selectedIndex == index
-                                                        ? AppColors.white
-                                                        : AppColors.deepPrimary,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                              widthSpace(0.5),
-                                              customText(
-                                                text: ticket.ticketPrice
-                                                    .toString(),
-                                                fontSize: 12,
-                                                textColor:
-                                                    selectedIndex == index
-                                                        ? AppColors.white
-                                                        : AppColors.deepPrimary,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
+                              ref
+                                  .read(isOpenProvider.notifier)
+                                  .resetState(true);
+
+                              log(formattedStartTime);
+
+                              notifier.updateTicketSummary(
+                                currency: eventDetails.currency,
+                                eventId: eventDetails.id,
+                                image: eventDetails.currentPicUrl,
+                                location: eventDetails.location!.address,
+                                name: eventDetails.eventName,
+                                numberOfTickets: 0,
+                                price: ticketPrice,
+                                ticketType: ticketType,
+                                time: formattedStartTime,
+                              );
+                            },
+                            onSaved: (value) {},
                           ),
                         ],
                       ),
@@ -462,6 +490,7 @@ class EventDetailsMainView extends ConsumerWidget {
                                     "",
                             orgFName: eventDetails.createdBy!.firstName!,
                             orgLName: eventDetails.createdBy!.lastName!,
+                            joinStatus: eventDetails.createdBy!.joinStatus!,
                           ),
                           heightSpace(2),
                           customText(
@@ -483,6 +512,7 @@ class EventDetailsMainView extends ConsumerWidget {
                             height: height,
                             width: width,
                             function: () {
+                              log(eventDetails.location!.address.toString());
                               if (eventDetails.location!.address == null) {
                                 ToastResp.toastMsgError(
                                     resp:
@@ -495,15 +525,21 @@ class EventDetailsMainView extends ConsumerWidget {
                             },
                           ),
                           heightSpace(2),
-                          ChasescrollButton(
-                            buttonText: "Buy Ticket",
-                            onTap: () {
-                              ref
-                                  .read(selectPriceIndexNotifier.notifier)
-                                  .resetState();
-                              //log(notifier.state.name.toString());
-                              context.push(AppRoutes.eventTicketSummaryScreen);
-                            },
+                          Visibility(
+                            visible: eventDetails.createdBy!.userId == userId
+                                ? false
+                                : true,
+                            child: ChasescrollButton(
+                              buttonText: "Buy Ticket",
+                              onTap: () {
+                                ref
+                                    .read(selectPriceIndexNotifier.notifier)
+                                    .resetState();
+                                //log(notifier.state.name.toString());
+                                context
+                                    .push(AppRoutes.eventTicketSummaryScreen);
+                              },
+                            ),
                           ),
                         ],
                       ),

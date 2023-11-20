@@ -1,7 +1,7 @@
-import 'package:chases_scroll/src/screens/community/community.dart';
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/expore_screens/explore_main_view.dart';
 import 'package:chases_scroll/src/screens/home/home.dart';
+import 'package:chases_scroll/src/screens/profile_view/user_profile_view.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/extract_first_letter.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
@@ -72,7 +72,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     const HomeScreen(),
     const ExploreMainView(),
     const EventMainView(),
-    const Community(),
+    const UserMainProfileView(),
     const Center(
       child: Text("Option 5"),
     )

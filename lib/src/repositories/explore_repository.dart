@@ -14,14 +14,49 @@ final repositoryProvider = Provider<ExploreRepository>(
 );
 
 class ExploreRepository {
-  List<Content> eventList = [];
+  List<EventContent> eventList = [];
   //this is for getting suggested users
   List<ContentUser> suggestedUsers = [];
 
   //this is for all event
-  List<Content> allEventList = [];
+  List<EventContent> allEventList = [];
   //this is for community
   List<CommContent> allCommunityList = [];
+
+  //accept friend request
+  Future<dynamic> acceptFriendRequest({String? friendID}) async {
+    final data = {
+      "friendRequestID": friendID,
+    };
+    final response = await ApiClient.post(Endpoints.acceptFriend,
+        body: data,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    log("response here saying  acceptFriendRequest... =>>>${response.message}");
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
+
+  Future<dynamic> blockFriend({String? friendID}) async {
+    final data = {"blockType": "USER", "typeID": friendID};
+    final response = await ApiClient.post(
+      Endpoints.blockFriend,
+      body: data,
+      useToken: true,
+    );
+
+    log("response here saying blockFriend... =>>>${response.message}");
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
+  }
 
   Future<dynamic> connectWithFriend({String? friendID}) async {
     final data = {
@@ -33,11 +68,11 @@ class ExploreRepository {
         backgroundColor: Colors.transparent,
         widget: Container());
 
-    log("response here saying  connect friend... =>>>${response.message}");
-
     if (response.status == 200 || response.status == 201) {
+      log("response here saying  connect friend... =>>>${response.message}");
       return response.message;
     }
+    log("response here saying  connect friend... =>>>${response.message}");
     return response.message;
   }
 
@@ -74,15 +109,16 @@ class ExploreRepository {
     }
   }
 
-  Future<List<Content>> getAllEvents() async {
+  Future<List<EventContent>> getAllEvents() async {
     final response =
         await ApiClient.get(Endpoints.getAllEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> allEvents = response.message['content'];
       // log(allEvents.toString());
-      allEventList =
-          allEvents.map<Content>((event) => Content.fromJson(event)).toList();
+      allEventList = allEvents
+          .map<EventContent>((event) => EventContent.fromJson(event))
+          .toList();
 
       return allEventList;
     } else {
@@ -107,19 +143,36 @@ class ExploreRepository {
     }
   }
 
-  Future<List<Content>> getTopEvents() async {
+  Future<List<EventContent>> getTopEvents() async {
     final response =
         await ApiClient.get(Endpoints.getTopEvents, useToken: true);
 
     if (response.status == 200) {
       final List<dynamic> topEvents = response.message['content'];
       //log(topEvents.toString());
-      eventList =
-          topEvents.map<Content>((event) => Content.fromJson(event)).toList();
+      eventList = topEvents
+          .map<EventContent>((event) => EventContent.fromJson(event))
+          .toList();
 
       return eventList;
     } else {
       return [];
     }
+  }
+
+  //reject friend request
+  Future<dynamic> rejectFriendRequest({String? friendID}) async {
+    String url = "${Endpoints.rejectFriend}/$friendID";
+    final response = await ApiClient.delete(url,
+        useToken: true,
+        backgroundColor: Colors.transparent,
+        widget: Container());
+
+    log("response here saying rejectFriendRequest... =>>>${response.message}");
+
+    if (response.status == 200 || response.status == 201) {
+      return response.message;
+    }
+    return response.message;
   }
 }
