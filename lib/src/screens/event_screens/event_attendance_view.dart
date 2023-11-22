@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chases_scroll/src/models/attendee_model.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
+import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_people_info_widget.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
@@ -15,10 +16,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 
+import '../widgets/toast.dart';
+
 class EventAttendeesView extends HookWidget {
   final EventContent eventDetails;
 
   final EventRepository _eventRepository = EventRepository();
+  final ExploreRepository _exploreRepository = ExploreRepository();
 
   EventAttendeesView({
     super.key,
@@ -56,6 +60,38 @@ class EventAttendeesView extends HookWidget {
             .toList();
 
         foundUsers.value = found;
+      }
+    }
+
+    void refreshSuggestedUsers() {
+      usersLoading.value = false; // Set loading state back to true
+      getEventUsers(); // Trigger the API call again
+    }
+
+    connectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.connectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(result.toString());
+        refreshSuggestedUsers();
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    disconnectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.disconnectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(friendID.toString());
+        log(result.toString());
+        refreshSuggestedUsers();
+      } else {
+        log(friendID.toString());
+        log(result.toString());
+        ToastResp.toastMsgError(resp: result['message']);
       }
     }
 
@@ -190,6 +226,14 @@ class EventAttendeesView extends HookWidget {
 
                                   return SearchPeopleWidget(
                                     user: attendee,
+                                    onTapFollow: () async {
+                                      if (attendee.joinStatus !=
+                                          "FRIEND_REQUEST_SENT") {
+                                        connectFriend(attendee.userId!);
+                                      } else {
+                                        disconnectFriend(attendee.userId!);
+                                      }
+                                    },
                                   );
                                 },
                               ),

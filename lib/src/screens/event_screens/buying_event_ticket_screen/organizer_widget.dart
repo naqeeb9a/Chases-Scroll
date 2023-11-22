@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
+import 'package:chases_scroll/src/screens/chat/model.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
@@ -152,10 +153,16 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                   GestureDetector(
                     onTap: () {
                       // String? name = value.name;
+                      context.push(AppRoutes.otherUsersProfile,
+                          extra: widget.orgId);
 
-                      widget.joinStatus == "NOT_CONNECTED"
-                          ? connectFriend(widget.orgId)
-                          : disconnectFriend(widget.orgId);
+                      ToastResp.toastMsgCustom(
+                          resp: "You can see organizer profile and follow",
+                          color: AppColors.black);
+
+                      // widget.joinStatus == "NOT_CONNECTED"
+                      //     ? connectFriend(widget.orgId)
+                      //     : disconnectFriend(widget.orgId);
                     },
                     child: SvgPicture.asset(
                       AppImages.addOrganizer,
@@ -169,9 +176,14 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                   widthSpace(2.5),
                   GestureDetector(
                     onTap: () {
-                      if (widget.orgId.isNotEmpty) {
-                        fndID.add(widget.orgId.toString());
-                      }
+                      // if (widget.orgId.isNotEmpty) {
+                      //   fndID.add(widget.orgId.toString());
+                      // }
+                      context.push(AppRoutes.privateChat,
+                          extra: ChatDataModel(
+                              id: widget.orgId,
+                              image: widget.orgImage.toString(),
+                              name: "${widget.orgFName} ${widget.orgLName}"));
                     },
                     child: isLoading
                         ? const SizedBox(

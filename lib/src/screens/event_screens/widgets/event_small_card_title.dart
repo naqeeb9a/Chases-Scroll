@@ -168,7 +168,7 @@ class _EventSmallTitleCardState extends State<EventSmallTitleCard> {
                                   text: widget.isOrganser == true
                                       ? "Organizer"
                                       : "Attending",
-                                  fontSize: 11,
+                                  fontSize: 10,
                                   textColor: AppColors.deepPrimary,
                                   fontWeight: FontWeight.w700),
                             ),

@@ -171,9 +171,10 @@ class EventRepository {
     }
   }
 
-  Future<bool> createEventDraft({
+  Future<dynamic> createEventDraft({
     final List<String>? picUrls,
     final String? eventType,
+    final String? creatdraftID,
     final String? eventName,
     final String? eventDescription,
     final String? locationType,
@@ -196,6 +197,7 @@ class EventRepository {
     final data = {
       "picUrls": picUrls,
       "eventType": eventType,
+      "id": creatdraftID,
       "eventName": eventName,
       "eventDescription": eventDescription,
       "locationType": locationType,
@@ -231,9 +233,9 @@ class EventRepository {
 
     if (response.status == 200 || response.status == 201) {
       //log("Create event response ===> ${response.message}");
-      return true;
+      return response.message;
     } else {
-      return false;
+      return response.message;
     }
   }
 
@@ -394,6 +396,24 @@ class EventRepository {
     }
   }
 
+  //getDraft events by Id
+  Future<List<EventContent>> getDraftEventByID({String? id}) async {
+    String url = "${Endpoints.getDraftEvent}?id=$id";
+    final response = await ApiClient.get(url, useToken: true);
+
+    if (response.status == 200) {
+      final List<dynamic> draft = response.message['content'];
+      log("getDraftEventByID ====> ${draft.toString()}");
+      draftList = draft
+          .map<EventContent>((event) => EventContent.fromJson(event))
+          .toList();
+
+      return draftList;
+    } else {
+      return [];
+    }
+  }
+
   //getDraft events
   Future<List<EventContent>> getDraftEvents() async {
     String url = "${Endpoints.getDraftEvent}?createdBy=$userId&size=10";
@@ -401,7 +421,7 @@ class EventRepository {
 
     if (response.status == 200) {
       final List<dynamic> draft = response.message['content'];
-      log("getDraftEvents ====> ${draft.toString()}");
+      //log("getDraftEvents ====> ${draft.toString()}");
       draftList = draft
           .map<EventContent>((event) => EventContent.fromJson(event))
           .toList();
@@ -752,9 +772,10 @@ class EventRepository {
   }
 
   //update event  draft
-  Future<bool> updateEventDraft({
+  Future<dynamic> updateEventDraft({
     final List<String>? picUrls,
     final String? eventType,
+    final String? creatdraftID,
     final String? eventName,
     final String? eventDescription,
     final String? locationType,
@@ -777,6 +798,7 @@ class EventRepository {
     final data = {
       "picUrls": picUrls,
       "eventType": eventType,
+      "id": creatdraftID,
       "eventName": eventName,
       "eventDescription": eventDescription,
       "locationType": locationType,
@@ -812,9 +834,9 @@ class EventRepository {
 
     if (response.status == 200 || response.status == 201) {
       //log("Create event response ===> ${response.message}");
-      return true;
+      return response.message;
     } else {
-      return false;
+      return response.message;
     }
   }
 

@@ -43,7 +43,7 @@ class MyEventView extends HookWidget {
       getMyEvents(); // Trigger the API call again
     }
 
-    void _runEventFilter(String enteredKeyword) {
+    void runEventFilter(String enteredKeyword) {
       log(enteredKeyword);
       if (enteredKeyword.isEmpty) {
         foundEvents.value = allEvents.value;
@@ -76,7 +76,7 @@ class MyEventView extends HookWidget {
             ),
             hintText: "Search for event or ...",
             onChanged: (value) {
-              _runEventFilter(value);
+              runEventFilter(value);
             },
           ),
           Expanded(
@@ -115,11 +115,10 @@ class MyEventView extends HookWidget {
                       : Expanded(
                           child: Container(
                             child: ListView.builder(
-                              itemCount: myEventModel.value.length,
+                              itemCount: foundEvents.value.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
-                                EventContent myEvent =
-                                    myEventModel.value[index];
+                                EventContent myEvent = foundEvents.value[index];
                                 //for formatted time
                                 int startTimeInMillis = myEvent.startTime!;
                                 DateTime startTime =

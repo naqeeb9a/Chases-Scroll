@@ -4,6 +4,7 @@ import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
@@ -57,6 +58,19 @@ class MyDraftEventView extends HookWidget {
             .toList();
 
         foundEvents.value = found;
+      }
+    }
+
+    deleteDraft(String eventId) async {
+      final result = await _eventRepository.deleteDraft(
+        draftID: eventId,
+      );
+
+      if (result['updated'] == true) {
+        refreshDraftEvent();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
       }
     }
 
@@ -117,11 +131,10 @@ class MyDraftEventView extends HookWidget {
                       : Expanded(
                           child: Container(
                             child: ListView.builder(
-                              itemCount: myEventModel.value.length,
+                              itemCount: foundEvents.value.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
-                                EventContent myEvent =
-                                    myEventModel.value[index];
+                                EventContent myEvent = foundEvents.value[index];
                                 //for formatted time
                                 int startTimeInMillis = myEvent.startTime!;
                                 DateTime startTime =
@@ -302,23 +315,31 @@ class MyDraftEventView extends HookWidget {
                                                           ),
                                                         ),
                                                         widthSpace(1.3),
-                                                        Container(
-                                                          padding: PAD_ALL_8,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          4),
-                                                              color: AppColors
-                                                                  .backgroundGrey),
-                                                          child: customText(
-                                                              text: "Delete",
-                                                              fontSize: 11,
-                                                              textColor:
-                                                                  AppColors.red,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            deleteDraft(
+                                                              myEvent.id!,
+                                                            );
+                                                          },
+                                                          child: Container(
+                                                            padding: PAD_ALL_8,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            4),
+                                                                color: AppColors
+                                                                    .backgroundGrey),
+                                                            child: customText(
+                                                                text: "Delete",
+                                                                fontSize: 11,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .red,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700),
+                                                          ),
                                                         ),
                                                       ],
                                                     ),

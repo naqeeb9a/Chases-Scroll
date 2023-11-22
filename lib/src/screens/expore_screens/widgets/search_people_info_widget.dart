@@ -9,10 +9,12 @@ import '../../../utils/constants/spacer.dart';
 
 class SearchPeopleWidget extends StatefulWidget {
   final ContentUser user;
+  final Function()? onTapFollow;
 
   const SearchPeopleWidget({
     super.key,
     required this.user,
+    required this.onTapFollow,
   });
 
   @override
@@ -33,63 +35,110 @@ class _SearchPeopleWidgetState extends State<SearchPeopleWidget> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40),
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(40),
+                          bottomRight: Radius.circular(40),
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(0),
+                        ),
+                        color: Colors.grey.shade100,
+                        border:
+                            Border.all(color: AppColors.primary, width: 1.5),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.user.data!.imgMain!.value}"),
+                        ),
+                      ),
+                      child: Center(
+                        child: Visibility(
+                          visible:
+                              widget.user.data!.imgMain!.objectPublic == false
+                                  ? true
+                                  : false,
+                          child: customText(
+                              text: widget.user.firstName!.isEmpty
+                                  ? ""
+                                  : "${widget.user.firstName![0]}${widget.user.lastName![0]}"
+                                      .toUpperCase(),
+                              fontSize: 14,
+                              textColor: AppColors.deepPrimary,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
                     ),
-                    color: Colors.grey.shade100,
-                    border: Border.all(color: AppColors.primary, width: 1.5),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                          "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.user.data!.imgMain!.value}"),
+                    widthSpace(2),
+                    Container(
+                      //color: Colors.amber,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          customText(
+                              text:
+                                  "${widget.user.firstName} ${widget.user.lastName}",
+                              fontSize: 12,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w700),
+                          SizedBox(
+                            width: 130,
+                            child: customText(
+                                text: widget.user.username!,
+                                fontSize: 11,
+                                textColor: AppColors.searchTextGrey,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                GestureDetector(
+                  onTap: widget.onTapFollow,
+                  child: Container(
+                    height: 40,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: widget.user.joinStatus == "NOT_CONNECTED"
+                            ? AppColors.primary
+                            : AppColors.white,
+                      ),
+                      color: widget.user.joinStatus == "FRIEND_REQUEST_SENT"
+                          ? AppColors.btnOrange.withOpacity(0.3)
+                          : widget.user.joinStatus == "CONNECTED"
+                              ? AppColors.primary
+                              : AppColors.white,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                  child: Center(
-                    child: Visibility(
-                      visible: widget.user.data!.imgMain!.objectPublic == false
-                          ? true
-                          : false,
+                    child: Center(
                       child: customText(
-                          text: widget.user.firstName!.isEmpty
-                              ? ""
-                              : "${widget.user.firstName![0]}${widget.user.lastName![0]}"
-                                  .toUpperCase(),
-                          fontSize: 14,
-                          textColor: AppColors.deepPrimary,
-                          fontWeight: FontWeight.w500),
+                        text: widget.user.joinStatus == "CONNECTED"
+                            ? "Connected"
+                            : widget.user.joinStatus == "NOT_CONNECTED"
+                                ? "Connect"
+                                : widget.user.joinStatus ==
+                                        "FRIEND_REQUEST_SENT"
+                                    ? "Pending"
+                                    : "",
+                        fontSize: 12,
+                        textColor:
+                            widget.user.joinStatus == "FRIEND_REQUEST_SENT"
+                                ? AppColors.btnOrange
+                                : AppColors.primary,
+                      ),
                     ),
                   ),
                 ),
-                widthSpace(2),
-                Container(
-                  //color: Colors.amber,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      customText(
-                          text:
-                              "${widget.user.firstName} ${widget.user.lastName}",
-                          fontSize: 12,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.w700),
-                      customText(
-                          text: widget.user.username!,
-                          fontSize: 11,
-                          textColor: AppColors.searchTextGrey,
-                          fontWeight: FontWeight.w400),
-                    ],
-                  ),
-                )
               ],
             ),
             heightSpace(0.2),

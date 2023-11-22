@@ -554,11 +554,20 @@ class HomeScreen extends HookConsumerWidget {
                                             children: [
                                               Row(
                                                 children: [
-                                                  ChaseScrollContainer(
-                                                    name:
-                                                        "${e.user?.firstName} ${e.user?.lastName}",
-                                                    imageUrl:
-                                                        "${Endpoints.displayImages}${e.user?.data?.imgMain?.value}",
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      context.push(
+                                                        AppRoutes
+                                                            .otherUsersProfile,
+                                                        extra: e.user?.userId,
+                                                      );
+                                                    },
+                                                    child: ChaseScrollContainer(
+                                                      name:
+                                                          "${e.user?.firstName} ${e.user?.lastName}",
+                                                      imageUrl:
+                                                          "${Endpoints.displayImages}${e.user?.data?.imgMain?.value}",
+                                                    ),
                                                   ),
                                                   widthSpace(3),
                                                   Column(
@@ -656,7 +665,7 @@ class HomeScreen extends HookConsumerWidget {
                                                               return Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .all(
+                                                                        .all(
                                                                         8.0),
                                                                 child: PictureContainer(
                                                                     image: e.multipleMediaRef![

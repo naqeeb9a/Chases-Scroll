@@ -7,11 +7,13 @@ class AddEventExtendedTextLeft extends StatelessWidget {
   final Function()? function;
   final String? title;
   final Alignment? alignment;
+  final Color? color;
   const AddEventExtendedTextLeft({
     super.key,
     required this.function,
     required this.title,
     this.alignment,
+    this.color,
   });
 
   @override
@@ -22,10 +24,11 @@ class AddEventExtendedTextLeft extends StatelessWidget {
         child: Align(
           alignment: alignment ?? Alignment.centerLeft,
           child: customText(
-              text: title!,
-              fontSize: 14,
-              textColor: AppColors.black,
-              fontWeight: FontWeight.w600),
+            text: title!,
+            fontSize: 14,
+            textColor: color ?? AppColors.black,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );

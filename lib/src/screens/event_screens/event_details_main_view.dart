@@ -32,6 +32,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/images.dart';
@@ -262,78 +263,151 @@ class EventDetailsMainView extends ConsumerWidget {
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
+                              const Expanded(
+                                flex: 7,
+                                child: Row(),
+                              ),
+                              Expanded(
+                                flex: eventDetails.interestedUsers!.length < 2
+                                    ? 1
+                                    : eventDetails.interestedUsers!.length < 3
+                                        ? 2
+                                        : 3,
+                                child: SizedBox(
+                                  //color: Colors.amber,
+                                  height: 35,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: eventDetails
+                                                .interestedUsers!.length <
+                                            2
+                                        ? eventDetails.interestedUsers!.length
+                                        : 2, // Replace with your actual item count
+                                    itemBuilder: (context, index) {
+                                      InterestedUsers indiv =
+                                          eventDetails.interestedUsers![index];
+                                      // Replace this with your actual list item widget
+                                      return Container(
+                                        width: 8.w,
+                                        height: 6.h,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: AppColors.primary
+                                              .withOpacity(0.5),
+                                          image: DecorationImage(
+                                            scale: 1.0,
+                                            fit: BoxFit.fill,
+                                            image: NetworkImage(
+                                                "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}"),
+                                          ),
+                                        ),
+                                        child: Visibility(
+                                            child: Center(
+                                          child: Text(
+                                              "${indiv.firstName![0]}${indiv.lastName![0]}"
+                                                  .toUpperCase()),
+                                        )),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                               GestureDetector(
                                 onTap: () => context.push(
                                   AppRoutes.eventAttendeesView,
                                   extra: eventDetails,
                                 ),
-                                child: SizedBox(
-                                  height: 30,
-                                  width: 100,
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        top: 0,
-                                        left: 0,
-                                        child: Container(
-                                          width: 6.w,
-                                          height: 3.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 20,
-                                        child: Container(
-                                          width: 6.w,
-                                          height: 3.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            color: Colors.green,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 40,
-                                        child: Container(
-                                          width: 6.w,
-                                          height: 3.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            color: Colors.orange,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 60,
-                                        child: Container(
-                                          width: 6.w,
-                                          height: 3.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            color: AppColors.deepPrimary,
-                                          ),
-                                          child: Center(
-                                            child: customText(
-                                              text:
-                                                  "+${eventDetails.memberCount.toString()}",
-                                              fontSize: 6,
-                                              textColor: AppColors.white,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                child: Container(
+                                  width: 8.w,
+                                  height: 35,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: AppColors.deepPrimary,
+                                  ),
+                                  child: Center(
+                                    child: customText(
+                                      text:
+                                          "+${eventDetails.memberCount.toString()}",
+                                      fontSize: 6,
+                                      textColor: AppColors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                               ),
+                              // GestureDetector(
+                              // onTap: () => context.push(
+                              //   AppRoutes.eventAttendeesView,
+                              //   extra: eventDetails,
+                              // ),
+                              //   child: SizedBox(
+                              //     height: 30,
+                              //     width: 100,
+                              //     child: Stack(
+                              //       children: [
+                              //         Positioned(
+                              //           top: 0,
+                              //           left: 0,
+                              //           child: Container(
+                              //             width: 6.w,
+                              //             height: 3.h,
+                              //             decoration: BoxDecoration(
+                              //               borderRadius:
+                              //                   BorderRadius.circular(30),
+                              //               color: Colors.blue,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //         Positioned(
+                              //           left: 20,
+                              //           child: Container(
+                              //             width: 6.w,
+                              //             height: 3.h,
+                              //             decoration: BoxDecoration(
+                              //               borderRadius:
+                              //                   BorderRadius.circular(30),
+                              //               color: Colors.green,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //         Positioned(
+                              //           left: 40,
+                              //           child: Container(
+                              //             width: 6.w,
+                              //             height: 3.h,
+                              //             decoration: BoxDecoration(
+                              //               borderRadius:
+                              //                   BorderRadius.circular(30),
+                              //               color: Colors.orange,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //         Positioned(
+                              //           left: 60,
+                              // child: Container(
+                              //   width: 6.w,
+                              //   height: 3.h,
+                              //   decoration: BoxDecoration(
+                              //     borderRadius:
+                              //         BorderRadius.circular(30),
+                              //     color: AppColors.deepPrimary,
+                              //   ),
+                              //   child: Center(
+                              //     child: customText(
+                              //       text:
+                              //           "+${eventDetails.memberCount.toString()}",
+                              //       fontSize: 6,
+                              //       textColor: AppColors.white,
+                              //       fontWeight: FontWeight.w500,
+                              //     ),
+                              //   ),
+                              // ),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                           heightSpace(1.6),
@@ -352,6 +426,16 @@ class EventDetailsMainView extends ConsumerWidget {
                             title: "${eventDetails.location!.address}",
                             subTitle:
                                 "${eventDetails.location!.locationDetails}",
+                            link: "${eventDetails.location!.link}",
+                            onlinktap: () async {
+                              if (await launch(
+                                  "${eventDetails.location!.link}")) {
+                                await canLaunch(
+                                    "${eventDetails.location!.link}");
+                              } else {
+                                print('Could not launch');
+                              }
+                            },
                           ),
                           heightSpace(2),
                           const EventDetailsIconText(
@@ -359,80 +443,6 @@ class EventDetailsMainView extends ConsumerWidget {
                             title: "Select ticket Type",
                           ),
                           heightSpace(2),
-                          // SizedBox(
-                          //   width: double.infinity,
-                          //   child: Wrap(
-                          //     spacing: 12,
-                          //     children: eventDetails.productTypeData!
-                          //         .asMap()
-                          //         .entries
-                          //         .map((e) {
-                          //       int index = e.key;
-                          //       ProductTypeData ticket = e.value;
-
-                          //       return GestureDetector(
-                          //         onTap: () {
-                          //           ref
-                          //               .read(selectPriceIndexNotifier.notifier)
-                          //               .updateIndex(index);
-                          //           log(e.value.ticketType!);
-                          //           log(e.value.ticketPrice.toString());
-
-                          //         },
-                          //         child: IntrinsicWidth(
-                          //           child: Container(
-                          //             margin: const EdgeInsets.only(bottom: 7),
-                          //             decoration: BoxDecoration(
-                          //               color: selectedIndex == index
-                          //                   ? AppColors.primary
-                          //                   : Colors.white,
-                          //               border: Border.all(
-                          //                 width: 1.5,
-                          //                 color: AppColors.primary,
-                          //               ),
-                          //               borderRadius: const BorderRadius.only(
-                          //                 bottomLeft: Radius.circular(10),
-                          //                 bottomRight: Radius.circular(10),
-                          //                 topLeft: Radius.circular(10),
-                          //                 topRight: Radius.circular(10),
-                          //               ),
-                          //             ),
-                          //             child: Center(
-                          //               child: Padding(
-                          //                 padding: PAD_ALL_10,
-                          //                 child: Row(
-                          //                   children: [
-                          //                     customText(
-                          //                       text: ticket.ticketType
-                          //                           .toString(),
-                          //                       fontSize: 12,
-                          //                       textColor:
-                          //                           selectedIndex == index
-                          //                               ? AppColors.white
-                          //                               : AppColors.deepPrimary,
-                          //                       fontWeight: FontWeight.w400,
-                          //                     ),
-                          //                     widthSpace(0.5),
-                          //                     customText(
-                          //                       text: ticket.ticketPrice
-                          //                           .toString(),
-                          //                       fontSize: 12,
-                          //                       textColor:
-                          //                           selectedIndex == index
-                          //                               ? AppColors.white
-                          //                               : AppColors.deepPrimary,
-                          //                       fontWeight: FontWeight.w400,
-                          //                     ),
-                          //                   ],
-                          //                 ),
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       );
-                          //     }).toList(),
-                          //   ),
-                          // ),
                           DropDownEventType(
                             typeValue: selectedValue.isEmpty
                                 ? "Please select ticket option"
@@ -446,8 +456,6 @@ class EventDetailsMainView extends ConsumerWidget {
 
                               double ticketPrice =
                                   selectedTicket['ticketPrice'];
-                              // Now you have the ticketType
-                              log("ticketType ======$ticketType ${ticketPrice.toString()}");
 
                               ref
                                   .read(isOpenProvider.notifier)

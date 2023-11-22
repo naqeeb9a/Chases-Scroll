@@ -129,7 +129,7 @@ class _DropDownListViewState extends State<DropDownListView> {
       isExpanded: true,
       hint: Text(
         widget.typeValue.toString(),
-        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
       ),
 
       items: widget.typeList

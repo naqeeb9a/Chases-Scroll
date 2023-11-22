@@ -1,13 +1,16 @@
 import 'dart:developer';
 
+import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/providers/eventicket_provider.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
+import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/extract_first_letter.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -25,6 +28,10 @@ class GetCommunityFunnelID extends HookConsumerWidget {
 
     final eventCommFunnelNotifier =
         ref.read(eventCommFunnelDataProvider.notifier);
+
+    //value for userID
+    String userId =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
     //------------------------------------------------------------------------//
     //----------------------This is for community-----------------------------//
     final communityLoading = useState<bool>(true);
@@ -32,8 +39,8 @@ class GetCommunityFunnelID extends HookConsumerWidget {
     final allCommunity = useState<List<CommContent>>([]);
     final foundCommunity = useState<List<CommContent>>([]);
 
-    getAllCommunities() {
-      _exploreRepository.getAllCommunity().then((value) {
+    getJoinedCommunities() {
+      _exploreRepository.getJoinedCommunity(userId: userId).then((value) {
         communityLoading.value = false;
         communityModel.value = value;
         allCommunity.value = value;
@@ -58,7 +65,7 @@ class GetCommunityFunnelID extends HookConsumerWidget {
     }
 
     useEffect(() {
-      getAllCommunities();
+      getJoinedCommunities();
       return null;
     }, []);
 
@@ -180,15 +187,16 @@ class GetCommunityFunnelID extends HookConsumerWidget {
                                             "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm.data!.imgSrc}"),
                                       ),
                                     ),
-                                    // child: Center(
-                                    //   child: customText(
-                                    //       text: comm.data!.imgSrc!.isEmpty
-                                    //           ? initials
-                                    //           : "",
-                                    //       fontSize: 10,
-                                    //       textColor: AppColors.deepPrimary,
-                                    //       fontWeight: FontWeight.w500),
-                                    // ),
+                                    child: Center(
+                                      child: customText(
+                                          text: extractFirstLetters(comm
+                                              .data!.name
+                                              .toString()
+                                              .toUpperCase()),
+                                          fontSize: 10,
+                                          textColor: AppColors.deepPrimary,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                 ),
                               ],

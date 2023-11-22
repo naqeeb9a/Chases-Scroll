@@ -99,7 +99,8 @@ class Endpoints {
   //-----------------------create && draft ------------------------------
   static String createDraft = "events/create-draft";
   static String updateDraft = "/events/update-draft";
-  static String createEvent = "events/create-event-from-draft";
+  static String createEventDraft = "events/create-event-from-draft";
+  static String createEvent = "/events/create-event";
   static String getDraftEvent = "events/drafts";
   static String deleteDraft = "/events/delete-draft";
 
