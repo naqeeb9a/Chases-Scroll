@@ -1,10 +1,12 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../models/event_model.dart';
 import '../../../utils/constants/images.dart';
@@ -90,11 +92,21 @@ class _EventSmallTitleCardState extends State<EventSmallTitleCard> {
                                   lines: 1),
                             ),
                             widthSpace(1),
-                            customText(
-                                text: widget.price.toString(),
-                                fontSize: 14,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w500),
+                            widget.eventDetails!.currency == "USD"
+                                ? customText(
+                                    text: "\$${widget.price.toString()}",
+                                    fontSize: 13,
+                                    textColor: AppColors.deepPrimary,
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                : Text(
+                                    "$naira${widget.price.toString()}",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 13,
+                                      color: AppColors.deepPrimary,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                           ],
                         ),
                         heightSpace(1),

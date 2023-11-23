@@ -1198,7 +1198,7 @@ class _WidgetState extends ConsumerState<EditEventView> {
   }
 
   createEvent(String? funnelID) async {
-    bool result = await eventRepository.createEventDraft(
+    dynamic result = await eventRepository.createEventDraft(
       creatdraftID: widget.eventDetails.id,
       address: location.text,
       attendeesVisibility: _radioShowEventVisibility == "show" ? true : false,
@@ -1223,7 +1223,7 @@ class _WidgetState extends ConsumerState<EditEventView> {
       toBeAnnounced: announcedBox,
       productTypeData: formDataList,
     );
-    if (result) {
+    if (result['id'] != null) {
       if (context.mounted) {
         TextEditingController().clear();
         ToastResp.toastMsgSuccess(resp: "Event Created Successfully");

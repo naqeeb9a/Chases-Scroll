@@ -44,8 +44,8 @@ class RefundTicketDetailScreen extends ConsumerWidget {
                     ChasescrollButton(
                       width: 100,
                       buttonText: "Cancel Ticket",
-                      color: AppColors.red,
-                      textColor: AppColors.white,
+                      color: const Color.fromARGB(255, 188, 194, 223),
+                      textColor: AppColors.red,
                       onTap: () {
                         // showDialog(
                         //   context: context,

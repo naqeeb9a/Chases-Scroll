@@ -11,6 +11,7 @@ import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../utils/constants/colors.dart';
@@ -262,12 +264,23 @@ class FindAllEventsView extends HookWidget {
                                         ),
                                       ),
                                       widthSpace(1.5),
-                                      customText(
-                                        text: event.maxPrice.toString(),
-                                        fontSize: 14,
-                                        textColor: AppColors.deepPrimary,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+
+                                      event.currency == "USD"
+                                          ? customText(
+                                              text:
+                                                  "\$${event.maxPrice.toString()}",
+                                              fontSize: 13,
+                                              textColor: AppColors.deepPrimary,
+                                              fontWeight: FontWeight.w500,
+                                            )
+                                          : Text(
+                                              "$naira${event.maxPrice.toString()}",
+                                              style: GoogleFonts.montserrat(
+                                                fontSize: 13,
+                                                color: AppColors.deepPrimary,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
                                       // Text(
                                       //   event['currency'] == "USD"
                                       //       ? "\$${event['minPrice'].toString()}"

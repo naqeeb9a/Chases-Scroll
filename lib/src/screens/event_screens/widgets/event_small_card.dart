@@ -2,11 +2,13 @@ import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
+import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../utils/constants/images.dart';
@@ -89,11 +91,21 @@ class _EventSmallCardState extends State<EventSmallCard> {
                                   textColor: AppColors.black,
                                   fontWeight: FontWeight.w500),
                             ),
-                            customText(
-                                text: widget.price.toString(),
-                                fontSize: 14,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w500),
+                            widget.eventDetails!.currency == "USD"
+                                ? customText(
+                                    text: "\$${widget.price.toString()}",
+                                    fontSize: 13,
+                                    textColor: AppColors.deepPrimary,
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                : Text(
+                                    "$naira${widget.price.toString()}",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 13,
+                                      color: AppColors.deepPrimary,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                           ],
                         ),
                         heightSpace(1),
@@ -140,23 +152,6 @@ class _EventSmallCardState extends State<EventSmallCard> {
                             Row(
                               children: [
                                 GestureDetector(
-                                  onTap: widget.onSave,
-                                  child: Container(
-                                    child: widget.isSaved == true
-                                        ? SvgPicture.asset(
-                                            AppImages.bookmarkFilled,
-                                            height: 2.3.h,
-                                            width: 2.3.w,
-                                          )
-                                        : SvgPicture.asset(
-                                            AppImages.bookmark,
-                                            height: 2.3.h,
-                                            width: 2.3.w,
-                                          ),
-                                  ),
-                                ),
-                                widthSpace(4),
-                                GestureDetector(
                                   onTap: () async {
                                     String text =
                                         "https://chasescroll-new.netlify.app/events/${widget.eventDetails!.id}";
@@ -190,7 +185,24 @@ class _EventSmallCardState extends State<EventSmallCard> {
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
+                                widthSpace(4),
+                                GestureDetector(
+                                  onTap: widget.onSave,
+                                  child: Container(
+                                    child: widget.isSaved == true
+                                        ? SvgPicture.asset(
+                                            AppImages.bookmarkFilled,
+                                            height: 2.3.h,
+                                            width: 2.3.w,
+                                          )
+                                        : SvgPicture.asset(
+                                            AppImages.bookmark,
+                                            height: 2.3.h,
+                                            width: 2.3.w,
+                                          ),
+                                  ),
+                                ),
                               ],
                             ),
                           ],

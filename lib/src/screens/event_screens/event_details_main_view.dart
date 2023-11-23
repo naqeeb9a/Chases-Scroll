@@ -10,7 +10,6 @@ import 'package:chases_scroll/src/providers/event_statenotifier.dart';
 import 'package:chases_scroll/src/providers/eventicket_provider.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/drop_down_widget_view.dart';
-import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/organizer_widget.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_detail_map_locationCard.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_details_iconText.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
@@ -486,20 +485,21 @@ class EventDetailsMainView extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          OrganizerContainerWidget(
-                            height: height,
-                            width: width,
-                            isCreator: userId == eventDetails.createdBy!.userId
-                                ? true
-                                : false,
-                            orgId: eventDetails.createdBy!.userId ?? "",
-                            orgImage:
-                                eventDetails.createdBy!.data!.imgMain!.value ??
-                                    "",
-                            orgFName: eventDetails.createdBy!.firstName!,
-                            orgLName: eventDetails.createdBy!.lastName!,
-                            joinStatus: eventDetails.createdBy!.joinStatus!,
-                          ),
+                          // OrganizerContainerWidget(
+                          //   height: height,
+                          //   width: width,
+                          //   isCreator: userId == eventDetails.createdBy!.userId
+                          //       ? true
+                          //       : false,
+                          //   orgId: eventDetails.createdBy!.userId ?? "",
+                          //   orgImage: eventDetails.createdBy!.data!.imgMain !=
+                          //           null
+                          //       ? eventDetails.createdBy!.data!.imgMain!.value!
+                          //       : "",
+                          //   orgFName: eventDetails.createdBy!.firstName!,
+                          //   orgLName: eventDetails.createdBy!.lastName!,
+                          //   joinStatus: eventDetails.createdBy!.joinStatus!,
+                          // ),
                           heightSpace(2),
                           customText(
                             text: "Event Description",
@@ -534,9 +534,8 @@ class EventDetailsMainView extends ConsumerWidget {
                           ),
                           heightSpace(2),
                           Visibility(
-                            visible: eventDetails.createdBy!.userId == userId
-                                ? false
-                                : true,
+                            visible:
+                                eventDetails.isOrganizer == true ? false : true,
                             child: ChasescrollButton(
                               buttonText: "Buy Ticket",
                               onTap: () {

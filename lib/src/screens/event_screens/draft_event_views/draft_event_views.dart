@@ -14,9 +14,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../repositories/event_repository.dart';
 import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/helpers/strings.dart';
 
 class MyDraftEventView extends HookWidget {
   static final EventRepository _eventRepository = EventRepository();
@@ -212,16 +214,30 @@ class MyDraftEventView extends HookWidget {
                                                               lines: 1),
                                                         ),
                                                         widthSpace(1),
-                                                        customText(
-                                                            text: myEvent
-                                                                .minPrice
-                                                                .toString(),
-                                                            fontSize: 14,
-                                                            textColor:
-                                                                AppColors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                        myEvent.currency ==
+                                                                "USD"
+                                                            ? customText(
+                                                                text:
+                                                                    "\$${myEvent.maxPrice.toString()}",
+                                                                fontSize: 13,
+                                                                textColor: AppColors
+                                                                    .deepPrimary,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              )
+                                                            : Text(
+                                                                "$naira${myEvent.maxPrice.toString()}",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  fontSize: 13,
+                                                                  color: AppColors
+                                                                      .deepPrimary,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
                                                       ],
                                                     ),
                                                     heightSpace(1),
