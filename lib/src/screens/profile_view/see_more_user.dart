@@ -94,6 +94,33 @@ class SeeMoreUserView extends HookWidget {
       }
     }
 
+    connectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.connectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(result.toString());
+        refreshConnection();
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    disconnectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.disconnectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(friendID.toString());
+        log(result.toString());
+        refreshConnection();
+      } else {
+        log(friendID.toString());
+        log(result.toString());
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
     useEffect(() {
       getUsersConnection();
       return null;
@@ -228,8 +255,8 @@ class SeeMoreUserView extends HookWidget {
                                                         text: content
                                                                     .data!
                                                                     .imgMain!
-                                                                    .objectPublic ==
-                                                                false
+                                                                    .value ==
+                                                                null
                                                             ? content.firstName!
                                                                     .isEmpty
                                                                 ? ""
@@ -281,11 +308,15 @@ class SeeMoreUserView extends HookWidget {
                                             children: [
                                               GestureDetector(
                                                 onTap: () async {
+                                                  disconnectFriend(
+                                                      content.userId!);
                                                   // if (content.joinStatus !=
                                                   //     "FRIEND_REQUEST_SENT") {
-                                                  //   connectFriend(content.userId!);
+                                                  //   connectFriend(
+                                                  //       content.userId!);
                                                   // } else {
-                                                  //   disconnectFriend(content.userId!);
+                                                  //   disconnectFriend(
+                                                  //       content.userId!);
                                                   // }
                                                 },
                                                 child: Container(

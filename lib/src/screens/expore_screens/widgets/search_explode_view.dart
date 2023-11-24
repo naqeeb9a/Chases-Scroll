@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/community_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
+import 'package:chases_scroll/src/screens/community/model/group_model.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_event_widget.dart';
 import 'package:chases_scroll/src/screens/expore_screens/widgets/search_people_info_widget.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
@@ -15,6 +17,7 @@ import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart'
 import 'package:chases_scroll/src/utils/constants/helpers/extract_first_letter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../models/event_model.dart';
 import '../../../utils/constants/spacer.dart';
@@ -55,6 +58,8 @@ class SearchExploreView extends HookWidget {
         allEventModel.value = value;
         foundEvents.value = value;
         allEvents.value = value;
+
+        foundEvents.value.sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 
@@ -93,6 +98,8 @@ class SearchExploreView extends HookWidget {
         usersModel.value = value;
         allUsers.value = value;
         foundUsers.value = value;
+
+        foundUsers.value.sort((a, b) => a.firstName!.compareTo(b.firstName!));
       });
     }
 
@@ -130,6 +137,9 @@ class SearchExploreView extends HookWidget {
         communityModel.value = value;
         allCommunity.value = value;
         foundCommunity.value = value;
+
+        foundCommunity.value
+            .sort((a, b) => a.data!.name!.compareTo(b.data!.name!));
       });
     }
 
@@ -156,6 +166,34 @@ class SearchExploreView extends HookWidget {
 
     String userId =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+
+    saveEvent(String eventId) async {
+      final result = await _eventRepository.saveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['updated'] == true) {
+        refreshEventData();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    unSaveEvent(String eventId) async {
+      final result = await _eventRepository.unSaveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['updated'] == true) {
+        refreshEventData();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
 
     //join community
     joinCommunity(CommContent comm) async {
@@ -227,7 +265,7 @@ class SearchExploreView extends HookWidget {
               child: AppTextFormField(
                 //textEditingController: searchController,
                 //label: "",
-                hintText: "Search for users, event or...",
+                hintText: "Search for users, event or communities...",
                 onChanged: (value) {
                   //_runUsersFilter(value);
                   if (currentPageValue.value == 0) {
@@ -387,21 +425,11 @@ class SearchExploreView extends HookWidget {
                                     price: event.minPrice,
                                     isSaved: event.isSaved!,
                                     onSave: () async {
-                                      final result =
-                                          await _eventRepository.saveEvent(
-                                        eventID: event.id,
-                                        userID: userId,
-                                      );
-                                      log(userId);
-                                      if (result['message'] == true) {
-                                        // Trigger a refresh of the events data
-                                        refreshEventData();
-                                        ToastResp.toastMsgSuccess(
-                                            resp: result['message']);
-                                      } else {
-                                        ToastResp.toastMsgError(
-                                            resp: result['message']);
-                                      }
+                                      event.isSaved != true
+                                          ? saveEvent(event.id.toString())
+                                          : unSaveEvent(
+                                              event.id.toString(),
+                                            );
                                     },
                                   );
                                 },
@@ -429,288 +457,318 @@ class SearchExploreView extends HookWidget {
                                   // List<String> words = n.split(' ');
                                   // String initials =
                                   //     words.map((word) => word[0]).join('');
-                                  return Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              height: 55,
-                                              width: 55,
-                                              child: Stack(
-                                                children: [
-                                                  Positioned(
-                                                    left: 0,
-                                                    child: Container(
-                                                      width: 35,
-                                                      height: 35,
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        20),
-                                                                bottomRight:
-                                                                    Radius
-                                                                        .circular(
-                                                                            20),
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        20),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        0),
-                                                              ),
-                                                              color: AppColors
-                                                                  .deepPrimary),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 5,
-                                                    child: Container(
-                                                      width: 35,
-                                                      height: 35,
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Colors.white,
-                                                            width: 1),
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                .only(
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  20),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  20),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  20),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  0),
-                                                        ),
-                                                        color: AppColors
-                                                            .deepPrimary,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      context.push(
+                                        AppRoutes.communityInfo,
+                                        extra: CommunityInfoModel(
+                                          description:
+                                              comm.data!.description ?? "",
+                                          groupId: comm.id,
+                                          name: comm.data!.name ?? "",
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                height: 55,
+                                                width: 55,
+                                                child: Stack(
+                                                  children: [
+                                                    Positioned(
+                                                      left: 0,
+                                                      child: Container(
+                                                        width: 35,
+                                                        height: 35,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          20),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          20),
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          20),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                ),
+                                                                color: AppColors
+                                                                    .deepPrimary),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 10,
-                                                    child: Container(
-                                                      width: 35,
-                                                      height: 35,
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Colors.white,
-                                                            width: 1),
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                .only(
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  20),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  20),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  20),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  0),
-                                                        ),
-                                                        color: Colors
-                                                            .grey.shade200,
-                                                        image: DecorationImage(
-                                                          fit: BoxFit.cover,
-                                                          image: NetworkImage(
-                                                              "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm.data!.imgSrc}"),
-                                                        ),
-                                                      ),
-                                                      child: Center(
-                                                        child: customText(
-                                                            text: comm
-                                                                    .data!
-                                                                    .imgSrc!
-                                                                    .isEmpty
-                                                                ? comm.data!.name ==
-                                                                        null
-                                                                    ? ""
-                                                                    : extractFirstLetters(comm
-                                                                        .data!
-                                                                        .name
-                                                                        .toString()
-                                                                        .toUpperCase())
-                                                                : "",
-                                                            fontSize: 12,
-                                                            textColor: AppColors
-                                                                .deepPrimary,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            widthSpace(1),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  customText(
-                                                      text: comm.data!.name ==
-                                                              null
-                                                          ? ""
-                                                          : comm.data!.name!,
-                                                      fontSize: 13,
-                                                      textColor:
-                                                          AppColors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                  customText(
-                                                      text: comm
-                                                          .data!.description
-                                                          .toString(),
-                                                      fontSize: 12,
-                                                      textColor: AppColors
-                                                          .searchTextGrey,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      lines: 3),
-                                                  heightSpace(1),
-                                                  SizedBox(
-                                                    width: 150,
-                                                    //color: Colors.orange,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            customText(
-                                                                text: comm.data!
-                                                                    .memberCount
-                                                                    .toString(),
-                                                                fontSize: 10,
-                                                                textColor: AppColors
-                                                                    .deepPrimary,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                            widthSpace(1),
-                                                            customText(
-                                                                text: comm.data!
-                                                                            .memberCount ==
-                                                                        1
-                                                                    ? "Member"
-                                                                    : "Members",
-                                                                fontSize: 10,
-                                                                textColor: AppColors
-                                                                    .searchTextGrey,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                          ],
-                                                        ),
-                                                        widthSpace(10),
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: comm.data!
-                                                                        .isPublic ==
-                                                                    false
-                                                                ? AppColors.red
-                                                                    .withOpacity(
-                                                                        0.1)
-                                                                : const Color(
-                                                                    0xffD0D4EB),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        3),
+                                                    Positioned(
+                                                      left: 5,
+                                                      child: Container(
+                                                        width: 35,
+                                                        height: 35,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 1),
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                  .only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    20),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    20),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    20),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    0),
                                                           ),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(3.0),
-                                                            child: customText(
-                                                                text: comm
-                                                                            .data!
-                                                                            .isPublic ==
-                                                                        true
-                                                                    ? "Public"
-                                                                    : "Private",
-                                                                fontSize: 8,
-                                                                textColor:
-                                                                    AppColors
-                                                                        .red,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                                          color: AppColors
+                                                              .deepPrimary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      left: 10,
+                                                      child: Container(
+                                                        width: 35,
+                                                        height: 35,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 1),
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                  .only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    20),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    20),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    20),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    0),
+                                                          ),
+                                                          color: Colors
+                                                              .grey.shade200,
+                                                          image:
+                                                              DecorationImage(
+                                                            fit: BoxFit.cover,
+                                                            image: NetworkImage(
+                                                                "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm.data!.imgSrc}"),
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            widthSpace(5),
-                                            GestureDetector(
-                                              onTap: () async {
-                                                log("comunity ID ==> ${comm.joinStatus}");
-                                                comm.joinStatus ==
-                                                        "NOT_CONNECTED"
-                                                    ? joinCommunity(comm)
-                                                    : leaveCommunity(comm);
-                                              },
-                                              child: Container(
-                                                height: 34,
-                                                width: 70,
-                                                decoration: BoxDecoration(
-                                                    color: comm.joinStatus ==
-                                                            "CONNECTED"
-                                                        ? AppColors.red
-                                                        : AppColors.primary,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            6)),
-                                                child: Center(
-                                                  child: customText(
-                                                      text: comm.joinStatus ==
-                                                              "CONNECTED"
-                                                          ? "Leave"
-                                                          : comm.joinStatus ==
-                                                                  "NOT_CONNECTED"
-                                                              ? "Join"
-                                                              : comm.joinStatus ==
-                                                                      "FRIEND_REQUEST_SENT"
-                                                                  ? "Pending"
+                                                        child: Center(
+                                                          child: customText(
+                                                              text: comm
+                                                                      .data!
+                                                                      .imgSrc!
+                                                                      .isEmpty
+                                                                  ? comm.data!.name ==
+                                                                          null
+                                                                      ? ""
+                                                                      : extractFirstLetters(comm
+                                                                          .data!
+                                                                          .name
+                                                                          .toString()
+                                                                          .toUpperCase())
                                                                   : "",
-                                                      fontSize: 10,
-                                                      textColor:
-                                                          AppColors.white,
-                                                      fontWeight:
-                                                          FontWeight.w600),
+                                                              fontSize: 12,
+                                                              textColor: AppColors
+                                                                  .deepPrimary,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        const Divider(),
-                                      ],
+                                              widthSpace(1),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    customText(
+                                                        text: comm.data!.name ==
+                                                                null
+                                                            ? ""
+                                                            : comm.data!.name!,
+                                                        fontSize: 13,
+                                                        textColor:
+                                                            AppColors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                    customText(
+                                                        text: comm
+                                                            .data!.description
+                                                            .toString(),
+                                                        fontSize: 12,
+                                                        textColor: AppColors
+                                                            .searchTextGrey,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        lines: 3),
+                                                    heightSpace(1),
+                                                    SizedBox(
+                                                      width: 150,
+                                                      //color: Colors.orange,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              customText(
+                                                                  text: comm
+                                                                      .data!
+                                                                      .memberCount
+                                                                      .toString(),
+                                                                  fontSize: 10,
+                                                                  textColor:
+                                                                      AppColors
+                                                                          .deepPrimary,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                              widthSpace(1),
+                                                              customText(
+                                                                  text: comm.data!
+                                                                              .memberCount ==
+                                                                          1
+                                                                      ? "Member"
+                                                                      : "Members",
+                                                                  fontSize: 10,
+                                                                  textColor:
+                                                                      AppColors
+                                                                          .searchTextGrey,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            ],
+                                                          ),
+                                                          widthSpace(10),
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: AppColors
+                                                                  .white,
+                                                              border:
+                                                                  Border.all(
+                                                                width: 1.2,
+                                                                color: comm.data!
+                                                                            .isPublic ==
+                                                                        true
+                                                                    ? AppColors
+                                                                        .red
+                                                                        .withOpacity(
+                                                                            0.7)
+                                                                    : const Color(
+                                                                        0xffDB9E00),
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          3),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(3.0),
+                                                              child: customText(
+                                                                  text: comm.data!
+                                                                              .isPublic ==
+                                                                          true
+                                                                      ? "Public"
+                                                                      : "Private",
+                                                                  fontSize: 8,
+                                                                  textColor: comm
+                                                                              .data!.isPublic ==
+                                                                          true
+                                                                      ? AppColors
+                                                                          .red
+                                                                      : const Color(
+                                                                          0xffDB9E00),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              widthSpace(5),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  log("comunity ID ==> ${comm.joinStatus}");
+                                                  comm.joinStatus ==
+                                                          "NOT_CONNECTED"
+                                                      ? joinCommunity(comm)
+                                                      : leaveCommunity(comm);
+                                                },
+                                                child: Container(
+                                                  height: 34,
+                                                  width: 70,
+                                                  decoration: BoxDecoration(
+                                                      color: comm.joinStatus ==
+                                                              "CONNECTED"
+                                                          ? AppColors.red
+                                                          : AppColors.primary,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6)),
+                                                  child: Center(
+                                                    child: customText(
+                                                        text: comm.joinStatus ==
+                                                                "CONNECTED"
+                                                            ? "Leave"
+                                                            : comm.joinStatus ==
+                                                                    "NOT_CONNECTED"
+                                                                ? "Join"
+                                                                : comm.joinStatus ==
+                                                                        "FRIEND_REQUEST_SENT"
+                                                                    ? "Pending"
+                                                                    : "",
+                                                        fontSize: 10,
+                                                        textColor:
+                                                            AppColors.white,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const Divider(),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },

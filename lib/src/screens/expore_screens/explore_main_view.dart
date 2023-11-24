@@ -44,6 +44,8 @@ class ExploreMainView extends HookWidget {
       _exploreRepository.getTopEvents().then((value) {
         eventLoading.value = false;
         eventModel.value = value;
+
+        eventModel.value.sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 
@@ -56,6 +58,8 @@ class ExploreMainView extends HookWidget {
       _exploreRepository.getSuggestedUsers().then((value) {
         usersLoading.value = false;
         usersModel.value = value;
+
+        usersModel.value.sort((a, b) => a.firstName!.compareTo(b.firstName!));
       });
     }
 

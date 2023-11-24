@@ -65,4 +65,6 @@ class AppRoutes {
   static const String eventByID = "/eventByID";
   static const String eventByIdDashboard = "/eventByIdDashboard";
   static const String blockedUser = "/blockedUser";
+  static const String refundUser = "/refundUser";
+  static const String refundAllUser = "/refundAllUser";
 }

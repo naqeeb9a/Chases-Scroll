@@ -319,12 +319,9 @@ class UserMainProfileView extends HookWidget {
                                   ),
                                   heightSpace(0.3),
                                   customText(
-                                    text: userProfileModel.value.data!.about!
-                                                .objectPublic ==
-                                            false
-                                        ? "Bio - NONE"
-                                        : userProfileModel
-                                            .value.data!.about!.value,
+                                    text: userProfileModel
+                                            .value.data!.about!.value ??
+                                        "Bio - NONE",
                                     fontSize: 12,
                                     textColor: AppColors.white,
                                     fontWeight: FontWeight.w500,
@@ -332,8 +329,8 @@ class UserMainProfileView extends HookWidget {
                                   heightSpace(0.3),
                                   customText(
                                     text: userProfileModel.value.data!
-                                                .webAddress!.objectPublic ==
-                                            false
+                                                .webAddress!.value ==
+                                            null
                                         ? "Website - NONE"
                                         : userProfileModel
                                             .value.data!.about!.value,

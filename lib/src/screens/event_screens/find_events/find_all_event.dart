@@ -39,6 +39,9 @@ class FindAllEventCardView extends HookWidget {
       _eventRepository.getAllEvents().then((value) {
         allEventLoading.value = false;
         allEventModel.value = value;
+
+        allEventModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 
@@ -46,6 +49,9 @@ class FindAllEventCardView extends HookWidget {
       _eventRepository.getTopEvents().then((value) {
         topEventLoading.value = false;
         topEventModel.value = value;
+
+        topEventModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

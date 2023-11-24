@@ -47,6 +47,8 @@ import 'package:chases_scroll/src/screens/profile_view/settings/blocked_users_vi
 import 'package:chases_scroll/src/screens/profile_view/settings/change_password_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/edit_profile_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/event_dashboard_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/refund_all_user_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/refund_user_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/privacy_policy_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/report_bug_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/request_enhancement_view.dart';
@@ -169,9 +171,6 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         name: AppRoutes.comment,
         builder: (_, __) => Comment(
           commentData: __.extra as Map<dynamic, dynamic>,
-          // path: AppRoutes.addEventView,
-          // name: AppRoutes.addEventView,
-          // builder: (_, __) => const AddEventView(),
         ),
       ),
       GoRoute(
@@ -232,7 +231,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.paymentMethodScreen,
         name: AppRoutes.paymentMethodScreen,
-        builder: (_, __) => const PaymentMethodScreenView(),
+        builder: (_, __) => PaymentMethodScreenView(),
       ),
       GoRoute(
         path: AppRoutes.refundBoughtDetailScreen,
@@ -399,6 +398,20 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         name: AppRoutes.seeMoreUserPost,
         builder: (_, __) => SeeMoreUserPost(
           userID: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.refundAllUser,
+        name: AppRoutes.refundAllUser,
+        builder: (_, __) => RefundAllUserEventView(
+          eventId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.refundUser,
+        name: AppRoutes.refundUser,
+        builder: (_, __) => RefundUserEventView(
+          eventId: __.extra as String,
         ),
       ),
     ]);

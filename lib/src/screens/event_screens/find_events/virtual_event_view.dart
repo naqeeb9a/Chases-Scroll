@@ -31,6 +31,9 @@ class FindVirtualEvents extends HookWidget {
       _eventRepository.getVirtualEvents().then((value) {
         myVirtualLoading.value = false;
         myVirtualModel.value = value;
+
+        myVirtualModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

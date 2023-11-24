@@ -7,20 +7,19 @@ import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/refund_reason_screen.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/shimmer_.dart';
-import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
-class RefundUserEventView extends HookWidget {
+class RefundAllUserEventView extends HookWidget {
   final String? eventId;
 
   final EventRepository _eventRepository = EventRepository();
   final ExploreRepository _exploreRepository = ExploreRepository();
 
-  RefundUserEventView({
+  RefundAllUserEventView({
     super.key,
     required this.eventId,
   });
@@ -75,7 +74,7 @@ class RefundUserEventView extends HookWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(35, 20, 10, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -93,27 +92,50 @@ class RefundUserEventView extends HookWidget {
                       textColor: AppColors.deepPrimary,
                       fontWeight: FontWeight.w700,
                       lines: 2),
-                  GestureDetector(
-                    child: const Icon(
-                      Icons.close,
-                      size: 22,
-                      color: AppColors.white,
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.primary,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  RefundTicketOptionScreenView(
+                                title:
+                                    "Refund?\nyou are refunding payment to all Attendees for your event, are\nyou sure you want to preceed?",
+                                refundNumber: 2,
+                                eventId: eventId!,
+                                userId: "",
+                              ),
+                            ),
+                          );
+                        },
+                        child: customText(
+                            text: "Refund All",
+                            fontSize: 12,
+                            textColor: AppColors.white),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 0, left: 20, right: 20),
-              child: AppTextFormField(
-                //textEditingController: searchController,
-                //label: "",
-                hintText: "Search for users attending event ...",
-                onChanged: (value) {
-                  _runUsersFilter(value);
-                },
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(bottom: 0, left: 5, right: 5),
+            //   child: AppTextFormField(
+            //     //textEditingController: searchController,
+            //     //label: "",
+            //     hintText: "Search for users attending event ...",
+            //     onChanged: (value) {
+            //       _runUsersFilter(value);
+            //     },
+            //   ),
+            // ),
+            heightSpace(3),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -242,30 +264,6 @@ class RefundUserEventView extends HookWidget {
                                                     ),
                                                   )
                                                 ],
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          RefundTicketOptionScreenView(
-                                                        title:
-                                                            "Refund?\nyou are refunding payment to all Attendees for the ${attendee.firstName} ${attendee.firstName}, are\nyou sure you want to preceed?",
-                                                        refundNumber: 1,
-                                                        eventId: eventId!,
-                                                        userId:
-                                                            attendee.userId!,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                child: customText(
-                                                    text: "Refund User",
-                                                    fontSize: 11,
-                                                    textColor:
-                                                        AppColors.deepPrimary,
-                                                    fontWeight:
-                                                        FontWeight.w400),
                                               ),
                                             ],
                                           ),

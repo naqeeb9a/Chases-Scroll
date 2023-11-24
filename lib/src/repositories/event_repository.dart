@@ -653,6 +653,8 @@ class EventRepository {
           .map<EventContent>((event) => EventContent.fromJson(event))
           .toList();
 
+      //eventList.sort();
+
       return eventList;
     } else {
       return [];
@@ -725,6 +727,38 @@ class EventRepository {
       return response.message;
     }
     return response.message;
+  }
+
+  //refund All User
+  Future<bool> refundAllUser({String? eventID}) async {
+    final url = "${Endpoints.refundUserEvent}?eventID=$eventID";
+    final response = await ApiClient.get(
+      url,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      log("refundAllUser ======> ${response.message}");
+      return true;
+    }
+    return false;
+  }
+
+  //refund User Ticket
+  Future<bool> refundUserEventTicket(
+      {String? eventID, String? userID, String? reason}) async {
+    final url =
+        "${Endpoints.refundUserEvent}?eventID=$eventID&userID=$userID&reason=$reason";
+    final response = await ApiClient.get(
+      url,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      log("refundAllUser ======> ${response.message}");
+      return true;
+    }
+    return false;
   }
 
   //this is  to save an event

@@ -31,12 +31,13 @@ class FindTrendingEvents extends HookWidget {
   Widget build(BuildContext context) {
     final topEventLoading = useState<bool>(true);
 
-    final topEventModel = useState<List<EventContent>>([]);
-    final allEvents = useState<List<EventContent>>([]);
-    final foundEvents = useState<List<EventContent>>([]);
     //value for userID
     String userId =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
+
+    final topEventModel = useState<List<EventContent>>([]);
+    final allEvents = useState<List<EventContent>>([]);
+    final foundEvents = useState<List<EventContent>>([]);
 
     getTopEvents() {
       _eventRepository.getTopEvents().then((value) {
@@ -44,6 +45,8 @@ class FindTrendingEvents extends HookWidget {
         topEventModel.value = value;
         foundEvents.value = value;
         allEvents.value = value;
+
+        foundEvents.value.sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 
@@ -158,6 +161,7 @@ class FindTrendingEvents extends HookWidget {
                           scrollDirection: Axis.vertical,
                           itemBuilder: (BuildContext context, int index) {
                             EventContent event = foundEvents.value[index];
+
                             return GestureDetector(
                               onTap: () {
                                 context.push(AppRoutes.eventDetailMainView,

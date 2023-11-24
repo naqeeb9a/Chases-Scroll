@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
-import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/screens/chat/model.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -50,8 +49,6 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
   late String? fullName =
       "${widget.orgFName.toUpperCase()} ${widget.orgLName.toUpperCase()}";
   final ExploreRepository _exploreRepository = ExploreRepository();
-
-  final EventRepository _eventRepository = EventRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +98,10 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                           ? Center(
                               child: customText(
                                 text:
-                                    "${widget.orgFName[0].toUpperCase()} ${widget.orgLName[0].toUpperCase()}",
+                                    "${widget.orgFName[0].toUpperCase()}${widget.orgLName[0].toUpperCase()}",
                                 fontSize: 14,
                                 textColor: AppColors.primary,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w700,
                               ),
                             )
                           : ClipRRect(
@@ -166,11 +163,11 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                     },
                     child: SvgPicture.asset(
                       AppImages.addOrganizer,
-                      color: widget.joinStatus == "FRIEND_REQUEST_SENT"
-                          ? AppColors.btnOrange.withOpacity(0.8)
-                          : widget.joinStatus == "NOT_CONNECTED"
-                              ? AppColors.black
-                              : AppColors.green,
+                      // color: widget.joinStatus == "FRIEND_REQUEST_SENT"
+                      //     ? AppColors.btnOrange.withOpacity(0.8)
+                      //     : widget.joinStatus == "NOT_CONNECTED"
+                      //         ? AppColors.black
+                      //         : AppColors.green,
                     ),
                   ),
                   widthSpace(2.5),
@@ -185,17 +182,9 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                               image: widget.orgImage.toString(),
                               name: "${widget.orgFName} ${widget.orgLName}"));
                     },
-                    child: isLoading
-                        ? const SizedBox(
-                            height: 13,
-                            width: 13,
-                            child: CircularProgressIndicator(
-                              color: AppColors.primary,
-                            ),
-                          )
-                        : SvgPicture.asset(
-                            AppImages.messageOrganizer,
-                          ),
+                    child: SvgPicture.asset(
+                      AppImages.messageOrganizer,
+                    ),
                   ),
                 ],
               ),

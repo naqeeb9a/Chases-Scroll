@@ -30,6 +30,8 @@ class SuggestionFriendMore extends HookWidget {
       _exploreRepository.getSuggestedUsers().then((value) {
         usersLoading.value = false;
         usersModel.value = value;
+
+        usersModel.value.sort((a, b) => a.firstName!.compareTo(b.firstName!));
       });
     }
 

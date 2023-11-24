@@ -59,8 +59,6 @@ class EventMainView extends HookWidget {
       });
     }
 
-    log("userProfileLoading.value ===>${userProfileModel.value.toString()}");
-
     useEffect(() {
       getUsersProfile();
 

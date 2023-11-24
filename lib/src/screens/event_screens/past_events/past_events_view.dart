@@ -35,6 +35,8 @@ class PastEventView extends HookWidget {
         pastEventModel.value = value;
         foundEvents.value = value;
         allEvents.value = value;
+
+        foundEvents.value.sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

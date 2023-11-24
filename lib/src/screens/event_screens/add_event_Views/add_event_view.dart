@@ -1133,7 +1133,12 @@ class _WidgetState extends ConsumerState<AddEventView> {
     );
     if (result) {
       if (context.mounted) {
-        TextEditingController().clear();
+        setState(() {
+          location.text = '';
+          desc.text = '';
+          eventTitle.text = '';
+          link.text = '';
+        });
         ToastResp.toastMsgSuccess(resp: "Event Created Successfully");
         context.push(AppRoutes.bottomNav, extra: false);
       }

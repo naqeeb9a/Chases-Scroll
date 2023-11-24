@@ -825,8 +825,7 @@ class _WidgetState extends ConsumerState<EditEventView> {
                                             ToastResp.toastMsgError(
                                                 resp: "Select Valid End Date");
                                           } else {
-                                            log("whats happeninng");
-                                            updateEventDraft();
+                                            animateTo(2);
                                           }
                                         }
                                       },
@@ -1272,42 +1271,6 @@ class _WidgetState extends ConsumerState<EditEventView> {
   }
 
   //create draft
-  updateEventDraft() async {
-    dynamic result = await eventRepository.updateEventDraft(
-      address: location.text,
-      creatdraftID: widget.eventDetails.id,
-      attendeesVisibility: _radioShowEventVisibility == "show" ? true : false,
-      currency: eventCurrencyType,
-      currentPicUrl: imageString,
-      endDate: convertDateTimeToEpoch(eDate),
-      startDate: convertDateTimeToEpoch(sDate),
-      endTime: convertTimeOfDayToEpoch(startTime),
-      startTime: convertTimeOfDayToEpoch(endTime),
-      eventDescription: desc.text,
-      eventFunnelGroupID: "",
-      eventName: eventTitle.text,
-      eventType: eventTypeValue,
-      isExclusive: isExclusive,
-      isPublic: _radioShowEventVisibility == "show" ? true : false,
-      link: link.text,
-      locationDetails: desc.text,
-      locationType: link.text.isEmpty ? "Physical" : "Virtual",
-      picUrls: [],
-      toBeAnnounced: announcedBox,
-      productTypeData: formDataList,
-    );
-    if (result['id'] != null) {
-      if (context.mounted) {
-        setState(() {
-          widget.eventDetails.id = result['id'];
-        });
-        ToastResp.toastMsgSuccess(resp: "Event Details Saved");
-        animateTo(2);
-      }
-    } else {
-      return;
-    }
-  }
 
   void uploadImages() async {
     final imagePath =

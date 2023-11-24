@@ -32,6 +32,9 @@ class FindFundraisingEventView extends HookWidget {
       _eventRepository.getFundraisingEvents().then((value) {
         myFundraisingLoading.value = false;
         myFundraisinglModel.value = value;
+
+        myFundraisinglModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

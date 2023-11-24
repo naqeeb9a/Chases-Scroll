@@ -5,6 +5,7 @@ class AppImages {
   static const String chatBackground = "assets/pngs/chat.png";
   static const String successImage = "assets/pngs/success-jump.png";
   static const String backBG = "assets/pngs/backBG.png";
+  static const String mark = "assets/pngs/mark.png";
 
   //jpegs
   static const String mapPic = "assets/jpegs/map_pic.jpg";
@@ -82,6 +83,7 @@ class AppImages {
   static const String deleteAccount = "assets/svgs/trash.svg";
   static const String logout = "assets/svgs/logout.svg";
   static const String public = "assets/svgs/people.svg";
+  static const String question = "assets/svgs/question.svg";
 
   //wallet
   static const String profileEvent = "assets/svgs/profile-event.svg";

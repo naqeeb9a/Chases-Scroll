@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
@@ -24,6 +26,7 @@ class SearchPeopleWidget extends StatefulWidget {
 class _SearchPeopleWidgetState extends State<SearchPeopleWidget> {
   @override
   Widget build(BuildContext context) {
+    log(widget.user.joinStatus.toString());
     return GestureDetector(
       onTap: () =>
           context.push(AppRoutes.otherUsersProfile, extra: widget.user.userId),
@@ -61,10 +64,9 @@ class _SearchPeopleWidgetState extends State<SearchPeopleWidget> {
                       ),
                       child: Center(
                         child: Visibility(
-                          visible:
-                              widget.user.data!.imgMain!.objectPublic == false
-                                  ? true
-                                  : false,
+                          visible: widget.user.data!.imgMain!.value == null
+                              ? true
+                              : false,
                           child: customText(
                               text: widget.user.firstName!.isEmpty
                                   ? ""
@@ -116,14 +118,14 @@ class _SearchPeopleWidgetState extends State<SearchPeopleWidget> {
                       color: widget.user.joinStatus == "FRIEND_REQUEST_SENT"
                           ? AppColors.btnOrange.withOpacity(0.3)
                           : widget.user.joinStatus == "CONNECTED"
-                              ? AppColors.primary
+                              ? AppColors.red
                               : AppColors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
                       child: customText(
                         text: widget.user.joinStatus == "CONNECTED"
-                            ? "Connected"
+                            ? "Disconnect"
                             : widget.user.joinStatus == "NOT_CONNECTED"
                                 ? "Connect"
                                 : widget.user.joinStatus ==
@@ -134,7 +136,9 @@ class _SearchPeopleWidgetState extends State<SearchPeopleWidget> {
                         textColor:
                             widget.user.joinStatus == "FRIEND_REQUEST_SENT"
                                 ? AppColors.btnOrange
-                                : AppColors.primary,
+                                : widget.user.joinStatus == "NOT_CONNECTED"
+                                    ? AppColors.primary
+                                    : AppColors.white,
                       ),
                     ),
                   ),

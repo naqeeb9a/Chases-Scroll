@@ -96,6 +96,9 @@ class Endpoints {
   static String createWebUrlPaystack = "payments/payWithPaystack";
   static String createWebUrlStripe = "payments/payWithStripe";
 
+  static String refundUserEvent = "payments/refundEvent";
+  static String refundUserEventTicket = "payments/refundTicket";
+
   //-----------------------create && draft ------------------------------
   static String createDraft = "events/create-draft";
   static String updateDraft = "/events/update-draft";
@@ -140,6 +143,7 @@ class Endpoints {
   static String deleteBlock = "user/delete-block";
   static String verifyFund = "payments/api/wallet/verifyFundWallet";
   static String onboardStripe = "payments/account/oauthOnboard";
+  static String payWithWallet = "payments/api/wallet/pay";
 
   //analytics
   static String analyticEvent = "payments/analytics/tickets";

@@ -31,6 +31,9 @@ class FindReligiousEvents extends HookWidget {
       _eventRepository.getReligiousEvents().then((value) {
         myReligiousLoading.value = false;
         myReligiouslModel.value = value;
+
+        myReligiouslModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

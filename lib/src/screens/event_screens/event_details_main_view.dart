@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chases_scroll/src/config/keys.dart';
 import 'package:chases_scroll/src/config/locator.dart';
 import 'package:chases_scroll/src/config/router/routes.dart';
@@ -10,6 +11,7 @@ import 'package:chases_scroll/src/providers/event_statenotifier.dart';
 import 'package:chases_scroll/src/providers/eventicket_provider.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/drop_down_widget_view.dart';
+import 'package:chases_scroll/src/screens/event_screens/buying_event_ticket_screen/organizer_widget.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_detail_map_locationCard.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_details_iconText.dart';
 import 'package:chases_scroll/src/screens/widgets/app_bar.dart';
@@ -294,19 +296,56 @@ class EventDetailsMainView extends ConsumerWidget {
                                               BorderRadius.circular(30),
                                           color: AppColors.primary
                                               .withOpacity(0.5),
-                                          image: DecorationImage(
-                                            scale: 1.0,
-                                            fit: BoxFit.fill,
-                                            image: NetworkImage(
-                                                "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}"),
-                                          ),
+                                          // image: DecorationImage(
+                                          //   scale: 1.0,
+                                          //   fit: BoxFit.fill,
+                                          //   image: NetworkImage(
+                                          //       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}"),
+                                          // ),
                                         ),
-                                        child: Visibility(
-                                            child: Center(
-                                          child: Text(
-                                              "${indiv.firstName![0]}${indiv.lastName![0]}"
-                                                  .toUpperCase()),
-                                        )),
+                                        child: eventDetails.createdBy!.data !=
+                                                null
+                                            ? Center(
+                                                child: indiv.firstName == null
+                                                    ? customText(
+                                                        text: "NN",
+                                                        fontSize: 14,
+                                                        textColor:
+                                                            AppColors.white,
+                                                        fontWeight:
+                                                            FontWeight.w700)
+                                                    : customText(
+                                                        text:
+                                                            "${indiv.firstName![0].toUpperCase()}${indiv.lastName![0].toUpperCase()}",
+                                                        fontSize: 14,
+                                                        textColor:
+                                                            AppColors.white,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                              )
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(24),
+                                                  bottomRight:
+                                                      Radius.circular(24),
+                                                  topLeft: Radius.circular(24),
+                                                  topRight: Radius.circular(0),
+                                                ),
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                        // child: Visibility(
+                                        //     child: Center(
+                                        //   child: Text(
+                                        //       "${indiv.firstName![0]}${indiv.lastName![0]}"
+                                        //           .toUpperCase()),
+                                        // )),
                                       );
                                     },
                                   ),
@@ -485,21 +524,25 @@ class EventDetailsMainView extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // OrganizerContainerWidget(
-                          //   height: height,
-                          //   width: width,
-                          //   isCreator: userId == eventDetails.createdBy!.userId
-                          //       ? true
-                          //       : false,
-                          //   orgId: eventDetails.createdBy!.userId ?? "",
-                          //   orgImage: eventDetails.createdBy!.data!.imgMain !=
-                          //           null
-                          //       ? eventDetails.createdBy!.data!.imgMain!.value!
-                          //       : "",
-                          //   orgFName: eventDetails.createdBy!.firstName!,
-                          //   orgLName: eventDetails.createdBy!.lastName!,
-                          //   joinStatus: eventDetails.createdBy!.joinStatus!,
-                          // ),
+                          OrganizerContainerWidget(
+                            height: height,
+                            width: width,
+                            isCreator: userId == eventDetails.createdBy!.userId
+                                ? true
+                                : false,
+                            orgId: eventDetails.createdBy!.userId ?? "",
+                            orgImage: eventDetails.createdBy!.data != null
+                                ? eventDetails
+                                        .createdBy!.data!.imgMain!.value ??
+                                    ""
+                                : "",
+                            orgFName:
+                                eventDetails.createdBy!.firstName.toString(),
+                            orgLName:
+                                eventDetails.createdBy!.lastName.toString(),
+                            joinStatus:
+                                eventDetails.createdBy!.joinStatus.toString(),
+                          ),
                           heightSpace(2),
                           customText(
                             text: "Event Description",
