@@ -73,23 +73,8 @@ class PaymentMethodScreenView extends ConsumerWidget {
                       ToastResp.toastMsgError(
                           resp:
                               "Amount in wallet wont get you this event ticket");
-                    } else {
-                      final result =
-                          await _walletRepository.buyEventWithWallet();
-
-                      if (result['status'] != "error") {
-                        ToastResp.toastMsgSuccess(
-                            resp: "Payment with wallet successful");
-
-                        onTapFreeSuccess();
-                      } else {
-                        ToastResp.toastMsgError(
-                            resp: "Payment with wallet not successful");
-                      }
-                    }
-                  } else {
-                    if (state.currency == "NGN") {
-                      if (amountNGN < state.price!) {
+                    } else if (state.currency == "USD") {
+                      if (amountUSD < state.price!) {
                         ToastResp.toastMsgError(
                             resp:
                                 "Amount in wallet wont get you this event ticket");
@@ -105,6 +90,27 @@ class PaymentMethodScreenView extends ConsumerWidget {
                         } else {
                           ToastResp.toastMsgError(
                               resp: "Payment with wallet not successful");
+                        }
+                      }
+                    } else {
+                      if (state.currency == "NGN") {
+                        if (amountNGN < state.price!) {
+                          ToastResp.toastMsgError(
+                              resp:
+                                  "Amount in wallet wont get you this event ticket");
+                        } else {
+                          final result =
+                              await _walletRepository.buyEventWithWallet();
+
+                          if (result['status'] != "error") {
+                            ToastResp.toastMsgSuccess(
+                                resp: "Payment with wallet successful");
+
+                            onTapFreeSuccess();
+                          } else {
+                            ToastResp.toastMsgError(
+                                resp: "Payment with wallet not successful");
+                          }
                         }
                       }
                     }

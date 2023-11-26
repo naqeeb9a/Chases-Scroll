@@ -195,7 +195,7 @@ class _EventBigCardState extends State<EventBigCard> {
                               : 3,
                       child: SizedBox(
                         // color: Colors.amber,
-                        height: 35,
+                        height: 30,
                         width: double.infinity,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -212,7 +212,7 @@ class _EventBigCardState extends State<EventBigCard> {
                               height: 6.h,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
-                                color: AppColors.primary.withOpacity(0.5),
+                                color: AppColors.primary.withOpacity(0.3),
                                 image: DecorationImage(
                                   scale: 1.0,
                                   fit: BoxFit.fill,
@@ -222,9 +222,13 @@ class _EventBigCardState extends State<EventBigCard> {
                               ),
                               child: Visibility(
                                   child: Center(
-                                child: Text(
-                                    "${indiv.firstName![0]}${indiv.lastName![0]}"
-                                        .toUpperCase()),
+                                child: customText(
+                                  text:
+                                      "${indiv.firstName![0]}${indiv.lastName![0]}"
+                                          .toUpperCase(),
+                                  fontSize: 10,
+                                  textColor: AppColors.deepPrimary,
+                                ),
                               )),
                             );
                           },
@@ -294,7 +298,7 @@ class _EventBigCardState extends State<EventBigCard> {
                     // ),
                     Container(
                       width: 8.w,
-                      height: 35,
+                      height: 30,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: AppColors.deepPrimary,

@@ -54,9 +54,7 @@ class _EventDetailsIconTextState extends State<EventDetailsIconText> {
                 lines: 1,
               ),
               Visibility(
-                visible: widget.subTitle == null || widget.subTitle!.isEmpty
-                    ? false
-                    : true,
+                visible: widget.subTitle == null ? false : true,
                 child: SizedBox(
                   width: 80.w,
                   child: customText(
@@ -76,10 +74,10 @@ class _EventDetailsIconTextState extends State<EventDetailsIconText> {
                     width: 80.w,
                     child: customText(
                       text: widget.link.toString(),
-                      fontSize: 13,
+                      fontSize: 11,
                       textColor: AppColors.green,
                       fontWeight: FontWeight.w700,
-                      lines: 1,
+                      lines: 2,
                     ),
                   ),
                 ),

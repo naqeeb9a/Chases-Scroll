@@ -291,7 +291,7 @@ class UserMainProfileView extends HookWidget {
                               height: height / 7,
                               width: double.infinity,
                               color: AppColors.black.withOpacity(0.9),
-                              padding: PAD_ALL_15,
+                              padding: PAD_ALL_13,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -317,7 +317,6 @@ class UserMainProfileView extends HookWidget {
                                     textColor: AppColors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
-                                  heightSpace(0.3),
                                   customText(
                                     text: userProfileModel
                                             .value.data!.about!.value ??
@@ -326,7 +325,6 @@ class UserMainProfileView extends HookWidget {
                                     textColor: AppColors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
-                                  heightSpace(0.3),
                                   customText(
                                     text: userProfileModel.value.data!
                                                 .webAddress!.value ==
@@ -808,16 +806,20 @@ class UserMainProfileView extends HookWidget {
                                                                           children: [
                                                                             GestureDetector(
                                                                               onTap: () async {
-                                                                                // if (content.joinStatus !=
-                                                                                //     "FRIEND_REQUEST_SENT") {
-                                                                                //   connectFriend(content.userId!);
-                                                                                // } else {
-                                                                                //   disconnectFriend(content.userId!);
-                                                                                // }
+                                                                                final result = await _exploreRepository.disconnectWithFriend(friendID: content.userId);
+                                                                                if (result['updated'] == true) {
+                                                                                  ToastResp.toastMsgSuccess(resp: result['message']);
+                                                                                  refreshConnection();
+                                                                                  log(result.toString());
+                                                                                } else {
+                                                                                  log(content.userId.toString());
+                                                                                  log(result.toString());
+                                                                                  ToastResp.toastMsgError(resp: result['message']);
+                                                                                }
                                                                               },
                                                                               child: Container(
                                                                                 height: 40,
-                                                                                width: 100,
+                                                                                width: 90,
                                                                                 decoration: BoxDecoration(
                                                                                   color: content.joinStatus == "CONNECTED" ? AppColors.red : AppColors.primary,
                                                                                   borderRadius: BorderRadius.circular(10),
@@ -837,7 +839,6 @@ class UserMainProfileView extends HookWidget {
                                                                                 ),
                                                                               ),
                                                                             ),
-                                                                            widthSpace(1),
                                                                           ],
                                                                         ),
                                                                       ],
@@ -1101,35 +1102,37 @@ class UserMainProfileView extends HookWidget {
                                   ),
                                 ),
                                 foundEvents.value.isEmpty
-                                    ? SizedBox(
-                                        height: 50.h,
-                                        width: double.infinity,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 10.h,
-                                              backgroundColor: AppColors
-                                                  .deepPrimary
-                                                  .withOpacity(0.1),
-                                              child: SvgPicture.asset(
-                                                AppImages.calendarAdd,
-                                                color: AppColors.deepPrimary,
-                                                height: 10.h,
+                                    ? Expanded(
+                                        child: SizedBox(
+                                          height: 30.h,
+                                          width: double.infinity,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 5.h,
+                                                backgroundColor: AppColors
+                                                    .deepPrimary
+                                                    .withOpacity(0.1),
+                                                child: SvgPicture.asset(
+                                                  AppImages.calendarAdd,
+                                                  color: AppColors.deepPrimary,
+                                                  height: 5.h,
+                                                ),
                                               ),
-                                            ),
-                                            heightSpace(2),
-                                            customText(
-                                              text:
-                                                  "You have no created or attending event",
-                                              fontSize: 12,
-                                              textColor: AppColors.primary,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ],
+                                              heightSpace(2),
+                                              customText(
+                                                text:
+                                                    "You have no created or attending event",
+                                                fontSize: 12,
+                                                textColor: AppColors.primary,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       )
                                     : Expanded(

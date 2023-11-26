@@ -98,7 +98,7 @@ class ExploreRepository {
 
     if (response.status == 200) {
       final List<dynamic> allCommunities = response.message['content'];
-      //log(allCommunities.toString());
+      log("getAllCommunity ====>${allCommunities.toString()}");
       allCommunityList = allCommunities
           .map<CommContent>((event) => CommContent.fromJson(event))
           .toList();

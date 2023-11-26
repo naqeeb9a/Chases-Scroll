@@ -31,7 +31,16 @@ class SuggestionFriendMore extends HookWidget {
         usersLoading.value = false;
         usersModel.value = value;
 
-        usersModel.value.sort((a, b) => a.firstName!.compareTo(b.firstName!));
+        usersModel.value.sort((a, b) {
+          // First, compare by first name
+          int firstNameComparison = a.firstName!.compareTo(b.firstName!);
+          if (firstNameComparison != 0) {
+            return firstNameComparison;
+          }
+
+          // If first names are the same, compare by last name
+          return a.lastName!.compareTo(b.lastName!);
+        });
       });
     }
 
@@ -113,8 +122,8 @@ class SuggestionFriendMore extends HookWidget {
                                       child: Row(
                                         children: [
                                           Container(
-                                            height: 50,
-                                            width: 50,
+                                            height: 45,
+                                            width: 45,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   const BorderRadius.only(
@@ -192,7 +201,7 @@ class SuggestionFriendMore extends HookWidget {
                                         },
                                         child: Container(
                                           height: 40,
-                                          width: 100,
+                                          width: 80,
                                           decoration: BoxDecoration(
                                             border: Border.all(
                                               color: content.joinStatus ==

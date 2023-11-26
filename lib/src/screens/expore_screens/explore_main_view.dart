@@ -125,7 +125,6 @@ class ExploreMainView extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              heightSpace(2),
               customText(
                   text: "Hello $fullName",
                   fontSize: 20,

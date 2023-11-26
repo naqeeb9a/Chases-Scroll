@@ -276,7 +276,7 @@ class EventDetailsMainView extends ConsumerWidget {
                                         : 3,
                                 child: SizedBox(
                                   //color: Colors.amber,
-                                  height: 35,
+                                  height: 30,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     itemCount: eventDetails
@@ -295,7 +295,7 @@ class EventDetailsMainView extends ConsumerWidget {
                                           borderRadius:
                                               BorderRadius.circular(30),
                                           color: AppColors.primary
-                                              .withOpacity(0.5),
+                                              .withOpacity(0.2),
                                           // image: DecorationImage(
                                           //   scale: 1.0,
                                           //   fit: BoxFit.fill,
@@ -317,9 +317,9 @@ class EventDetailsMainView extends ConsumerWidget {
                                                     : customText(
                                                         text:
                                                             "${indiv.firstName![0].toUpperCase()}${indiv.lastName![0].toUpperCase()}",
-                                                        fontSize: 14,
-                                                        textColor:
-                                                            AppColors.white,
+                                                        fontSize: 10,
+                                                        textColor: AppColors
+                                                            .deepPrimary,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                       ),
@@ -358,7 +358,7 @@ class EventDetailsMainView extends ConsumerWidget {
                                 ),
                                 child: Container(
                                   width: 8.w,
-                                  height: 35,
+                                  height: 30,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(30),
                                     color: AppColors.deepPrimary,
@@ -367,85 +367,13 @@ class EventDetailsMainView extends ConsumerWidget {
                                     child: customText(
                                       text:
                                           "+${eventDetails.memberCount.toString()}",
-                                      fontSize: 6,
+                                      fontSize: 10,
                                       textColor: AppColors.white,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
                               ),
-                              // GestureDetector(
-                              // onTap: () => context.push(
-                              //   AppRoutes.eventAttendeesView,
-                              //   extra: eventDetails,
-                              // ),
-                              //   child: SizedBox(
-                              //     height: 30,
-                              //     width: 100,
-                              //     child: Stack(
-                              //       children: [
-                              //         Positioned(
-                              //           top: 0,
-                              //           left: 0,
-                              //           child: Container(
-                              //             width: 6.w,
-                              //             height: 3.h,
-                              //             decoration: BoxDecoration(
-                              //               borderRadius:
-                              //                   BorderRadius.circular(30),
-                              //               color: Colors.blue,
-                              //             ),
-                              //           ),
-                              //         ),
-                              //         Positioned(
-                              //           left: 20,
-                              //           child: Container(
-                              //             width: 6.w,
-                              //             height: 3.h,
-                              //             decoration: BoxDecoration(
-                              //               borderRadius:
-                              //                   BorderRadius.circular(30),
-                              //               color: Colors.green,
-                              //             ),
-                              //           ),
-                              //         ),
-                              //         Positioned(
-                              //           left: 40,
-                              //           child: Container(
-                              //             width: 6.w,
-                              //             height: 3.h,
-                              //             decoration: BoxDecoration(
-                              //               borderRadius:
-                              //                   BorderRadius.circular(30),
-                              //               color: Colors.orange,
-                              //             ),
-                              //           ),
-                              //         ),
-                              //         Positioned(
-                              //           left: 60,
-                              // child: Container(
-                              //   width: 6.w,
-                              //   height: 3.h,
-                              //   decoration: BoxDecoration(
-                              //     borderRadius:
-                              //         BorderRadius.circular(30),
-                              //     color: AppColors.deepPrimary,
-                              //   ),
-                              //   child: Center(
-                              //     child: customText(
-                              //       text:
-                              //           "+${eventDetails.memberCount.toString()}",
-                              //       fontSize: 6,
-                              //       textColor: AppColors.white,
-                              //       fontWeight: FontWeight.w500,
-                              //     ),
-                              //   ),
-                              // ),
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                           heightSpace(1.6),
@@ -459,22 +387,28 @@ class EventDetailsMainView extends ConsumerWidget {
                                 "Time-Out ${formattedEndTime.toString()}",
                           ),
                           heightSpace(1),
-                          EventDetailsIconText(
-                            iconString: AppImages.location,
-                            title: "${eventDetails.location!.address}",
-                            subTitle:
-                                "${eventDetails.location!.locationDetails}",
-                            link: "${eventDetails.location!.link}",
-                            onlinktap: () async {
-                              if (await launch(
-                                  "${eventDetails.location!.link}")) {
-                                await canLaunch(
-                                    "${eventDetails.location!.link}");
-                              } else {
-                                print('Could not launch');
-                              }
-                            },
-                          ),
+                          eventDetails.location!.link!.isNotEmpty ||
+                                  eventDetails.location!.link == null
+                              ? EventDetailsIconText(
+                                  iconString: AppImages.location,
+                                  title: "Online Event",
+                                  link: "${eventDetails.location!.link}",
+                                  onlinktap: () async {
+                                    if (await launch(
+                                        "${eventDetails.location!.link}")) {
+                                      await canLaunch(
+                                          "${eventDetails.location!.link}");
+                                    } else {
+                                      print('Could not launch');
+                                    }
+                                  },
+                                )
+                              : EventDetailsIconText(
+                                  iconString: AppImages.location,
+                                  title: "${eventDetails.location!.address}",
+                                  subTitle:
+                                      "${eventDetails.location!.locationDetails}",
+                                ),
                           heightSpace(2),
                           const EventDetailsIconText(
                             iconString: AppImages.ticket,

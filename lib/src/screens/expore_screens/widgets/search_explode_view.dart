@@ -99,7 +99,16 @@ class SearchExploreView extends HookWidget {
         allUsers.value = value;
         foundUsers.value = value;
 
-        foundUsers.value.sort((a, b) => a.firstName!.compareTo(b.firstName!));
+        foundUsers.value.sort((a, b) {
+          // First, compare by first name
+          int firstNameComparison = a.firstName!.compareTo(b.firstName!);
+          if (firstNameComparison != 0) {
+            return firstNameComparison;
+          }
+
+          // If first names are the same, compare by last name
+          return a.lastName!.compareTo(b.lastName!);
+        });
       });
     }
 
@@ -740,27 +749,38 @@ class SearchExploreView extends HookWidget {
                                                       color: comm.joinStatus ==
                                                               "CONNECTED"
                                                           ? AppColors.red
-                                                          : AppColors.primary,
+                                                          : comm.joinStatus ==
+                                                                  "REQUEST_PENDING"
+                                                              ? AppColors
+                                                                  .btnOrange
+                                                                  .withOpacity(
+                                                                      0.3)
+                                                              : AppColors
+                                                                  .primary,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               6)),
                                                   child: Center(
                                                     child: customText(
-                                                        text: comm.joinStatus ==
-                                                                "CONNECTED"
-                                                            ? "Leave"
-                                                            : comm.joinStatus ==
-                                                                    "NOT_CONNECTED"
-                                                                ? "Join"
-                                                                : comm.joinStatus ==
-                                                                        "FRIEND_REQUEST_SENT"
-                                                                    ? "Pending"
-                                                                    : "",
-                                                        fontSize: 10,
-                                                        textColor:
-                                                            AppColors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600),
+                                                      text: comm.joinStatus ==
+                                                              "CONNECTED"
+                                                          ? "Leave"
+                                                          : comm.joinStatus ==
+                                                                  "NOT_CONNECTED"
+                                                              ? "Join"
+                                                              : comm.joinStatus ==
+                                                                      "REQUEST_PENDING"
+                                                                  ? "Pending"
+                                                                  : "",
+                                                      fontSize: 10,
+                                                      textColor: comm
+                                                                  .joinStatus ==
+                                                              "REQUEST_PENDING"
+                                                          ? AppColors.btnOrange
+                                                          : AppColors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
                                                   ),
                                                 ),
                                               ),

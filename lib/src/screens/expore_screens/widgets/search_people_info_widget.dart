@@ -108,7 +108,7 @@ class _SearchPeopleWidgetState extends State<SearchPeopleWidget> {
                   onTap: widget.onTapFollow,
                   child: Container(
                     height: 40,
-                    width: 100,
+                    width: 80,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: widget.user.joinStatus == "NOT_CONNECTED"

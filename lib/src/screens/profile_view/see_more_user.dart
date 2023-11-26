@@ -44,6 +44,17 @@ class SeeMoreUserView extends HookWidget {
         userRequestModel.value = value;
         allUsersRequest.value = value;
         foundUsersRequest.value = value;
+
+        foundUsersRequest.value.sort((a, b) {
+          // First, compare by first name
+          int firstNameComparison = a.firstName!.compareTo(b.firstName!);
+          if (firstNameComparison != 0) {
+            return firstNameComparison;
+          }
+
+          // If first names are the same, compare by last name
+          return a.lastName!.compareTo(b.lastName!);
+        });
       });
     }
 
@@ -53,6 +64,17 @@ class SeeMoreUserView extends HookWidget {
         usersModel.value = value;
         allUsers.value = value;
         foundUsers.value = value;
+
+        foundUsers.value.sort((a, b) {
+          // First, compare by first name
+          int firstNameComparison = a.firstName!.compareTo(b.firstName!);
+          if (firstNameComparison != 0) {
+            return firstNameComparison;
+          }
+
+          // If first names are the same, compare by last name
+          return a.lastName!.compareTo(b.lastName!);
+        });
       });
     }
 
@@ -308,16 +330,26 @@ class SeeMoreUserView extends HookWidget {
                                             children: [
                                               GestureDetector(
                                                 onTap: () async {
-                                                  disconnectFriend(
-                                                      content.userId!);
-                                                  // if (content.joinStatus !=
-                                                  //     "FRIEND_REQUEST_SENT") {
-                                                  //   connectFriend(
-                                                  //       content.userId!);
-                                                  // } else {
-                                                  //   disconnectFriend(
-                                                  //       content.userId!);
-                                                  // }
+                                                  final result =
+                                                      await _exploreRepository
+                                                          .disconnectWithFriend(
+                                                              friendID: content
+                                                                  .userId);
+                                                  if (result['updated'] ==
+                                                      true) {
+                                                    ToastResp.toastMsgSuccess(
+                                                        resp:
+                                                            result['message']);
+                                                    refreshConnection();
+                                                    log(result.toString());
+                                                  } else {
+                                                    log(content.userId
+                                                        .toString());
+                                                    log(result.toString());
+                                                    ToastResp.toastMsgError(
+                                                        resp:
+                                                            result['message']);
+                                                  }
                                                 },
                                                 child: Container(
                                                   height: 40,
