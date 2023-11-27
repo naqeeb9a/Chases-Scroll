@@ -58,6 +58,11 @@ class AppRoutes {
   static const String profileCommmunityMore = "/profileCommmunityMore";
   static const String profilePostMore = "/profilePostMore";
   static const String otherUsersProfile = "/otherUsersProfile";
+  static const String otherUsersProfileConnections =
+      "/otherUsersProfileConnections";
+  static const String otherUsersProfileEvents = "/otherUsersProfileEvents";
+  static const String otherUsersProfileCommunities =
+      "/otherUsersProfileCommunities";
   static const String transactionView = "/transactionView";
   static const String settingsWallet = "/settingsWallet";
   static const String fundWalletNGN = "/fundWalletNGN";

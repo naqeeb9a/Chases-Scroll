@@ -65,6 +65,7 @@ class EventMainView extends HookWidget {
       return null;
     }, []);
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [

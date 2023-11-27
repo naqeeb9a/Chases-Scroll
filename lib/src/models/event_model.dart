@@ -149,6 +149,11 @@ class Country {
     data['value'] = value;
     return data;
   }
+
+  @override
+  String toString() {
+    return '{objectPublic: $objectPublic, value: $value}';
+  }
 }
 
 class Data {

@@ -367,7 +367,8 @@ class UserMainProfileView extends HookWidget {
                                 return Column(
                                   children: [
                                     customText(
-                                      text: "${postModel.value.length}",
+                                      text:
+                                          "${postModel.value.where((ticket) => ticket.type == "WITH_IMAGE").length}",
                                       fontSize: 12,
                                       textColor: value == 0
                                           ? AppColors.deepPrimary

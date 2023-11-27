@@ -37,7 +37,10 @@ import 'package:chases_scroll/src/screens/notification/notification.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
-import 'package:chases_scroll/src/screens/profile_view/other_users_profile_main_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/other_users_profile/other_user_community_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/other_users_profile/other_user_connections_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/other_users_profile/other_users_events_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/other_users_profile/other_users_profile_main_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/see_more_community.dart';
 import 'package:chases_scroll/src/screens/profile_view/see_more_event.dart';
 import 'package:chases_scroll/src/screens/profile_view/see_more_user.dart';
@@ -412,6 +415,27 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         name: AppRoutes.refundUser,
         builder: (_, __) => RefundUserEventView(
           eventId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.otherUsersProfileConnections,
+        name: AppRoutes.otherUsersProfileConnections,
+        builder: (_, __) => SeeOtherUsersConnectionsView(
+          userId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.otherUsersProfileEvents,
+        name: AppRoutes.otherUsersProfileEvents,
+        builder: (_, __) => SeeOtherUsersEventsView(
+          userId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.otherUsersProfileCommunities,
+        name: AppRoutes.otherUsersProfileCommunities,
+        builder: (_, __) => SeeOtherUsersCommunitiesView(
+          userId: __.extra as String,
         ),
       ),
     ]);

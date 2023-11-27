@@ -108,7 +108,7 @@ class _SearchPeopleWidgetState extends State<SearchPeopleWidget> {
                   onTap: widget.onTapFollow,
                   child: Container(
                     height: 40,
-                    width: 80,
+                    width: 90,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: widget.user.joinStatus == "NOT_CONNECTED"
@@ -132,7 +132,7 @@ class _SearchPeopleWidgetState extends State<SearchPeopleWidget> {
                                         "FRIEND_REQUEST_SENT"
                                     ? "Pending"
                                     : "",
-                        fontSize: 12,
+                        fontSize: 11,
                         textColor:
                             widget.user.joinStatus == "FRIEND_REQUEST_SENT"
                                 ? AppColors.btnOrange
