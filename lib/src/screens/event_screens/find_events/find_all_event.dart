@@ -149,7 +149,7 @@ class FindAllEventCardView extends HookWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          radius: 10.h,
+                          radius: 8.h,
                           backgroundColor:
                               AppColors.deepPrimary.withOpacity(0.1),
                           child: SvgPicture.asset(
@@ -158,9 +158,9 @@ class FindAllEventCardView extends HookWidget {
                             height: 5.h,
                           ),
                         ),
-                        heightSpace(2),
+                        heightSpace(1),
                         customText(
-                          text: "No event available",
+                          text: "No Top events available",
                           fontSize: 12,
                           textColor: AppColors.primary,
                           fontWeight: FontWeight.w500,
@@ -203,7 +203,7 @@ class FindAllEventCardView extends HookWidget {
                   ),
                 ),
           RowTextGestureView(
-            leftText: "Trending Event 🔥",
+            leftText: "Trending Events 🔥",
             function: () => context.push(AppRoutes.findTrendingEvent),
           ),
           topEventLoading.value || topEventModel.value.isEmpty
@@ -226,9 +226,9 @@ class FindAllEventCardView extends HookWidget {
                             height: 5.h,
                           ),
                         ),
-                        heightSpace(2),
+                        heightSpace(1),
                         customText(
-                          text: "No trending event available",
+                          text: "No trending events available",
                           fontSize: 12,
                           textColor: AppColors.primary,
                           fontWeight: FontWeight.w500,

@@ -21,6 +21,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class WalletView extends StatefulHookWidget {
   final PageController pageController;
@@ -350,54 +351,205 @@ class _WalletViewState extends State<WalletView> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    animateTo(1);
-                                    //bool switchh = StorageUtil.getBool(key: "switch");
-                                    // if (_isBlueContainerVisible == false) {
-                                    //   if (paystackCheckAccount.value == false) {
-                                    //     Navigator.of(context).push(
-                                    //       MaterialPageRoute(
-                                    //         builder: (context) =>
-                                    //             const SetupAccountPaystackView(),
-                                    //       ),
-                                    //     );
-                                    //   } else {
-                                    //     // showModalBottomSheet(
-                                    //     //   context: context,
-                                    //     //   builder: (context) => StatefulBuilder(
-                                    //     //     builder: (BuildContext context,
-                                    //     //         StateSetter state) {
-                                    //     //       return WalletAmountWithdrawalScreenView(
-                                    //     //         walletBalanceUSD:
-                                    //     //             Prefs.getUSD().toString(),
-                                    //     //         walletBalanceNGN:
-                                    //     //             Prefs.getNGN().toString(),
-                                    //     //       );
-                                    //     //     },
-                                    //     //   ),
-                                    //     // );
-                                    //   }
-                                    // }
-                                    // } else {
-                                    //   print(accountStatus);
-                                    //   if (accountStatus == false) {
-                                    //     return registerStripe();
-                                    //   } else {
-                                    //     showModalBottomSheet(
-                                    //       context: context,
-                                    //       builder: (context) => StatefulBuilder(
-                                    //         builder: (BuildContext context,
-                                    //             StateSetter state) {
-                                    //           return WalletAmountWithdrawalScreenView(
-                                    //             walletBalanceUSD:
-                                    //                 Prefs.getUSD().toString(),
-                                    //             walletBalanceNGN:
-                                    //                 Prefs.getNGN().toString(),
-                                    //           );
-                                    //         },
-                                    //       ),
-                                    //     );
-                                    //   }
-                                    // }
+                                    showMaterialModalBottomSheet(
+                                      backgroundColor: Colors.transparent,
+                                      context: context,
+                                      builder: (context) => StatefulBuilder(
+                                          builder: (BuildContext context,
+                                              StateSetter state) {
+                                        return ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            topRight: Radius.circular(20),
+                                          ),
+                                          child: Container(
+                                            height: 500,
+                                            color: Colors.white,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    heightSpace(5),
+                                                    customText(
+                                                      text: "Enter Amount",
+                                                      fontSize: 16,
+                                                      textColor:
+                                                          AppColors.primary,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                    heightSpace(2),
+                                                    SizedBox(
+                                                      height: 50,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          IntrinsicWidth(
+                                                            child:
+                                                                TextFormField(
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: GoogleFonts.sora(
+                                                                  color: AppColors
+                                                                      .primary,
+                                                                  fontSize:
+                                                                      height *
+                                                                          0.05,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700),
+                                                              controller:
+                                                                  amountController,
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                prefixIcon:
+                                                                    Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: AppColors
+                                                                        .iconGrey,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                  ),
+                                                                  padding:
+                                                                      PAD_ALL_15,
+                                                                  child:
+                                                                      SvgPicture
+                                                                          .asset(
+                                                                    _isBlueContainerVisible ==
+                                                                            false
+                                                                        ? AppImages
+                                                                            .niaraWallett
+                                                                        : AppImages
+                                                                            .dollerWallett,
+                                                                    color: AppColors
+                                                                        .primary,
+                                                                  ),
+                                                                ),
+                                                                border:
+                                                                    InputBorder
+                                                                        .none,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    heightSpace(5),
+                                                    ChasescrollButton(
+                                                      buttonText: "Widthdraw",
+                                                      onTap: () async {
+                                                        log(amountController
+                                                            .text);
+                                                        log(balance.toString());
+                                                        double amount =
+                                                            double.parse(
+                                                                amountController
+                                                                    .text);
+                                                        if (_isBlueContainerVisible ==
+                                                            false) {
+                                                          if (paystackCheckAccount
+                                                                  .value ==
+                                                              false) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        const SetupAccountPaystackView(),
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            if ((balance /
+                                                                    100) <
+                                                                amount) {
+                                                              ToastResp
+                                                                  .toastMsgError(
+                                                                      resp:
+                                                                          "Low Naira Balance");
+                                                            } else {
+                                                              final result =
+                                                                  await _walletRepository
+                                                                      .withdrawWallet(
+                                                                amount: double.parse(
+                                                                    amountController
+                                                                        .text),
+                                                                currency: "NGN",
+                                                              );
+
+                                                              if (result) {
+                                                                ToastResp
+                                                                    .toastMsgSuccess(
+                                                                        resp:
+                                                                            "Withdrawal from naira account successful");
+                                                              } else {
+                                                                ToastResp
+                                                                    .toastMsgError(
+                                                                        resp:
+                                                                            "Withdrawal from naira account not successful");
+                                                              }
+                                                            }
+                                                          }
+                                                        } else {
+                                                          if (stripeCheckAccount
+                                                                  .value ==
+                                                              false) {
+                                                            registerStripe();
+                                                          } else {
+                                                            final result =
+                                                                await _walletRepository
+                                                                    .withdrawWallet(
+                                                              amount: double.parse(
+                                                                  amountController
+                                                                      .text),
+                                                              currency: "USD",
+                                                            );
+
+                                                            if (result) {
+                                                              ToastResp
+                                                                  .toastMsgSuccess(
+                                                                      resp:
+                                                                          "Withdrawal from dollar account successful");
+                                                            } else {
+                                                              ToastResp
+                                                                  .toastMsgError(
+                                                                      resp:
+                                                                          "Withdrawal from dollar account not successful");
+                                                            }
+                                                          }
+                                                        }
+
+                                                        // bool result =
+                                                        //     await _walletRepository.getAccountStatus();
+
+                                                        // if (result) {
+                                                        //   ToastResp.toastMsgError(
+                                                        //       resp:
+                                                        //           "you dont have an withdrawal account yet. kindly Setup when redirected");
+
+                                                        // } else {
+                                                        //   ToastResp.toastMsgSuccess(resp: "");
+                                                        // }
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    );
                                   },
                                   child: Container(
                                     padding: PAD_ALL_5,
@@ -453,19 +605,115 @@ class _WalletViewState extends State<WalletView> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    animateTo(2);
-                                    // showModalBottomSheet(
-                                    //   context: context,
-                                    //   builder: (context) => StatefulBuilder(
-                                    //     builder: (BuildContext context,
-                                    //         StateSetter state) {
-                                    //       return const WalletAmountFundScreenView();
-                                    //     },
-                                    //   ),
-                                    // );
-                                    _isBlueContainerVisible == false
-                                        ? fundWalletNGN()
-                                        : fundWalletUSD();
+                                    showMaterialModalBottomSheet(
+                                      backgroundColor: Colors.transparent,
+                                      context: context,
+                                      builder: (context) => StatefulBuilder(
+                                          builder: (BuildContext context,
+                                              StateSetter state) {
+                                        return ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            topRight: Radius.circular(20),
+                                          ),
+                                          child: Container(
+                                            height: 500,
+                                            color: Colors.white,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    heightSpace(5),
+                                                    customText(
+                                                      text: "Enter Amount",
+                                                      fontSize: 16,
+                                                      textColor:
+                                                          AppColors.primary,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                    heightSpace(2),
+                                                    SizedBox(
+                                                      height: 50,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          IntrinsicWidth(
+                                                            child:
+                                                                TextFormField(
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: GoogleFonts.sora(
+                                                                  color: AppColors
+                                                                      .primary,
+                                                                  fontSize:
+                                                                      height *
+                                                                          0.05,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700),
+                                                              controller:
+                                                                  amountController,
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                prefixIcon:
+                                                                    Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: AppColors
+                                                                        .iconGrey,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                  ),
+                                                                  padding:
+                                                                      PAD_ALL_15,
+                                                                  child:
+                                                                      SvgPicture
+                                                                          .asset(
+                                                                    _isBlueContainerVisible ==
+                                                                            false
+                                                                        ? AppImages
+                                                                            .niaraWallett
+                                                                        : AppImages
+                                                                            .dollerWallett,
+                                                                    color: AppColors
+                                                                        .primary,
+                                                                  ),
+                                                                ),
+                                                                border:
+                                                                    InputBorder
+                                                                        .none,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    heightSpace(3),
+                                                    ChasescrollButton(
+                                                      buttonText:
+                                                          "Fund Account",
+                                                      onTap: () {
+                                                        _isBlueContainerVisible ==
+                                                                false
+                                                            ? fundWalletNGN()
+                                                            : fundWalletUSD();
+                                                      },
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    );
                                   },
                                   child: Container(
                                     padding: PAD_ALL_5,
@@ -789,129 +1037,6 @@ class _WalletViewState extends State<WalletView> {
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              heightSpace(5),
-                              customText(
-                                  text: "Enter Amount",
-                                  fontSize: 14,
-                                  textColor: AppColors.black),
-                              heightSpace(2),
-                              SizedBox(
-                                height: 50,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IntrinsicWidth(
-                                      child: TextFormField(
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.sora(
-                                            color: AppColors.primary,
-                                            fontSize: height * 0.05,
-                                            fontWeight: FontWeight.w700),
-                                        controller: amountController,
-                                        decoration: InputDecoration(
-                                          prefixIcon: Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColors.iconGrey,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            padding: PAD_ALL_15,
-                                            child: SvgPicture.asset(
-                                              _isBlueContainerVisible == false
-                                                  ? AppImages.niaraWallett
-                                                  : AppImages.dollerWallett,
-                                              color: AppColors.primary,
-                                            ),
-                                          ),
-                                          border: InputBorder.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              heightSpace(3),
-                              ChasescrollButton(
-                                buttonText: "Widthdraw",
-                                onTap: () async {
-                                  log(amountController.text);
-                                  log(balance.toString());
-                                  double amount =
-                                      double.parse(amountController.text);
-                                  if (_isBlueContainerVisible == false) {
-                                    if (paystackCheckAccount.value == false) {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SetupAccountPaystackView(),
-                                        ),
-                                      );
-                                    } else {
-                                      if ((balance / 100) < amount) {
-                                        ToastResp.toastMsgError(
-                                            resp: "Low Naira Balance");
-                                      } else {
-                                        final result = await _walletRepository
-                                            .withdrawWallet(
-                                          amount: double.parse(
-                                              amountController.text),
-                                          currency: "NGN",
-                                        );
-
-                                        if (result) {
-                                          ToastResp.toastMsgSuccess(
-                                              resp:
-                                                  "Withdrawal from naira account successful");
-                                        } else {
-                                          ToastResp.toastMsgError(
-                                              resp:
-                                                  "Withdrawal from naira account not successful");
-                                        }
-                                      }
-                                    }
-                                  } else {
-                                    if (stripeCheckAccount.value == false) {
-                                      registerStripe();
-                                    } else {
-                                      final result = await _walletRepository
-                                          .withdrawWallet(
-                                        amount:
-                                            double.parse(amountController.text),
-                                        currency: "USD",
-                                      );
-
-                                      if (result) {
-                                        ToastResp.toastMsgSuccess(
-                                            resp:
-                                                "Withdrawal from dollar account successful");
-                                      } else {
-                                        ToastResp.toastMsgError(
-                                            resp:
-                                                "Withdrawal from dollar account not successful");
-                                      }
-                                    }
-                                  }
-
-                                  // bool result =
-                                  //     await _walletRepository.getAccountStatus();
-
-                                  // if (result) {
-                                  //   ToastResp.toastMsgError(
-                                  //       resp:
-                                  //           "you dont have an withdrawal account yet. kindly Setup when redirected");
-
-                                  // } else {
-                                  //   ToastResp.toastMsgSuccess(resp: "");
-                                  // }
-                                },
-                              )
-                            ],
                           ),
                         ),
                         Container(

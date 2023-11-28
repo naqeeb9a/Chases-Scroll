@@ -84,8 +84,8 @@ class ProfileRepository {
         "about": {"objectPublic": true, "value": about},
       }
     };
-    final response = await ApiClient.post(
-      Endpoints.unSaveEvent,
+    final response = await ApiClient.put(
+      Endpoints.editProfile,
       body: data,
       useToken: true,
     );

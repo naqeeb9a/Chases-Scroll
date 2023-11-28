@@ -278,7 +278,9 @@ class SeeMoreUserView extends HookWidget {
                                                       image: DecorationImage(
                                                         fit: BoxFit.cover,
                                                         image: NetworkImage(
-                                                            "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content.data!.imgMain!.value.toString()}"),
+                                                            content.data!
+                                                                .imgMain!.value
+                                                                .toString()),
                                                       ),
                                                     ),
                                                     child: Center(

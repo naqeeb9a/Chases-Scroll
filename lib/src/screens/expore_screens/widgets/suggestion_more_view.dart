@@ -136,8 +136,9 @@ class SuggestionFriendMore extends HookWidget {
                                               color: Colors.grey.shade300,
                                               image: DecorationImage(
                                                 fit: BoxFit.cover,
-                                                image: NetworkImage(
-                                                    "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content.data!.imgMain!.value.toString()}"),
+                                                image: NetworkImage(content
+                                                    .data!.imgMain!.value
+                                                    .toString()),
                                               ),
                                             ),
                                             child: Center(

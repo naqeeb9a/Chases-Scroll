@@ -79,48 +79,54 @@ class FindEventsScreenView extends HookWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10.0),
-            child: SizedBox(
-              height: 45,
-              //color: Colors.redAccent,
-              width: double.infinity,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: listEventType.length,
-                itemBuilder: (context, index) {
-                  //print(popularProducts.popularProductList.length.toString());
-                  return GestureDetector(
-                    onTap: () {
-                      pageController.animateToPage(
-                        index, // convert int to double
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.ease,
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: index == currentPageIndex.value
-                            ? Colors.black87
-                            : const Color(0xff989292).withOpacity(0.15),
-                      ),
-                      child: Padding(
-                        padding: PAD_ALL_10,
-                        child: Center(
-                          child: customText(
-                            text: listEventType[index],
-                            fontSize: 12,
-                            textColor: index == currentPageIndex.value
-                                ? Colors.white
-                                : Colors.black87,
-                            fontWeight: FontWeight.w400,
+            child: Scrollbar(
+              controller: pageController,
+              scrollbarOrientation: ScrollbarOrientation.top,
+              // This forces the scrollbar to be visible always
+
+              child: SizedBox(
+                height: 45,
+                //color: Colors.redAccent,
+                width: double.infinity,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: listEventType.length,
+                  itemBuilder: (context, index) {
+                    //print(popularProducts.popularProductList.length.toString());
+                    return GestureDetector(
+                      onTap: () {
+                        pageController.animateToPage(
+                          index, // convert int to double
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 5),
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: index == currentPageIndex.value
+                              ? Colors.black87
+                              : const Color(0xff989292).withOpacity(0.15),
+                        ),
+                        child: Padding(
+                          padding: PAD_ALL_10,
+                          child: Center(
+                            child: customText(
+                              text: listEventType[index],
+                              fontSize: 12,
+                              textColor: index == currentPageIndex.value
+                                  ? Colors.white
+                                  : Colors.black87,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),
