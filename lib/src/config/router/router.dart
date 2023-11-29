@@ -1,4 +1,5 @@
 import 'package:chases_scroll/src/config/router/routes.dart';
+import 'package:chases_scroll/src/models/commdata.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/screens/auth_screens/data.dart';
 import 'package:chases_scroll/src/screens/auth_screens/email_screen.dart';
@@ -10,6 +11,16 @@ import 'package:chases_scroll/src/screens/auth_screens/signup.dart';
 import 'package:chases_scroll/src/screens/auth_screens/signup_two.dart';
 import 'package:chases_scroll/src/screens/auth_screens/success_password.dart';
 import 'package:chases_scroll/src/screens/bottom_nav.dart';
+import 'package:chases_scroll/src/screens/chat/chat.dart';
+import 'package:chases_scroll/src/screens/chat/group_chat.dart';
+import 'package:chases_scroll/src/screens/chat/group_chat_message.dart';
+import 'package:chases_scroll/src/screens/chat/model.dart';
+import 'package:chases_scroll/src/screens/chat/private_chat.dart';
+import 'package:chases_scroll/src/screens/community/community_chat.dart';
+import 'package:chases_scroll/src/screens/community/community_info.dart';
+import 'package:chases_scroll/src/screens/community/create_community.dart';
+import 'package:chases_scroll/src/screens/community/model/group_model.dart';
+import 'package:chases_scroll/src/screens/community/report_community.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/add_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/edit_event_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/add_event_Views/widgets/get_community_id_view.dart';
@@ -21,20 +32,26 @@ import 'package:chases_scroll/src/screens/event_screens/event_details_main_view.
 import 'package:chases_scroll/src/screens/event_screens/event_main_view.dart';
 import 'package:chases_scroll/src/screens/event_screens/find_events/trending_event.dart';
 import 'package:chases_scroll/src/screens/home/comment/comment.dart';
+import 'package:chases_scroll/src/screens/home/report_user.dart';
+import 'package:chases_scroll/src/screens/notification/notification.dart';
 import 'package:chases_scroll/src/screens/onboarding/explore.dart';
 import 'package:chases_scroll/src/screens/onboarding/onboarding_screen.dart';
 import 'package:chases_scroll/src/screens/onboarding/splashscreen.dart';
-import 'package:chases_scroll/src/screens/profile_view/other_users_profile_main_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/other_users_profile/other_user_community_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/other_users_profile/other_user_connections_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/other_users_profile/other_users_events_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/other_users_profile/other_users_profile_main_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/see_more_community.dart';
 import 'package:chases_scroll/src/screens/profile_view/see_more_event.dart';
 import 'package:chases_scroll/src/screens/profile_view/see_more_user.dart';
-import 'package:chases_scroll/src/screens/profile_view/see_more_user_post.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/account_settings_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/blocked_users_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/change_password_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/edit_profile_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/event_dashboard_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/refund_all_user_view.dart';
+import 'package:chases_scroll/src/screens/profile_view/settings/eventDasboard/refund_user_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/privacy_policy_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/report_bug_view.dart';
 import 'package:chases_scroll/src/screens/profile_view/settings/request_enhancement_view.dart';
@@ -54,6 +71,7 @@ import '../../screens/event_screens/buying_event_ticket_screen/refund_ticket_det
 import '../../screens/event_screens/find_events/all_event_view.dart';
 import '../../screens/expore_screens/widgets/search_explode_view.dart';
 import '../../screens/expore_screens/widgets/suggestion_more_view.dart';
+import '../../screens/profile_view/see_more_user_post.dart';
 
 GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
@@ -99,6 +117,22 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
                 isSignup: __.extra as bool,
               )),
       GoRoute(
+          path: AppRoutes.communityChat,
+          name: AppRoutes.communityChat,
+          builder: (_, __) =>
+              CommunityChat(communityData: __.extra as CommunityData)),
+      GoRoute(
+          path: AppRoutes.communityInfo,
+          name: AppRoutes.communityInfo,
+          builder: (_, __) => CommunityInfo(
+                communityInfoModel: __.extra as CommunityInfoModel,
+              )),
+      GoRoute(
+          path: AppRoutes.createCommunity,
+          name: AppRoutes.createCommunity,
+          builder: (_, __) => CreateCommunity(
+              communityInfoModel: __.extra as CommunityInfoModel)),
+      GoRoute(
         path: AppRoutes.newPassword,
         name: AppRoutes.newPassword,
         builder: (_, __) => NewPassword(
@@ -126,19 +160,40 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         builder: (_, __) => const SearchExploreView(),
       ),
       GoRoute(
+        path: AppRoutes.chatScreen,
+        name: AppRoutes.chatScreen,
+        builder: (_, __) => const ChatScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.createChat,
+        name: AppRoutes.createChat,
+        builder: (_, __) => CreateChat(),
+      ),
+      GoRoute(
         path: AppRoutes.comment,
         name: AppRoutes.comment,
         builder: (_, __) => Comment(
           commentData: __.extra as Map<dynamic, dynamic>,
-          // path: AppRoutes.addEventView,
-          // name: AppRoutes.addEventView,
-          // builder: (_, __) => const AddEventView(),
         ),
       ),
       GoRoute(
         path: AppRoutes.eventView,
         name: AppRoutes.eventView,
         builder: (_, __) => const EventMainView(),
+      ),
+      GoRoute(
+        path: AppRoutes.reportCommunity,
+        name: AppRoutes.reportCommunity,
+        builder: (_, __) => ReportCommunity(
+          typeId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.reportPostUser,
+        name: AppRoutes.reportPostUser,
+        builder: (_, __) => ReportPostUser(
+          typeId: __.extra as String,
+        ),
       ),
       GoRoute(
         path: AppRoutes.allEventView,
@@ -179,7 +234,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.paymentMethodScreen,
         name: AppRoutes.paymentMethodScreen,
-        builder: (_, __) => const PaymentMethodScreenView(),
+        builder: (_, __) => PaymentMethodScreenView(),
       ),
       GoRoute(
         path: AppRoutes.refundBoughtDetailScreen,
@@ -223,10 +278,25 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         builder: (_, __) => const FindTrendingEvents(),
       ),
       GoRoute(
-        path: AppRoutes.settings,
-        name: AppRoutes.settings,
-        builder: (_, __) => const SettingsScreenView(),
-      ),
+          path: AppRoutes.privateChat,
+          name: AppRoutes.privateChat,
+          builder: (_, __) => PrivateChat(
+                chatDataModel: __.extra as ChatDataModel,
+              )),
+      GoRoute(
+          path: AppRoutes.groupChatMessage,
+          name: AppRoutes.groupChatMessage,
+          builder: (_, __) => GroupChatMessage(
+                chatDataModel: __.extra as ChatDataModel,
+              )),
+      GoRoute(
+          path: AppRoutes.notification,
+          name: AppRoutes.notification,
+          builder: (_, __) => const NotificationView()),
+      GoRoute(
+          path: AppRoutes.settings,
+          name: AppRoutes.settings,
+          builder: (_, __) => const SettingsScreenView()),
       GoRoute(
         path: AppRoutes.terms,
         name: AppRoutes.terms,
@@ -331,6 +401,41 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
         name: AppRoutes.seeMoreUserPost,
         builder: (_, __) => SeeMoreUserPost(
           userID: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.refundAllUser,
+        name: AppRoutes.refundAllUser,
+        builder: (_, __) => RefundAllUserEventView(
+          eventId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.refundUser,
+        name: AppRoutes.refundUser,
+        builder: (_, __) => RefundUserEventView(
+          eventId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.otherUsersProfileConnections,
+        name: AppRoutes.otherUsersProfileConnections,
+        builder: (_, __) => SeeOtherUsersConnectionsView(
+          userId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.otherUsersProfileEvents,
+        name: AppRoutes.otherUsersProfileEvents,
+        builder: (_, __) => SeeOtherUsersEventsView(
+          userId: __.extra as String,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.otherUsersProfileCommunities,
+        name: AppRoutes.otherUsersProfileCommunities,
+        builder: (_, __) => SeeOtherUsersCommunitiesView(
+          userId: __.extra as String,
         ),
       ),
     ]);

@@ -4,6 +4,7 @@ import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/dimens.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
@@ -13,9 +14,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../repositories/event_repository.dart';
 import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/helpers/strings.dart';
 
 class MyDraftEventView extends HookWidget {
   static final EventRepository _eventRepository = EventRepository();
@@ -37,6 +40,8 @@ class MyDraftEventView extends HookWidget {
         myEventModel.value = value;
         foundEvents.value = value;
         allEvents.value = value;
+
+        foundEvents.value.sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 
@@ -57,6 +62,19 @@ class MyDraftEventView extends HookWidget {
             .toList();
 
         foundEvents.value = found;
+      }
+    }
+
+    deleteDraft(String eventId) async {
+      final result = await _eventRepository.deleteDraft(
+        draftID: eventId,
+      );
+
+      if (result['updated'] == true) {
+        refreshDraftEvent();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
       }
     }
 
@@ -117,11 +135,10 @@ class MyDraftEventView extends HookWidget {
                       : Expanded(
                           child: Container(
                             child: ListView.builder(
-                              itemCount: myEventModel.value.length,
+                              itemCount: foundEvents.value.length,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
-                                EventContent myEvent =
-                                    myEventModel.value[index];
+                                EventContent myEvent = foundEvents.value[index];
                                 //for formatted time
                                 int startTimeInMillis = myEvent.startTime!;
                                 DateTime startTime =
@@ -199,16 +216,30 @@ class MyDraftEventView extends HookWidget {
                                                               lines: 1),
                                                         ),
                                                         widthSpace(1),
-                                                        customText(
-                                                            text: myEvent
-                                                                .minPrice
-                                                                .toString(),
-                                                            fontSize: 14,
-                                                            textColor:
-                                                                AppColors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                        myEvent.currency ==
+                                                                "USD"
+                                                            ? customText(
+                                                                text:
+                                                                    "\$${myEvent.maxPrice.toString()}",
+                                                                fontSize: 13,
+                                                                textColor: AppColors
+                                                                    .deepPrimary,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              )
+                                                            : Text(
+                                                                "$naira${myEvent.maxPrice.toString()}",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  fontSize: 13,
+                                                                  color: AppColors
+                                                                      .deepPrimary,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
                                                       ],
                                                     ),
                                                     heightSpace(1),
@@ -302,23 +333,31 @@ class MyDraftEventView extends HookWidget {
                                                           ),
                                                         ),
                                                         widthSpace(1.3),
-                                                        Container(
-                                                          padding: PAD_ALL_8,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          4),
-                                                              color: AppColors
-                                                                  .backgroundGrey),
-                                                          child: customText(
-                                                              text: "Delete",
-                                                              fontSize: 11,
-                                                              textColor:
-                                                                  AppColors.red,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            deleteDraft(
+                                                              myEvent.id!,
+                                                            );
+                                                          },
+                                                          child: Container(
+                                                            padding: PAD_ALL_8,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            4),
+                                                                color: AppColors
+                                                                    .backgroundGrey),
+                                                            child: customText(
+                                                                text: "Delete",
+                                                                fontSize: 11,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .red,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700),
+                                                          ),
                                                         ),
                                                       ],
                                                     ),

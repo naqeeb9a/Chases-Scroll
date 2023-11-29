@@ -32,6 +32,9 @@ class FindSocialEventsView extends HookWidget {
       _eventRepository.getSocialEvents().then((value) {
         mySocialLoading.value = false;
         mySocialModel.value = value;
+
+        mySocialModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

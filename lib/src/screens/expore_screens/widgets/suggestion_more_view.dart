@@ -30,6 +30,17 @@ class SuggestionFriendMore extends HookWidget {
       _exploreRepository.getSuggestedUsers().then((value) {
         usersLoading.value = false;
         usersModel.value = value;
+
+        usersModel.value.sort((a, b) {
+          // First, compare by first name
+          int firstNameComparison = a.firstName!.compareTo(b.firstName!);
+          if (firstNameComparison != 0) {
+            return firstNameComparison;
+          }
+
+          // If first names are the same, compare by last name
+          return a.lastName!.compareTo(b.lastName!);
+        });
       });
     }
 
@@ -111,8 +122,8 @@ class SuggestionFriendMore extends HookWidget {
                                       child: Row(
                                         children: [
                                           Container(
-                                            height: 50,
-                                            width: 50,
+                                            height: 45,
+                                            width: 45,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   const BorderRadius.only(
@@ -125,8 +136,9 @@ class SuggestionFriendMore extends HookWidget {
                                               color: Colors.grey.shade300,
                                               image: DecorationImage(
                                                 fit: BoxFit.cover,
-                                                image: NetworkImage(
-                                                    "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content.data!.imgMain!.value.toString()}"),
+                                                image: NetworkImage(content
+                                                    .data!.imgMain!.value
+                                                    .toString()),
                                               ),
                                             ),
                                             child: Center(
@@ -190,7 +202,7 @@ class SuggestionFriendMore extends HookWidget {
                                         },
                                         child: Container(
                                           height: 40,
-                                          width: 100,
+                                          width: 80,
                                           decoration: BoxDecoration(
                                             border: Border.all(
                                               color: content.joinStatus ==

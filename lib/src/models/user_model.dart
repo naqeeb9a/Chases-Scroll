@@ -33,6 +33,13 @@ class Country {
     data['value'] = value;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Country{'
+        'objectPublic: $objectPublic, '
+        'value: $value}';
+  }
 }
 
 class CreatedOn {
@@ -250,6 +257,24 @@ class Data {
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Data{'
+        'mobilePhone: $mobilePhone, '
+        'country: $country, '
+        'imgMain: $imgMain, '
+        'images: $images, '
+        'gender: $gender, '
+        'city: $city, '
+        'webAddress: $webAddress, '
+        'work: $work, '
+        'about: $about, '
+        'state: $state, '
+        'userSchool: $userSchool, '
+        'maritalStatus: $maritalStatus, '
+        'favorites: $favorites}';
+  }
 }
 
 class MobilePhone {
@@ -268,6 +293,13 @@ class MobilePhone {
     data['objectPublic'] = objectPublic;
     data['value'] = value;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'MobilePhone{'
+        'objectPublic: $objectPublic, '
+        'value: $value}';
   }
 }
 

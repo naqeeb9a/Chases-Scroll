@@ -23,6 +23,8 @@ class EventBigCard extends StatefulWidget {
   final String? location;
   final double? price;
   final EventContent? eventDetails;
+  final Function()? onSaved;
+  final bool? isSaved;
 
   const EventBigCard(
     this.width, {
@@ -33,6 +35,8 @@ class EventBigCard extends StatefulWidget {
     this.location,
     this.price,
     this.eventDetails,
+    this.onSaved,
+    this.isSaved,
   });
 
   @override
@@ -183,65 +187,129 @@ class _EventBigCardState extends State<EventBigCard> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 30,
-                      width: 80,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
+                    Expanded(
+                      flex: widget.eventDetails!.interestedUsers!.length < 2
+                          ? 1
+                          : widget.eventDetails!.interestedUsers!.length < 3
+                              ? 2
+                              : 3,
+                      child: SizedBox(
+                        // color: Colors.amber,
+                        height: 30,
+                        width: double.infinity,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount:
+                              widget.eventDetails!.interestedUsers!.length < 3
+                                  ? widget.eventDetails!.interestedUsers!.length
+                                  : 3, // Replace with your actual item count
+                          itemBuilder: (context, index) {
+                            InterestedUsers indiv =
+                                widget.eventDetails!.interestedUsers![index];
+                            // Replace this with your actual list item widget
+                            return Container(
+                              width: 8.w,
+                              height: 6.h,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 15,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.green,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 30,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.orange,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 45,
-                            child: Container(
-                              width: 6.w,
-                              height: 3.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: AppColors.deepPrimary,
-                              ),
-                              child: Center(
-                                child: customText(
-                                  text: "+${widget.eventDetails!.memberCount}",
-                                  fontSize: 9,
-                                  textColor: AppColors.white,
-                                  fontWeight: FontWeight.w500,
+                                color: AppColors.primary.withOpacity(0.3),
+                                image: DecorationImage(
+                                  scale: 1.0,
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(
+                                      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}"),
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
+                              child: Visibility(
+                                  child: Center(
+                                child: customText(
+                                  text:
+                                      "${indiv.firstName![0]}${indiv.lastName![0]}"
+                                          .toUpperCase(),
+                                  fontSize: 10,
+                                  textColor: AppColors.deepPrimary,
+                                ),
+                              )),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    // SizedBox(
+                    //   height: 30,
+                    //   width: 80,
+                    //   child: Stack(
+                    //     children: [
+                    //       Positioned(
+                    //         top: 0,
+                    //         left: 0,
+                    //         child: Container(
+                    //           width: 6.w,
+                    //           height: 3.h,
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             color: Colors.blue,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Positioned(
+                    //         left: 15,
+                    //         child: Container(
+                    //           width: 6.w,
+                    //           height: 3.h,
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             color: Colors.green,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Positioned(
+                    //         left: 30,
+                    //         child: Container(
+                    //           width: 6.w,
+                    //           height: 3.h,
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             color: Colors.orange,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Positioned(
+                    //         left: 45,
+                    //         child: Container(
+                    //           width: 6.w,
+                    //           height: 3.h,
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             color: AppColors.deepPrimary,
+                    //           ),
+                    //           child: Center(
+                    //             child: customText(
+                    //               text: "+${widget.eventDetails!.memberCount}",
+                    //               fontSize: 9,
+                    //               textColor: AppColors.white,
+                    //               fontWeight: FontWeight.w500,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    Container(
+                      width: 8.w,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: AppColors.deepPrimary,
+                      ),
+                      child: Center(
+                        child: customText(
+                          text: "+${widget.eventDetails!.memberCount}",
+                          fontSize: 9,
+                          textColor: AppColors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     Container(
@@ -254,39 +322,60 @@ class _EventBigCardState extends State<EventBigCard> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: GestureDetector(
-                        onTap: () async {
-                          String text =
-                              "https://chasescroll-new.netlify.app/events/${widget.eventDetails!.id}";
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              String text =
+                                  "https://chasescroll-new.netlify.app/events/${widget.eventDetails!.id}";
 
-                          await Share.share(
-                            text,
-                            subject:
-                                'Check out this user profile from Chasescroll',
-                            sharePositionOrigin: Rect.fromCenter(
-                              center: const Offset(0, 0),
-                              width: 100,
-                              height: 100,
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: SvgPicture.asset(
-                                AppImages.share,
-                                height: 2.7.h,
-                                width: 2.7.w,
-                                color: AppColors.deepPrimary,
+                              await Share.share(
+                                text,
+                                subject:
+                                    'Check out this user profile from Chasescroll',
+                                sharePositionOrigin: Rect.fromCenter(
+                                  center: const Offset(0, 0),
+                                  width: 100,
+                                  height: 100,
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: SvgPicture.asset(
+                                    AppImages.share,
+                                    height: 2.7.h,
+                                    width: 2.7.w,
+                                    color: AppColors.deepPrimary,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          GestureDetector(
+                            onTap: widget.onSaved,
+                            child: Container(
+                              child: widget.eventDetails!.isSaved == true
+                                  ? SvgPicture.asset(
+                                      AppImages.bookmarkFilled,
+                                      height: 2.3.h,
+                                      width: 2.3.w,
+                                    )
+                                  : SvgPicture.asset(
+                                      AppImages.bookmark,
+                                      height: 2.3.h,
+                                      width: 2.3.w,
+                                    ),
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   ],

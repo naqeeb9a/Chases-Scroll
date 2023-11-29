@@ -5,6 +5,7 @@ class AppImages {
   static const String chatBackground = "assets/pngs/chat.png";
   static const String successImage = "assets/pngs/success-jump.png";
   static const String backBG = "assets/pngs/backBG.png";
+  static const String mark = "assets/pngs/mark.png";
 
   //jpegs
   static const String mapPic = "assets/jpegs/map_pic.jpg";
@@ -58,6 +59,10 @@ class AppImages {
   static const String stripe = "assets/svgs/Stripe.svg";
   static const String addOrganizer = "assets/svgs/profile-add.svg";
   static const String messageOrganizer = "assets/svgs/message-text.svg";
+  static const String downloadIcon = 'assets/svgs/download_icon.svg';
+  static const String settings = "assets/svgs/setting.svg";
+  static const String edit = "assets/svgs/edit.svg";
+  static const String check = 'assets/svgs/check.svg';
   //static const String share = "assets/svgs/message-text.svg";
 
   //this is for profile
@@ -78,6 +83,7 @@ class AppImages {
   static const String deleteAccount = "assets/svgs/trash.svg";
   static const String logout = "assets/svgs/logout.svg";
   static const String public = "assets/svgs/people.svg";
+  static const String question = "assets/svgs/question.svg";
 
   //wallet
   static const String profileEvent = "assets/svgs/profile-event.svg";

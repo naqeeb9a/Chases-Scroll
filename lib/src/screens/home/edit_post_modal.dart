@@ -2,8 +2,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chases_scroll/src/providers/auth_provider.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
 import 'package:chases_scroll/src/repositories/post_repository.dart';
+import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
@@ -12,11 +14,13 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
-class EditPostModal extends HookWidget {
+class EditPostModal extends HookConsumerWidget {
   static final post = TextEditingController();
   static final ImagePicker picker = ImagePicker();
   static final PostRepository _postRepository = PostRepository();
@@ -38,12 +42,16 @@ class EditPostModal extends HookWidget {
       this.postText});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final refresh = ref.watch(refreshHomeScreen);
     final playerController = useState<VideoPlayerController?>(null);
     final chewieController = useState<ChewieController?>(null);
     final videoLink = useState<String?>(null);
     final imageLink = useState<String?>(null);
+    final imageToUpload = useState<String?>(null);
+    final videoToUpload = useState<String?>(null);
     final isLoading = useState<bool>(false);
+    final containerHeight = useState<double?>(null);
 
     initializePlayer(String videoUrl) {
       playerController.value =
@@ -75,6 +83,7 @@ class EditPostModal extends HookWidget {
         log(videoLink.value.toString());
         initializePlayer(videoLink.value!);
         isLoading.value = false;
+        videoToUpload.value = value;
       });
     }
 
@@ -88,6 +97,7 @@ class EditPostModal extends HookWidget {
 
         imageLink.value = '${Endpoints.displayImages}/$imageName';
         isLoading.value = false;
+        imageToUpload.value = imageName;
         log("###########");
         log(imageName);
       }
@@ -106,8 +116,25 @@ class EditPostModal extends HookWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         width: double.infinity,
-        height: 600,
+        height: containerHeight.value,
         child: Column(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () => context.pop(),
+                child: const Icon(
+                  Icons.close,
+                  size: 22,
+                  color: Colors.black87,
+                ),
+              ),
+              customText(
+                  text: "Edit Post", fontSize: 14, textColor: AppColors.black),
+              widthSpace(5)
+            ],
+          ),
+          heightSpace(3),
           isLoading.value
               ? const Center(
                   child: CircularProgressIndicator(),
@@ -121,17 +148,25 @@ class EditPostModal extends HookWidget {
                         controller: chewieController.value!,
                       ),
                     )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: imageLink.value ?? imageUrl!,
-                        height: 300,
-                        width: 300,
-                      ),
+                  : CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: imageLink.value ?? imageUrl!,
+                      height: 300,
+                      width: double.infinity,
+                      errorWidget: (context, _, __) {
+                        return Center(
+                          child: customText(
+                              text: "No Image available",
+                              fontSize: 12,
+                              textColor: AppColors.textGrey),
+                        );
+                      },
                     ),
           heightSpace(3),
           TextFormField(
+            onTap: () {
+              containerHeight.value = 800;
+            },
             controller: post,
             decoration: InputDecoration(
                 prefixIcon: Padding(
@@ -159,22 +194,23 @@ class EditPostModal extends HookWidget {
                 ),
                 suffixIcon: InkWell(
                   onTap: () async {
-                    if (post.text.isEmpty) {
-                      ToastResp.toastMsgError(resp: "Post can't be empty");
-                      return;
-                    }
+                    // if (post.text.isEmpty) {
+                    //   ToastResp.toastMsgError(resp: "Post can't be empty");
+                    //   return;
+                    // }
                     bool result = await postRepository.editPost(
                         postId: postId!,
                         postText: post.text,
                         type: setPostType(),
-                        mediaRef: imageLink.value ?? videoLink.value,
-                        multipleMediaRef: imageLink.value == null
-                            ? [videoLink.value!]
-                            : [imageLink.value!]);
+                        mediaRef: imageToUpload.value ?? videoToUpload.value,
+                        multipleMediaRef: imageToUpload.value == null
+                            ? [videoToUpload.value ?? ""]
+                            : [imageToUpload.value ?? ""]);
 
                     if (result) {
                       ToastResp.toastMsgSuccess(resp: "Successfully Posted");
                       post.clear();
+                      ref.read(refreshHomeScreen.notifier).state = !refresh;
                       if (context.mounted) Navigator.pop(context);
                     }
                   },
@@ -191,7 +227,7 @@ class EditPostModal extends HookWidget {
                         const BorderSide(color: AppColors.textFormColor),
                     borderRadius: BorderRadius.circular(10)),
                 contentPadding: const EdgeInsets.all(10),
-                hintText: "Post Caption...",
+                hintText: "Add a Caption for your post...",
                 hintStyle: GoogleFonts.dmSans(
                     textStyle:
                         const TextStyle(color: AppColors.black, fontSize: 12))),

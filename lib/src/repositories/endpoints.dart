@@ -46,12 +46,24 @@ class Endpoints {
   static const String joinCommunity = 'group/join-group';
   static const String leaveGroup = '/group/leave-group';
   static const String getGroupMembers = 'group/get-group-members?groupID=';
+  static const String subComment = 'feed/add-sub-comment';
+  static const String editCommunity = '/group/update-group';
+  static const String getChat = "chat/chat";
+  static const String sendChat = "chat/message";
+  static const String getChatMessage = "chat/message";
+  static const String getSuggestedUsers = "user/suggest-connections";
+  static const String userFriends = "user/get-users-connections";
+  static const String likeComment = "feed/like-comment";
+  static const String getSubComment = "feed/get-all-sub-comments";
+  static const String notifications = "notifications/notification";
+  static const String report = "report/report";
+  static const String resolveRequest = "group/resolve-request";
 
   //-------------------------------------------------------------------------//
   //---------------------------- Explore ------------------------------------//
   static const String getTopEvents = "events/get-top-events";
   static const String getAllEvents = "events/events";
-  static const String getSuggestedUsers = "user/suggest-connections";
+
   static const String getAllCommunities = "group/group";
 
   static const String connectFriend = "/user/send-friend-request";
@@ -84,10 +96,14 @@ class Endpoints {
   static String createWebUrlPaystack = "payments/payWithPaystack";
   static String createWebUrlStripe = "payments/payWithStripe";
 
+  static String refundUserEvent = "payments/refundEvent";
+  static String refundUserEventTicket = "payments/refundTicket";
+
   //-----------------------create && draft ------------------------------
   static String createDraft = "events/create-draft";
   static String updateDraft = "/events/update-draft";
-  static String createEvent = "events/create-event-from-draft";
+  static String createEventDraft = "events/create-event-from-draft";
+  static String createEvent = "/events/create-event";
   static String getDraftEvent = "events/drafts";
   static String deleteDraft = "/events/delete-draft";
 
@@ -110,7 +126,6 @@ class Endpoints {
   static String getPrivateUserProfile = "user/privateprofile";
   static String getTransactions = "payments/transactions";
   static String getEventsDashboard = "events/events";
-  static String report = "report/report";
   static String blockedList = "user/blocklist";
   static String blockedUsers = "user/delete-block";
   static String getConnectionRequest = "user/friend-requests";
@@ -128,6 +143,7 @@ class Endpoints {
   static String deleteBlock = "user/delete-block";
   static String verifyFund = "payments/api/wallet/verifyFundWallet";
   static String onboardStripe = "payments/account/oauthOnboard";
+  static String payWithWallet = "payments/api/wallet/pay";
 
   //analytics
   static String analyticEvent = "payments/analytics/tickets";

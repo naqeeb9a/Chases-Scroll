@@ -16,6 +16,93 @@ class Chronology {
   }
 }
 
+class Commentcontent {
+  String? id;
+  Time? time;
+  String? postID;
+  String? comment;
+  User? user;
+  int? likeCount;
+  void data;
+  String? likeStatus;
+  SubComments? subComments;
+  int? timeInMilliseconds;
+
+  Commentcontent(
+      {this.id,
+      this.time,
+      this.postID,
+      this.comment,
+      this.user,
+      this.likeCount,
+      this.data,
+      this.likeStatus,
+      this.subComments,
+      this.timeInMilliseconds});
+
+  Commentcontent.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    time = json['time'] != null ? Time.fromJson(json['time']) : null;
+    postID = json['postID'];
+    comment = json['comment'];
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
+    likeCount = json['likeCount'];
+    data = json['data'];
+    likeStatus = json['likeStatus'];
+    subComments = json['subComments'] != null
+        ? SubComments.fromJson(json['subComments'])
+        : null;
+    timeInMilliseconds = json['timeInMilliseconds'];
+  }
+}
+
+class Comments {
+  Pageable? pageable;
+  int? totalPages;
+  int? totalElements;
+  bool? last;
+  int? size;
+  int? number;
+  Sort? sort;
+  bool? first;
+  int? numberOfElements;
+  bool? empty;
+  List<Commentcontent>? content;
+
+  Comments(
+      {this.pageable,
+      this.totalPages,
+      this.totalElements,
+      this.last,
+      this.size,
+      this.number,
+      this.sort,
+      this.first,
+      this.numberOfElements,
+      this.empty,
+      this.content});
+
+  Comments.fromJson(Map<String, dynamic> json) {
+    if (json['content'] != null) {
+      content = <Commentcontent>[];
+      json['content'].forEach((v) {
+        content!.add(Commentcontent.fromJson(v));
+      });
+    }
+    pageable =
+        json['pageable'] != null ? Pageable.fromJson(json['pageable']) : null;
+    totalPages = json['totalPages'];
+    totalElements = json['totalElements'];
+    last = json['last'];
+    size = json['size'];
+    number = json['number'];
+    sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
+    first = json['first'];
+    numberOfElements = json['numberOfElements'];
+    empty = json['empty'];
+  }
+}
+
 class Content {
   String? id;
   Time? time;
@@ -25,20 +112,20 @@ class Content {
   User? user;
   bool? isGroupFeed;
   String? mediaRef;
-  List<dynamic>? multipleMediaRef;
+  List<String>? multipleMediaRef;
   int? viewCount;
   int? commentCount;
-  int? videoLength;
-  String? shareWith;
+  dynamic videoLength;
   bool? publicPost;
   String? postType;
   int? likeCount;
   int? shareCount;
-  String? shareID;
-  String? data;
+  dynamic shareID;
+  dynamic data;
   String? viewStatus;
   String? likeStatus;
-  PostModel? comments;
+  dynamic shareWith;
+  Comments? comments;
   int? timeInMilliseconds;
 
   Content(
@@ -75,7 +162,12 @@ class Content {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     isGroupFeed = json['isGroupFeed'];
     mediaRef = json['mediaRef'];
-    multipleMediaRef = json['multipleMediaRef'];
+    if (json['multipleMediaRef'] != null) {
+      multipleMediaRef = <String>[];
+      json['multipleMediaRef'].forEach((v) {
+        multipleMediaRef!.add((v));
+      });
+    }
     viewCount = json['viewCount'];
     commentCount = json['commentCount'];
     videoLength = json['videoLength'];
@@ -89,48 +181,14 @@ class Content {
     viewStatus = json['viewStatus'];
     likeStatus = json['likeStatus'];
     comments =
-        json['comments'] != null ? PostModel.fromJson(json['comments']) : null;
+        json['comments'] != null ? Comments.fromJson(json['comments']) : null;
     timeInMilliseconds = json['timeInMilliseconds'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    if (time != null) {
-      data['time'] = time!.toJson();
-    }
-    data['text'] = text;
-    data['sourceId'] = sourceId;
-    data['type'] = type;
-    if (user != null) {
-      data['user'] = user!.toJson();
-    }
-    data['isGroupFeed'] = isGroupFeed;
-    data['mediaRef'] = mediaRef;
-    data['multipleMediaRef'] = multipleMediaRef;
-    data['viewCount'] = viewCount;
-    data['commentCount'] = commentCount;
-    data['videoLength'] = videoLength;
-    data['shareWith'] = shareWith;
-    data['publicPost'] = publicPost;
-    data['postType'] = postType;
-    data['likeCount'] = likeCount;
-    data['shareCount'] = shareCount;
-    data['shareID'] = shareID;
-    data['data'] = this.data;
-    data['viewStatus'] = viewStatus;
-    data['likeStatus'] = likeStatus;
-    if (comments != null) {
-      data['comments'] = comments!.toJson();
-    }
-    data['timeInMilliseconds'] = timeInMilliseconds;
-    return data;
   }
 }
 
 class Country {
   bool? objectPublic;
-  String? value;
+  dynamic value;
 
   Country({this.objectPublic, this.value});
 
@@ -273,24 +331,24 @@ class Pageable {
   int? offset;
   int? pageNumber;
   int? pageSize;
-  bool? unpaged;
   bool? paged;
+  bool? unpaged;
 
   Pageable(
       {this.sort,
       this.offset,
       this.pageNumber,
       this.pageSize,
-      this.unpaged,
-      this.paged});
+      this.paged,
+      this.unpaged});
 
   Pageable.fromJson(Map<String, dynamic> json) {
     sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
     offset = json['offset'];
     pageNumber = json['pageNumber'];
     pageSize = json['pageSize'];
-    unpaged = json['unpaged'];
     paged = json['paged'];
+    unpaged = json['unpaged'];
   }
 
   Map<String, dynamic> toJson() {
@@ -301,8 +359,8 @@ class Pageable {
     data['offset'] = offset;
     data['pageNumber'] = pageNumber;
     data['pageSize'] = pageSize;
-    data['unpaged'] = unpaged;
     data['paged'] = paged;
+    data['unpaged'] = unpaged;
     return data;
   }
 }
@@ -356,7 +414,7 @@ class PostModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (content != null) {
-      data['content'] = content!.map((v) => v.toJson()).toList();
+      data['content'] = content!.map((v) => v).toList();
     }
     if (pageable != null) {
       data['pageable'] = pageable!.toJson();
@@ -398,8 +456,55 @@ class Sort {
   }
 }
 
+class SubComment {
+  List<Commentcontent>? content;
+  Pageable? pageable;
+  int? totalPages;
+  int? totalElements;
+  bool? last;
+  int? size;
+  int? number;
+  Sort? sort;
+  bool? first;
+  int? numberOfElements;
+  bool? empty;
+
+  SubComment(
+      {this.content,
+      this.pageable,
+      this.totalPages,
+      this.totalElements,
+      this.last,
+      this.size,
+      this.number,
+      this.sort,
+      this.first,
+      this.numberOfElements,
+      this.empty});
+
+  SubComment.fromJson(Map<String, dynamic> json) {
+    if (json['content'] != null) {
+      content = <Commentcontent>[];
+      json['content'].forEach((v) {
+        content!.add(Commentcontent.fromJson(v));
+      });
+    }
+    pageable =
+        json['pageable'] != null ? Pageable.fromJson(json['pageable']) : null;
+    totalPages = json['totalPages'];
+    totalElements = json['totalElements'];
+    last = json['last'];
+    size = json['size'];
+    number = json['number'];
+    sort = json['sort'] != null ? Sort.fromJson(json['sort']) : null;
+    first = json['first'];
+    numberOfElements = json['numberOfElements'];
+    empty = json['empty'];
+  }
+}
+
 class SubComments {
-  List<String>? content;
+  List<Commentcontent>? content;
   Pageable? pageable;
   int? totalPages;
   int? totalElements;
@@ -426,9 +531,9 @@ class SubComments {
 
   SubComments.fromJson(Map<String, dynamic> json) {
     if (json['content'] != null) {
-      content = <String>[];
+      content = <Commentcontent>[];
       json['content'].forEach((v) {
-        content!.add((v));
+        content!.add(Commentcontent.fromJson(v));
       });
     }
     pageable =
@@ -443,28 +548,6 @@ class SubComments {
     numberOfElements = json['numberOfElements'];
     empty = json['empty'];
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (content != null) {
-      data['content'] = content!.map((v) => v).toList();
-    }
-    if (pageable != null) {
-      data['pageable'] = pageable!.toJson();
-    }
-    data['totalPages'] = totalPages;
-    data['totalElements'] = totalElements;
-    data['last'] = last;
-    data['size'] = size;
-    data['number'] = number;
-    if (sort != null) {
-      data['sort'] = sort!.toJson();
-    }
-    data['first'] = first;
-    data['numberOfElements'] = numberOfElements;
-    data['empty'] = empty;
-    return data;
-  }
 }
 
 class Time {
@@ -473,9 +556,6 @@ class Time {
   int? dayOfWeek;
   int? dayOfYear;
   int? era;
-  int? millisOfDay;
-  int? secondOfDay;
-  int? minuteOfDay;
   int? centuryOfEra;
   int? yearOfEra;
   int? yearOfCentury;
@@ -486,6 +566,9 @@ class Time {
   int? minuteOfHour;
   int? secondOfMinute;
   int? millisOfSecond;
+  int? millisOfDay;
+  int? secondOfDay;
+  int? minuteOfDay;
   Chronology? chronology;
   Zone? zone;
   int? millis;
@@ -499,9 +582,6 @@ class Time {
       this.dayOfWeek,
       this.dayOfYear,
       this.era,
-      this.millisOfDay,
-      this.secondOfDay,
-      this.minuteOfDay,
       this.centuryOfEra,
       this.yearOfEra,
       this.yearOfCentury,
@@ -512,6 +592,9 @@ class Time {
       this.minuteOfHour,
       this.secondOfMinute,
       this.millisOfSecond,
+      this.millisOfDay,
+      this.secondOfDay,
+      this.minuteOfDay,
       this.chronology,
       this.zone,
       this.millis,
@@ -525,9 +608,6 @@ class Time {
     dayOfWeek = json['dayOfWeek'];
     dayOfYear = json['dayOfYear'];
     era = json['era'];
-    millisOfDay = json['millisOfDay'];
-    secondOfDay = json['secondOfDay'];
-    minuteOfDay = json['minuteOfDay'];
     centuryOfEra = json['centuryOfEra'];
     yearOfEra = json['yearOfEra'];
     yearOfCentury = json['yearOfCentury'];
@@ -538,6 +618,9 @@ class Time {
     minuteOfHour = json['minuteOfHour'];
     secondOfMinute = json['secondOfMinute'];
     millisOfSecond = json['millisOfSecond'];
+    millisOfDay = json['millisOfDay'];
+    secondOfDay = json['secondOfDay'];
+    minuteOfDay = json['minuteOfDay'];
     chronology = json['chronology'] != null
         ? Chronology.fromJson(json['chronology'])
         : null;
@@ -555,9 +638,6 @@ class Time {
     data['dayOfWeek'] = dayOfWeek;
     data['dayOfYear'] = dayOfYear;
     data['era'] = era;
-    data['millisOfDay'] = millisOfDay;
-    data['secondOfDay'] = secondOfDay;
-    data['minuteOfDay'] = minuteOfDay;
     data['centuryOfEra'] = centuryOfEra;
     data['yearOfEra'] = yearOfEra;
     data['yearOfCentury'] = yearOfCentury;
@@ -568,6 +648,9 @@ class Time {
     data['minuteOfHour'] = minuteOfHour;
     data['secondOfMinute'] = secondOfMinute;
     data['millisOfSecond'] = millisOfSecond;
+    data['millisOfDay'] = millisOfDay;
+    data['secondOfDay'] = secondOfDay;
+    data['minuteOfDay'] = minuteOfDay;
     if (chronology != null) {
       data['chronology'] = chronology!.toJson();
     }

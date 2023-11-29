@@ -32,6 +32,9 @@ class FindCommunityEventView extends HookWidget {
       _eventRepository.getCommunityEvents().then((value) {
         myCommunityLoading.value = false;
         myCommunitylModel.value = value;
+
+        myCommunitylModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chases_scroll/src/config/router/routes.dart';
 import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/explore_repository.dart';
 import 'package:chases_scroll/src/repositories/profile_repository.dart';
@@ -17,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class SeeMoreUserView extends HookWidget {
   static final ProfileRepository _profileRepository = ProfileRepository();
@@ -44,6 +46,17 @@ class SeeMoreUserView extends HookWidget {
         userRequestModel.value = value;
         allUsersRequest.value = value;
         foundUsersRequest.value = value;
+
+        foundUsersRequest.value.sort((a, b) {
+          // First, compare by first name
+          int firstNameComparison = a.firstName!.compareTo(b.firstName!);
+          if (firstNameComparison != 0) {
+            return firstNameComparison;
+          }
+
+          // If first names are the same, compare by last name
+          return a.lastName!.compareTo(b.lastName!);
+        });
       });
     }
 
@@ -53,6 +66,17 @@ class SeeMoreUserView extends HookWidget {
         usersModel.value = value;
         allUsers.value = value;
         foundUsers.value = value;
+
+        foundUsers.value.sort((a, b) {
+          // First, compare by first name
+          int firstNameComparison = a.firstName!.compareTo(b.firstName!);
+          if (firstNameComparison != 0) {
+            return firstNameComparison;
+          }
+
+          // If first names are the same, compare by last name
+          return a.lastName!.compareTo(b.lastName!);
+        });
       });
     }
 
@@ -91,6 +115,33 @@ class SeeMoreUserView extends HookWidget {
             .toList();
 
         foundUsersRequest.value = found;
+      }
+    }
+
+    connectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.connectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(result.toString());
+        refreshConnection();
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    disconnectFriend(String friendID) async {
+      final result =
+          await _exploreRepository.disconnectWithFriend(friendID: friendID);
+      if (result['updated'] == true) {
+        ToastResp.toastMsgSuccess(resp: result['message']);
+        log(friendID.toString());
+        log(result.toString());
+        refreshConnection();
+      } else {
+        log(friendID.toString());
+        log(result.toString());
+        ToastResp.toastMsgError(resp: result['message']);
       }
     }
 
@@ -133,7 +184,7 @@ class SeeMoreUserView extends HookWidget {
                 child: AppTextFormField(
                   //textEditingController: searchController,
                   //label: "",
-                  hintText: "Search for users, event or...",
+                  hintText: "Search for users",
                   onChanged: (value) {
                     //_runUsersFilter(value);
 
@@ -188,142 +239,170 @@ class SeeMoreUserView extends HookWidget {
                                       (BuildContext context, int index) {
                                     ContentUser? content =
                                         foundUsers.value[index];
-                                    return Container(
-                                      margin: const EdgeInsets.only(
-                                          bottom: 15, left: 15, right: 15),
-                                      padding: PAD_ALL_5,
-                                      color: AppColors.white,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  height: 50,
-                                                  width: 50,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                      bottomLeft:
-                                                          Radius.circular(40),
-                                                      bottomRight:
-                                                          Radius.circular(40),
-                                                      topLeft:
-                                                          Radius.circular(40),
-                                                      topRight:
-                                                          Radius.circular(0),
+                                    return GestureDetector(
+                                      onTap: () => context.push(
+                                        AppRoutes.otherUsersProfile,
+                                        extra: content.userId,
+                                      ),
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            bottom: 15, left: 15, right: 15),
+                                        padding: PAD_ALL_5,
+                                        color: AppColors.white,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .only(
+                                                        bottomLeft:
+                                                            Radius.circular(40),
+                                                        bottomRight:
+                                                            Radius.circular(40),
+                                                        topLeft:
+                                                            Radius.circular(40),
+                                                        topRight:
+                                                            Radius.circular(0),
+                                                      ),
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      image: DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: NetworkImage(
+                                                            content.data!
+                                                                .imgMain!.value
+                                                                .toString()),
+                                                      ),
                                                     ),
-                                                    color: Colors.grey.shade300,
-                                                    image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: NetworkImage(
-                                                          "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content.data!.imgMain!.value.toString()}"),
-                                                    ),
-                                                  ),
-                                                  child: Center(
-                                                    child: customText(
-                                                        text: content
-                                                                    .data!
-                                                                    .imgMain!
-                                                                    .objectPublic ==
-                                                                false
-                                                            ? content.firstName!
-                                                                    .isEmpty
-                                                                ? ""
-                                                                : "${content.firstName![0]}${content.lastName![0]}"
-                                                                    .toUpperCase()
-                                                            : "",
-                                                        fontSize: 12,
-                                                        textColor: AppColors
-                                                            .deepPrimary,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                ),
-                                                widthSpace(2),
-                                                SizedBox(
-                                                  width: 40.w,
-                                                  //color: Colors.amber,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      customText(
-                                                          text:
-                                                              "${content.firstName} ${content.lastName}",
-                                                          fontSize: 11,
-                                                          textColor:
-                                                              AppColors.black,
-                                                          fontWeight:
-                                                              FontWeight.w700),
-                                                      customText(
-                                                          text:
-                                                              "Shared Affilations",
-                                                          fontSize: 11,
+                                                    child: Center(
+                                                      child: customText(
+                                                          text: content
+                                                                      .data!
+                                                                      .imgMain!
+                                                                      .value ==
+                                                                  null
+                                                              ? content
+                                                                      .firstName!
+                                                                      .isEmpty
+                                                                  ? ""
+                                                                  : "${content.firstName![0]}${content.lastName![0]}"
+                                                                      .toUpperCase()
+                                                              : "",
+                                                          fontSize: 12,
                                                           textColor: AppColors
-                                                              .searchTextGrey,
+                                                              .deepPrimary,
                                                           fontWeight:
-                                                              FontWeight.w400),
-                                                    ],
+                                                              FontWeight.w500),
+                                                    ),
                                                   ),
-                                                )
-                                              ],
+                                                  widthSpace(2),
+                                                  SizedBox(
+                                                    width: 40.w,
+                                                    //color: Colors.amber,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        customText(
+                                                            text:
+                                                                "${content.firstName} ${content.lastName}",
+                                                            fontSize: 11,
+                                                            textColor:
+                                                                AppColors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w700),
+                                                        customText(
+                                                            text:
+                                                                "Shared Affilations",
+                                                            fontSize: 11,
+                                                            textColor: AppColors
+                                                                .searchTextGrey,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Row(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  // if (content.joinStatus !=
-                                                  //     "FRIEND_REQUEST_SENT") {
-                                                  //   connectFriend(content.userId!);
-                                                  // } else {
-                                                  //   disconnectFriend(content.userId!);
-                                                  // }
-                                                },
-                                                child: Container(
-                                                  height: 40,
-                                                  width: 100,
-                                                  decoration: BoxDecoration(
-                                                    color: content.joinStatus ==
-                                                            "CONNECTED"
-                                                        ? AppColors.red
-                                                        : AppColors.primary,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: Center(
-                                                    child: customText(
-                                                      text: content
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    final result =
+                                                        await _exploreRepository
+                                                            .disconnectWithFriend(
+                                                                friendID: content
+                                                                    .userId);
+                                                    if (result['updated'] ==
+                                                        true) {
+                                                      ToastResp.toastMsgSuccess(
+                                                          resp: result[
+                                                              'message']);
+                                                      refreshConnection();
+                                                      log(result.toString());
+                                                    } else {
+                                                      log(content.userId
+                                                          .toString());
+                                                      log(result.toString());
+                                                      ToastResp.toastMsgError(
+                                                          resp: result[
+                                                              'message']);
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    height: 40,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                      color: content
                                                                   .joinStatus ==
                                                               "CONNECTED"
-                                                          ? "Disconnect"
-                                                          : content.joinStatus ==
-                                                                  "NOT_CONNECTED"
-                                                              ? "Connect"
-                                                              : content.joinStatus ==
-                                                                      "FRIEND_REQUEST_SENT"
-                                                                  ? "Pending"
-                                                                  : "",
-                                                      fontSize: 12,
-                                                      textColor:
-                                                          AppColors.white,
+                                                          ? AppColors.red
+                                                          : AppColors.primary,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Center(
+                                                      child: customText(
+                                                        text: content
+                                                                    .joinStatus ==
+                                                                "CONNECTED"
+                                                            ? "Disconnect"
+                                                            : content.joinStatus ==
+                                                                    "NOT_CONNECTED"
+                                                                ? "Connect"
+                                                                : content.joinStatus ==
+                                                                        "FRIEND_REQUEST_SENT"
+                                                                    ? "Pending"
+                                                                    : "",
+                                                        fontSize: 12,
+                                                        textColor:
+                                                            AppColors.white,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              widthSpace(1),
-                                            ],
-                                          ),
-                                        ],
+                                                widthSpace(1),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },

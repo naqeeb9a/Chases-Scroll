@@ -334,7 +334,7 @@ class MyEventByIDView extends HookWidget {
                                                                           true
                                                                       ? "Organizer"
                                                                       : "Attending",
-                                                                  fontSize: 11,
+                                                                  fontSize: 10,
                                                                   textColor:
                                                                       AppColors
                                                                           .deepPrimary,

@@ -59,14 +59,13 @@ class EventMainView extends HookWidget {
       });
     }
 
-    log("userProfileLoading.value ===>${userProfileModel.value.toString()}");
-
     useEffect(() {
       getUsersProfile();
 
       return null;
     }, []);
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [

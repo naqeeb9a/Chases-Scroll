@@ -7,14 +7,18 @@ import 'package:chases_scroll/src/models/event_model.dart';
 import 'package:chases_scroll/src/repositories/event_repository.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_big_card.dart';
 import 'package:chases_scroll/src/screens/event_screens/widgets/event_small_card.dart';
+import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/row_texts_widget.dart';
 import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/services/storage_service.dart';
+import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
+import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 class FindAllEventCardView extends HookWidget {
@@ -35,6 +39,9 @@ class FindAllEventCardView extends HookWidget {
       _eventRepository.getAllEvents().then((value) {
         allEventLoading.value = false;
         allEventModel.value = value;
+
+        allEventModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 
@@ -42,6 +49,9 @@ class FindAllEventCardView extends HookWidget {
       _eventRepository.getTopEvents().then((value) {
         topEventLoading.value = false;
         topEventModel.value = value;
+
+        topEventModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 
@@ -88,6 +98,34 @@ class FindAllEventCardView extends HookWidget {
       }
     }
 
+    saveEventTopEvent(String eventId) async {
+      final result = await _eventRepository.saveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['updated'] == true) {
+        refreshEventData();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
+    unSaveEventTopEvent(String eventId) async {
+      final result = await _eventRepository.unSaveEvent(
+        eventID: eventId,
+        userID: userId,
+      );
+      log(userId);
+      if (result['updated'] == true) {
+        refreshEventData();
+        ToastResp.toastMsgSuccess(resp: result['message']);
+      } else {
+        ToastResp.toastMsgError(resp: result['message']);
+      }
+    }
+
     useEffect(() {
       getAllEvents();
       getTopEvents();
@@ -100,70 +138,139 @@ class FindAllEventCardView extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           heightSpace(1),
-          Expanded(
-            flex: 6,
-            child: Container(
-              child: ListView.builder(
-                itemCount: allEventModel.value.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  EventContent allEvent = allEventModel.value[index];
-                  //for formatted time
-                  int? startTimeInMillis = allEvent.startTime;
-                  DateTime startTime =
-                      DateTimeUtils.convertMillisecondsToDateTime(
-                          startTimeInMillis!);
-                  String formattedDate = DateUtilss.formatDateTime(startTime);
-                  return EventBigCard(
-                    80.w,
-                    eventDetails: allEvent,
-                    eventName: allEvent.eventName,
-                    date: formattedDate,
-                    location: allEvent.location!.address,
-                    image: allEvent.currentPicUrl,
-                    price: allEvent.minPrice,
-                  );
-                },
-              ),
-            ),
-          ),
+          allEventLoading.value || allEventModel.value.isEmpty
+              ? Expanded(
+                  flex: 6,
+                  child: SizedBox(
+                    height: 10.h,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 8.h,
+                          backgroundColor:
+                              AppColors.deepPrimary.withOpacity(0.1),
+                          child: SvgPicture.asset(
+                            AppImages.calendarAdd,
+                            color: AppColors.deepPrimary,
+                            height: 5.h,
+                          ),
+                        ),
+                        heightSpace(1),
+                        customText(
+                          text: "No Top events available",
+                          fontSize: 12,
+                          textColor: AppColors.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : Expanded(
+                  flex: 6,
+                  child: Container(
+                    child: ListView.builder(
+                      itemCount: allEventModel.value.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        EventContent allEvent = allEventModel.value[index];
+                        //for formatted time
+                        int? startTimeInMillis = allEvent.startTime;
+                        DateTime startTime =
+                            DateTimeUtils.convertMillisecondsToDateTime(
+                                startTimeInMillis!);
+                        String formattedDate =
+                            DateUtilss.formatDateTime(startTime);
+                        return EventBigCard(
+                          80.w,
+                          eventDetails: allEvent,
+                          eventName: allEvent.eventName,
+                          date: formattedDate,
+                          location: allEvent.location!.address,
+                          image: allEvent.currentPicUrl,
+                          price: allEvent.minPrice,
+                          onSaved: () {
+                            allEvent.isSaved == false
+                                ? saveEventTopEvent(allEvent.id!)
+                                : unSaveEventTopEvent(allEvent.id!);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
           RowTextGestureView(
-            leftText: "Trending Event 🔥",
+            leftText: "Trending Events 🔥",
             function: () => context.push(AppRoutes.findTrendingEvent),
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              child: ListView.builder(
-                itemCount: topEventModel.value.length,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (BuildContext context, int index) {
-                  EventContent topEvent = topEventModel.value[index];
-                  //for formatted time
-                  int startTimeInMillis = topEvent.startTime!;
-                  DateTime startTime =
-                      DateTimeUtils.convertMillisecondsToDateTime(
-                          startTimeInMillis);
-                  String formattedDate = DateUtilss.formatDateTime(startTime);
+          topEventLoading.value || topEventModel.value.isEmpty
+              ? Expanded(
+                  flex: 3,
+                  child: SizedBox(
+                    height: 5.h,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 5.h,
+                          backgroundColor:
+                              AppColors.deepPrimary.withOpacity(0.1),
+                          child: SvgPicture.asset(
+                            AppImages.calendarAdd,
+                            color: AppColors.deepPrimary,
+                            height: 5.h,
+                          ),
+                        ),
+                        heightSpace(1),
+                        customText(
+                          text: "No trending events available",
+                          fontSize: 12,
+                          textColor: AppColors.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : Expanded(
+                  flex: 3,
+                  child: Container(
+                    child: ListView.builder(
+                      itemCount: topEventModel.value.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+                        EventContent topEvent = topEventModel.value[index];
+                        //for formatted time
+                        int startTimeInMillis = topEvent.startTime!;
+                        DateTime startTime =
+                            DateTimeUtils.convertMillisecondsToDateTime(
+                                startTimeInMillis);
+                        String formattedDate =
+                            DateUtilss.formatDateTime(startTime);
 
-                  return EventSmallCard(
-                    eventName: topEvent.eventName,
-                    date: formattedDate,
-                    location: topEvent.location!.address,
-                    image: topEvent.currentPicUrl,
-                    price: topEvent.minPrice,
-                    isSaved: topEvent.isSaved!,
-                    eventDetails: topEvent,
-                    onSave: () {
-                      topEvent.isSaved == false
-                          ? saveEvent(topEvent.id!)
-                          : unSaveEvent(topEvent.id!);
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
+                        return EventSmallCard(
+                          eventName: topEvent.eventName,
+                          date: formattedDate,
+                          location: topEvent.location!.address,
+                          image: topEvent.currentPicUrl,
+                          price: topEvent.minPrice,
+                          isSaved: topEvent.isSaved!,
+                          eventDetails: topEvent,
+                          onSave: () {
+                            topEvent.isSaved == false
+                                ? saveEvent(topEvent.id!)
+                                : unSaveEvent(topEvent.id!);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
         ],
       ),
     );

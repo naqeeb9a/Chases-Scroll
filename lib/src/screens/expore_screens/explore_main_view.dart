@@ -44,6 +44,8 @@ class ExploreMainView extends HookWidget {
       _exploreRepository.getTopEvents().then((value) {
         eventLoading.value = false;
         eventModel.value = value;
+
+        eventModel.value.sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 
@@ -56,6 +58,8 @@ class ExploreMainView extends HookWidget {
       _exploreRepository.getSuggestedUsers().then((value) {
         usersLoading.value = false;
         usersModel.value = value;
+
+        usersModel.value.sort((a, b) => a.firstName!.compareTo(b.firstName!));
       });
     }
 
@@ -110,6 +114,7 @@ class ExploreMainView extends HookWidget {
       getUsersProfile();
       getEvents();
       getSuggestedUsers();
+
       return null;
     }, []);
 
@@ -120,7 +125,6 @@ class ExploreMainView extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              heightSpace(2),
               customText(
                   text: "Hello $fullName",
                   fontSize: 20,
@@ -262,45 +266,34 @@ class ExploreMainView extends HookWidget {
                                     ContentUser? friend =
                                         usersModel.value[index];
 
-                                    return usersLoading.value
-                                        ? const Center(
-                                            child: Icon(
-                                              Icons.error,
-                                              size: 60,
-                                              color: Colors.red,
-                                            ),
-                                          )
-                                        : SuggestionView(
-                                            users: usersModel.value[index],
-                                            function: () async {
-                                              log(friend.userId!);
-                                              if (friend.joinStatus !=
-                                                  "FRIEND_REQUEST_SENT") {
-                                                connectFriend(friend.userId!);
-                                              } else {
-                                                disconnectFriend(
-                                                    friend.userId!);
-                                              }
-                                            },
-                                            blockfunction: () async {
-                                              final result =
-                                                  await _exploreRepository
-                                                      .blockFriend(
-                                                          friendID:
-                                                              friend.userId!);
-                                              if (result['updated'] == true) {
-                                                ToastResp.toastMsgSuccess(
-                                                    resp: result['message']);
+                                    return SuggestionView(
+                                      users: usersModel.value[index],
+                                      function: () async {
+                                        log(friend.userId!);
+                                        if (friend.joinStatus !=
+                                            "FRIEND_REQUEST_SENT") {
+                                          connectFriend(friend.userId!);
+                                        } else {
+                                          disconnectFriend(friend.userId!);
+                                        }
+                                      },
+                                      blockfunction: () async {
+                                        final result = await _exploreRepository
+                                            .blockFriend(
+                                                friendID: friend.userId!);
+                                        if (result['updated'] == true) {
+                                          ToastResp.toastMsgSuccess(
+                                              resp: result['message']);
 
-                                                log(result.toString());
-                                                refreshSuggestedUsers();
-                                              } else {
-                                                log(result.toString());
-                                                ToastResp.toastMsgError(
-                                                    resp: result['message']);
-                                              }
-                                            },
-                                          );
+                                          log(result.toString());
+                                          refreshSuggestedUsers();
+                                        } else {
+                                          log(result.toString());
+                                          ToastResp.toastMsgError(
+                                              resp: result['message']);
+                                        }
+                                      },
+                                    );
                                   },
                                 ),
                               ),

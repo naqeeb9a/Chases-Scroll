@@ -31,6 +31,9 @@ class FindCorporateEventView extends HookWidget {
       _eventRepository.getCorporateEvents().then((value) {
         myCorporateLoading.value = false;
         myCorporateModel.value = value;
+
+        myCorporateModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

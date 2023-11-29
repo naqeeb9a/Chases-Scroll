@@ -73,6 +73,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
   static final PostRepository _postRepository = PostRepository();
   static final EventRepository eventRepository = EventRepository();
   PageController pageController = PageController(viewportFraction: 1);
+  int currentPageValue = 0;
 
   final _scrollController = ScrollController();
 
@@ -140,6 +141,8 @@ class _WidgetState extends ConsumerState<AddEventView> {
     "Hybrid Location",
   ];
 
+  String? eventDraftID;
+
   void animateTo(int page) {
     pageController.animateToPage(
       page, // convert int to double
@@ -196,18 +199,27 @@ class _WidgetState extends ConsumerState<AddEventView> {
                   Expanded(
                     child: AddEventExtendedTextLeft(
                       title: "Theme",
+                      color: currentPageValue == 0
+                          ? AppColors.deepPrimary
+                          : AppColors.black,
                       function: () => animateTo(0),
                     ),
                   ),
                   Expanded(
                     child: AddEventExtendedTextLeft(
                       title: "Information",
+                      color: currentPageValue == 1
+                          ? AppColors.deepPrimary
+                          : AppColors.black,
                       function: () => animateTo(1),
                     ),
                   ),
                   Expanded(
                     child: AddEventExtendedTextLeft(
                       title: "Ticket",
+                      color: currentPageValue == 2
+                          ? AppColors.deepPrimary
+                          : AppColors.black,
                       function: () => animateTo(2),
                       alignment: Alignment.center,
                     ),
@@ -217,7 +229,15 @@ class _WidgetState extends ConsumerState<AddEventView> {
               const Divider(),
               Expanded(
                 child: PageView(
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: pageController,
+                  onPageChanged: (value) {
+                    setState(() {
+                      currentPageValue = value;
+                    });
+
+                    log(currentPageValue.toString());
+                  },
                   children: [
                     //---------------- First Phase ---------------------///
                     Container(
@@ -1113,7 +1133,12 @@ class _WidgetState extends ConsumerState<AddEventView> {
     );
     if (result) {
       if (context.mounted) {
-        TextEditingController().clear();
+        setState(() {
+          location.text = '';
+          desc.text = '';
+          eventTitle.text = '';
+          link.text = '';
+        });
         ToastResp.toastMsgSuccess(resp: "Event Created Successfully");
         context.push(AppRoutes.bottomNav, extra: false);
       }
@@ -1124,7 +1149,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
 
   //create draft
   createEventDraft() async {
-    bool result = await eventRepository.createEventDraft(
+    dynamic result = await eventRepository.createEventDraft(
       address: location.text,
       attendeesVisibility: _radioShowEventVisibility == "show" ? true : false,
       currency: eventCurrencyType,
@@ -1146,9 +1171,13 @@ class _WidgetState extends ConsumerState<AddEventView> {
       toBeAnnounced: announcedBox,
       productTypeData: formDataList,
     );
-    if (result) {
+    if (result['id'] != null) {
       if (context.mounted) {
+        setState(() {
+          eventDraftID = result['id'];
+        });
         ToastResp.toastMsgSuccess(resp: "Event Details Saved");
+        log("result['id'] ===> ${result['id']}");
         animateTo(1);
       }
     } else {
@@ -1164,8 +1193,9 @@ class _WidgetState extends ConsumerState<AddEventView> {
 
   //create draft
   updateEventDraft() async {
-    bool result = await eventRepository.updateEventDraft(
+    dynamic result = await eventRepository.updateEventDraft(
       address: location.text,
+      creatdraftID: eventDraftID,
       attendeesVisibility: _radioShowEventVisibility == "show" ? true : false,
       currency: eventCurrencyType,
       currentPicUrl: imageString,
@@ -1186,8 +1216,11 @@ class _WidgetState extends ConsumerState<AddEventView> {
       toBeAnnounced: announcedBox,
       productTypeData: formDataList,
     );
-    if (result) {
+    if (result['id'] != null) {
       if (context.mounted) {
+        setState(() {
+          eventDraftID = result['id'];
+        });
         ToastResp.toastMsgSuccess(resp: "Event Details Saved");
         animateTo(2);
       }

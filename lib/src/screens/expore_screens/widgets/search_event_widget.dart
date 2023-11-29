@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/dimens.dart';
@@ -142,6 +143,43 @@ class _SearchEventWidgetState extends State<SearchEventWidget> {
                                 ),
                                 Row(
                                   children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        String text =
+                                            "https://chasescroll-new.netlify.app/events/${widget.event!.id}";
+
+                                        await Share.share(
+                                          text,
+                                          subject:
+                                              'Check out this user profile from Chasescroll',
+                                          sharePositionOrigin: Rect.fromCenter(
+                                            center: const Offset(0, 0),
+                                            width: 100,
+                                            height: 100,
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 0.0),
+                                            child: SvgPicture.asset(
+                                              AppImages.share,
+                                              height: 2.7.h,
+                                              width: 2.7.w,
+                                              color: AppColors.deepPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    widthSpace(4),
                                     GestureDetector(
                                       onTap: widget.onSave,
                                       child: Container(

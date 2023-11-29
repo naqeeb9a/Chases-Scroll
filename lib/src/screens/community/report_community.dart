@@ -1,19 +1,46 @@
 import 'dart:developer';
 
+import 'package:chases_scroll/src/repositories/community_repo.dart';
 import 'package:chases_scroll/src/screens/widgets/chasescroll_button.dart';
 import 'package:chases_scroll/src/screens/widgets/custom_fonts.dart';
 import 'package:chases_scroll/src/screens/widgets/textform_field.dart';
+import 'package:chases_scroll/src/screens/widgets/toast.dart';
 import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class ReportCommunity extends HookWidget {
-  const ReportCommunity({super.key});
+  static final CommunityRepo _communityRepository = CommunityRepo();
+  static final description = TextEditingController();
+  final String typeId;
+  const ReportCommunity({super.key, required this.typeId});
 
   @override
   Widget build(BuildContext context) {
     final reason = useState<String>("");
+
+    reportCommunity() async {
+      if (description.text.isEmpty) {
+        ToastResp.toastMsgError(resp: "Description can't be empty");
+        return;
+      }
+
+      if (reason.value.isEmpty) {
+        ToastResp.toastMsgError(resp: "Select a reason");
+        return;
+      }
+      bool result = await _communityRepository.reportCommunity(
+          typeId: typeId,
+          title: reason.value,
+          description: description.text,
+          reportType: "REPORT_COMMUNITY");
+
+      if (result) {
+        ToastResp.toastMsgSuccess(resp: "Successful");
+      }
+    }
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -125,13 +152,15 @@ class ReportCommunity extends HookWidget {
               ),
             ),
             heightSpace(2),
-            const AppTextFormField(
+            AppTextFormField(
+              textEditingController: description,
               hintText: "Brief Description",
               maxLength: 300,
               maxLines: 8,
             ),
             heightSpace(2),
-            const ChasescrollButton(
+            ChasescrollButton(
+              onTap: reportCommunity,
               buttonText: "Submit",
             )
           ]),

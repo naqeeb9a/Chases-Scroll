@@ -32,6 +32,9 @@ class FindPopupEventView extends HookWidget {
       _eventRepository.getReligiousEvents().then((value) {
         myPopupLoading.value = false;
         myPopuplModel.value = value;
+
+        myPopuplModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

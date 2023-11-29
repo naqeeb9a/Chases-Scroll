@@ -32,6 +32,9 @@ class FindFestivalEventView extends HookWidget {
       _eventRepository.getFestivalEvents().then((value) {
         myFestivalLoading.value = false;
         myFestivallModel.value = value;
+
+        myFestivallModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

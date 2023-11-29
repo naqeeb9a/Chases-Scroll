@@ -72,57 +72,62 @@ class _SuggestionViewState extends State<SuggestionView> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: GestureDetector(
-                    onTap: () {
-                      context.push(AppRoutes.otherUsersProfile,
-                          extra: widget.users!.userId);
-                    },
-                    child: Container(
-                      height: 6.h,
-                      width: 15.w,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(40),
-                          bottomRight: Radius.circular(40),
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(0),
-                        ),
-                        border: Border.all(color: AppColors.primary),
-                        color: Colors.grey.shade100,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.users!.data!.imgMain!.value.toString()}"),
+                GestureDetector(
+                  onTap: () {
+                    context.push(AppRoutes.otherUsersProfile,
+                        extra: widget.users!.userId);
+                  },
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        child: Container(
+                          height: 6.h,
+                          width: 15.w,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(40),
+                              bottomRight: Radius.circular(40),
+                              topLeft: Radius.circular(40),
+                              topRight: Radius.circular(0),
+                            ),
+                            border: Border.all(color: AppColors.primary),
+                            color: Colors.grey.shade100,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(widget
+                                  .users!.data!.imgMain!.value
+                                  .toString()),
+                            ),
+                          ),
+                          child: Center(
+                            child: customText(
+                                text: widget.users!.data!.imgMain!.value == null
+                                    ? widget.users!.firstName!.isEmpty
+                                        ? ""
+                                        : "${widget.users!.firstName![0]}${widget.users!.lastName![0]}"
+                                            .toUpperCase()
+                                    : "",
+                                fontSize: 14,
+                                textColor: AppColors.deepPrimary,
+                                fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
-                      child: Center(
-                        child: customText(
-                            text: widget.users!.data!.imgMain!.value == null
-                                ? widget.users!.firstName!.isEmpty
-                                    ? ""
-                                    : "${widget.users!.firstName![0]}${widget.users!.lastName![0]}"
-                                        .toUpperCase()
-                                : "",
-                            fontSize: 14,
-                            textColor: AppColors.deepPrimary,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
+                      customText(
+                          text: "${widget.users!.firstName}",
+                          fontSize: 12,
+                          textColor: AppColors.primary,
+                          fontWeight: FontWeight.w500),
+                      heightSpace(0.3),
+                      customText(
+                          text: "Shared Affilations",
+                          fontSize: 12,
+                          textColor: AppColors.textGrey,
+                          fontWeight: FontWeight.w400),
+                    ],
                   ),
                 ),
-                customText(
-                    text: "${widget.users!.firstName}",
-                    fontSize: 12,
-                    textColor: AppColors.primary,
-                    fontWeight: FontWeight.w500),
-                heightSpace(0.3),
-                customText(
-                    text: "Shared Affilations",
-                    fontSize: 12,
-                    textColor: AppColors.textGrey,
-                    fontWeight: FontWeight.w400),
                 Padding(
                   padding: const EdgeInsets.only(top: 9.0, right: 15, left: 15),
                   child: ChasescrollButtonChanges(

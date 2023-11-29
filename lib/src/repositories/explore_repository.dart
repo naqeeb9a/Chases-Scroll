@@ -98,7 +98,7 @@ class ExploreRepository {
 
     if (response.status == 200) {
       final List<dynamic> allCommunities = response.message['content'];
-      //log(allCommunities.toString());
+      log("getAllCommunity ====>${allCommunities.toString()}");
       allCommunityList = allCommunities
           .map<CommContent>((event) => CommContent.fromJson(event))
           .toList();
@@ -121,6 +121,23 @@ class ExploreRepository {
           .toList();
 
       return allEventList;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<CommContent>> getJoinedCommunity({String? userId}) async {
+    String? url = "${Endpoints.joinedCommunity}?userID=$userId";
+    final response = await ApiClient.get(url, useToken: true);
+
+    if (response.status == 200) {
+      final List<dynamic> allCommunities = response.message['content'];
+      //log(allCommunities.toString());
+      allCommunityList = allCommunities
+          .map<CommContent>((event) => CommContent.fromJson(event))
+          .toList();
+
+      return allCommunityList;
     } else {
       return [];
     }

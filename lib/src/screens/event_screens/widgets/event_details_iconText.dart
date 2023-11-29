@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class EventDetailsIconText extends StatelessWidget {
+class EventDetailsIconText extends StatefulWidget {
   final String? title;
   final String? subTitle;
   final String? subTitle2;
   final String? link;
   final String? iconString;
+  final Function()? onlinktap;
 
   const EventDetailsIconText({
     super.key,
@@ -19,8 +20,14 @@ class EventDetailsIconText extends StatelessWidget {
     this.subTitle2,
     this.link,
     this.iconString,
+    this.onlinktap,
   });
 
+  @override
+  State<EventDetailsIconText> createState() => _EventDetailsIconTextState();
+}
+
+class _EventDetailsIconTextState extends State<EventDetailsIconText> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -29,7 +36,7 @@ class EventDetailsIconText extends StatelessWidget {
           radius: 20,
           backgroundColor: AppColors.deepPrimary.withOpacity(0.1),
           child: SvgPicture.asset(
-            iconString.toString(),
+            widget.iconString.toString(),
             color: AppColors.deepPrimary,
           ),
         ),
@@ -39,7 +46,7 @@ class EventDetailsIconText extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               customText(
-                text: title.toString(),
+                text: widget.title.toString(),
                 fontSize: 13,
                 textColor: AppColors.deepPrimary,
                 fontWeight: FontWeight.w700,
@@ -47,11 +54,11 @@ class EventDetailsIconText extends StatelessWidget {
                 lines: 1,
               ),
               Visibility(
-                visible: subTitle == null ? false : true,
+                visible: widget.subTitle == null ? false : true,
                 child: SizedBox(
                   width: 80.w,
                   child: customText(
-                    text: subTitle.toString(),
+                    text: widget.subTitle.toString(),
                     fontSize: 11,
                     textColor: AppColors.subtitleColors,
                     fontWeight: FontWeight.w400,
@@ -60,11 +67,27 @@ class EventDetailsIconText extends StatelessWidget {
                 ),
               ),
               Visibility(
-                visible: subTitle2 != null ? true : false,
+                visible: widget.link == null ? false : true,
+                child: GestureDetector(
+                  onTap: widget.onlinktap,
+                  child: SizedBox(
+                    width: 80.w,
+                    child: customText(
+                      text: widget.link.toString(),
+                      fontSize: 11,
+                      textColor: AppColors.green,
+                      fontWeight: FontWeight.w700,
+                      lines: 2,
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: widget.subTitle2 != null ? true : false,
                 child: SizedBox(
                   width: 80.w,
                   child: customText(
-                    text: subTitle2.toString(),
+                    text: widget.subTitle2.toString(),
                     fontSize: 11,
                     textColor: AppColors.subtitleColors,
                     fontWeight: FontWeight.w400,

@@ -10,7 +10,7 @@ Widget boxShimmer() {
       highlightColor: AppColors.lightGrey,
       child: Container(
         width: double.infinity,
-        height: 50,
+        height: 53,
         decoration: BoxDecoration(
             color: AppColors.white, borderRadius: BorderRadius.circular(10)),
       ));

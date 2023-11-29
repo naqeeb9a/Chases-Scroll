@@ -112,13 +112,13 @@ class _WidgetState extends ConsumerState<EditEventView> {
   String? eventLocationType = "Select Location";
 
   //event visibility String
-  String? _radioJoinValue;
+  String? _radioJoinValue = "public";
 
   //event go live
-  String? _radioGoLiveValue;
+  String _radioGoLiveValue = "yes";
 
   //event go live
-  String? _radioShowEventVisibility;
+  String? _radioShowEventVisibility = "show";
 
   //start date
   DateTime sDate = DateTime.now();
@@ -150,6 +150,11 @@ class _WidgetState extends ConsumerState<EditEventView> {
 
   String? isJoinValue;
 
+  ValueNotifier<List<EventContent>> myEventModel =
+      ValueNotifier<List<EventContent>>([]);
+
+  ValueNotifier<bool> draftEventloading = ValueNotifier<bool>(false);
+
   void animateTo(int page) {
     pageController.animateToPage(
       page, // convert int to double
@@ -163,6 +168,33 @@ class _WidgetState extends ConsumerState<EditEventView> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final notifier = ref.watch(eventCommFunnelDataProvider.notifier);
+
+    // getDraftEventById() {
+    //   eventRepository
+    //       .getDraftEventByID(id: widget.eventDetails.id)
+    //       .then((value) {
+    //     myEventLoading.value = false;
+    //     // print(
+    //     //     'Data from getDraftEventByID: ${myEventModel.value[0].isPublic.toString()}');
+    //     // myEventModel.value = value;
+    //     // _radioGoLiveValue = value[0].isPublic == true ? "public" : "private";
+
+    //     // eventTitle.text = value[0].eventName.toString();
+    //     // eventTypeValue = value[0].eventType.toString();
+    //     // eventDesc.text = value[0].eventDescription.toString();
+    //     // _radioJoinValue = value[0].isPublic == true ? "public" : "private";
+
+    //     // _radioShowEventVisibility =
+    //     //     value[0].attendeesVisibility == true ? "show" : "hide";
+    //     // //second page
+
+    //     // link.text = myEventModel.value[0].location!.link.toString();
+    //     // location.text = myEventModel.value[0].location!.address.toString();
+    //     // desc.text = myEventModel.value[0].location!.locationDetails.toString();
+    //     // startDateString = myEventModel.value[0].startDate.toString();
+    //     // endDateString = myEventModel.value[0].endDate.toString();
+    //   });
+    // }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -562,10 +594,7 @@ class _WidgetState extends ConsumerState<EditEventView> {
                               heightSpace(4),
                               TextButtonEvent(function: () {
                                 if (_formKey1.currentState!.validate()) {
-                                  if (image == null) {
-                                    ToastResp.toastMsgError(
-                                        resp: "No Image has been Selected");
-                                  } else if (_radioGoLiveValue == null) {
+                                  if (_radioGoLiveValue == null) {
                                     ToastResp.toastMsgError(
                                         resp: "Go live not Selected");
                                   } else if (_radioJoinValue == null) {
@@ -796,7 +825,6 @@ class _WidgetState extends ConsumerState<EditEventView> {
                                             ToastResp.toastMsgError(
                                                 resp: "Select Valid End Date");
                                           } else {
-                                            log("whats happeninng");
                                             animateTo(2);
                                           }
                                         }
@@ -1169,11 +1197,14 @@ class _WidgetState extends ConsumerState<EditEventView> {
   }
 
   createEvent(String? funnelID) async {
-    bool result = await eventRepository.createEvent(
+    dynamic result = await eventRepository.createEventDraft(
+      creatdraftID: widget.eventDetails.id,
       address: location.text,
       attendeesVisibility: _radioShowEventVisibility == "show" ? true : false,
       currency: eventCurrencyType,
-      currentPicUrl: imageString,
+      currentPicUrl: widget.eventDetails.currentPicUrl!.isNotEmpty
+          ? widget.eventDetails.currentPicUrl
+          : imageString,
       endDate: convertDateTimeToEpoch(eDate),
       startDate: convertDateTimeToEpoch(sDate),
       endTime: convertTimeOfDayToEpoch(startTime),
@@ -1191,7 +1222,7 @@ class _WidgetState extends ConsumerState<EditEventView> {
       toBeAnnounced: announcedBox,
       productTypeData: formDataList,
     );
-    if (result) {
+    if (result['id'] != null) {
       if (context.mounted) {
         TextEditingController().clear();
         ToastResp.toastMsgSuccess(resp: "Event Created Successfully");
@@ -1202,29 +1233,44 @@ class _WidgetState extends ConsumerState<EditEventView> {
     }
   }
 
+  getDraftEventById() {
+    draftEventloading.value = true;
+
+    eventRepository.getDraftEventByID(id: widget.eventDetails.id).then((value) {
+      draftEventloading.value = false;
+      myEventModel.value = value;
+    }).catchError((error) {
+      draftEventloading.value = false;
+      myEventModel.value = [];
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     formDataList.add(ProductTypeDataa());
+    log("widget.eventDetails.isPublic ===> ${widget.eventDetails.isPublic.toString()}");
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _radioJoinValue =
+          widget.eventDetails.isPublic == true ? "public" : "private";
 
-    isJoinValue = widget.eventDetails.isJoined == true ? "public" : "private";
-    _radioJoinValue = isJoinValue;
-    eventTitle.text = widget.eventDetails.eventName.toString();
-    eventTypeValue = widget.eventDetails.eventType.toString();
-    eventDesc.text = widget.eventDetails.eventDescription.toString();
-    _radioJoinValue =
-        widget.eventDetails.attendeesVisibility == true ? "show" : "hide";
-    _radioShowEventVisibility =
-        widget.eventDetails.isPublic == true ? "public" : "private";
-    //second page
+      eventTitle.text = widget.eventDetails.eventName.toString();
 
-    link.text = widget.eventDetails.location!.link.toString();
-    location.text = widget.eventDetails.location!.address.toString();
-    desc.text = widget.eventDetails.location!.locationDetails.toString();
-    startDateString = widget.eventDetails.startDate.toString();
-    endDateString = widget.eventDetails.endDate.toString();
-    eventCurrencyType = widget.eventDetails.currency;
+      eventTypeValue = widget.eventDetails.eventType.toString();
+      eventDesc.text = widget.eventDetails.eventDescription.toString();
+      _radioShowEventVisibility = "show";
+      _radioGoLiveValue = "public";
+      //second page
+
+      link.text = widget.eventDetails.location!.link.toString();
+      location.text = widget.eventDetails.location!.address.toString();
+      desc.text = widget.eventDetails.location!.locationDetails.toString();
+      sDate =
+          DateTime.fromMillisecondsSinceEpoch(widget.eventDetails.startDate!);
+    });
   }
+
+  //create draft
 
   void uploadImages() async {
     final imagePath =

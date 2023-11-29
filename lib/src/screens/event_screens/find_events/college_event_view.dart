@@ -32,6 +32,9 @@ class FindCollegeEvents extends HookWidget {
       _eventRepository.getCollegeEvents().then((value) {
         myCollegeLoading.value = false;
         myCollegeModel.value = value;
+
+        myCollegeModel.value
+            .sort((a, b) => a.eventName!.compareTo(b.eventName!));
       });
     }
 

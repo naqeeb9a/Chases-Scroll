@@ -46,120 +46,118 @@ class TransactionScreeView extends HookWidget {
                       fontSize: 12,
                       textColor: AppColors.black),
                 )
-              : Expanded(
-                  child: ListView.builder(
-                    itemCount: transactionHistory.value.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final item = transactionHistory.value[index];
+              : ListView.builder(
+                  itemCount: transactionHistory.value.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final item = transactionHistory.value[index];
 
-                      double payAmount = item.payableAmount! / 100;
+                    double payAmount = item.payableAmount! / 100;
 
-                      int timestampInSeconds = 1699607489;
-                      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
-                          timestampInSeconds * 1000);
+                    int timestampInSeconds = 1699607489;
+                    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
+                        timestampInSeconds * 1000);
 
-                      String formattedDateTime =
-                          DateFormat('MMM d, y, hh:mm a').format(dateTime);
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 3),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: item.purpose == "FUND_WALLET"
-                                        ? const Color(0xff12BC42)
+                    String formattedDateTime =
+                        DateFormat('MMM d, y, hh:mm a').format(dateTime);
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: item.purpose == "FUND_WALLET"
+                                      ? const Color(0xff12BC42)
+                                      : item.purpose == "PAY_FOR_TICKET"
+                                          ? const Color(0xff5856d6)
+                                          : Colors.red,
+                                  //? item['purpose'] == "SELLER_REFUND" ?Colors.red: item['purpose'] == "BUYER_REFUND"?Colors.green: Colors.red,
+                                ),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    item.purpose == "FUND_WALLET"
+                                        ? AppImages.receipt
                                         : item.purpose == "PAY_FOR_TICKET"
-                                            ? const Color(0xff5856d6)
-                                            : Colors.red,
-                                    //? item['purpose'] == "SELLER_REFUND" ?Colors.red: item['purpose'] == "BUYER_REFUND"?Colors.green: Colors.red,
-                                  ),
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                      item.purpose == "FUND_WALLET"
-                                          ? AppImages.receipt
-                                          : item.purpose == "PAY_FOR_TICKET"
-                                              ? AppImages.profileEvent
-                                              : AppImages.receipt,
-                                      height: 25,
-                                      width: 25,
-                                    ),
+                                            ? AppImages.profileEvent
+                                            : AppImages.receipt,
+                                    height: 25,
+                                    width: 25,
                                   ),
                                 ),
-                                const SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    customText(
-                                      text: item.purpose == "FUND_WALLET"
-                                          ? "Fund Wallet"
-                                          : item.purpose == "PAY_FOR_TICKET"
-                                              ? "Ticket Purchase"
-                                              : "Cash Out",
-                                      fontSize: 14,
+                              ),
+                              const SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  customText(
+                                    text: item.purpose == "FUND_WALLET"
+                                        ? "Fund Wallet"
+                                        : item.purpose == "PAY_FOR_TICKET"
+                                            ? "Ticket Purchase"
+                                            : "Cash Out",
+                                    fontSize: 14,
+                                    textColor: AppColors.black,
+                                  ),
+                                  customText(
+                                    text: formattedDateTime,
+                                    fontSize: 10,
+                                    textColor: AppColors.textGrey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  heightSpace(0.5),
+                                ],
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  item.currency == "NGN"
+                                      ? customText(
+                                          text: "+₦$payAmount",
+                                          fontSize: 12,
+                                          textColor: AppColors.black,
+                                        )
+                                      : customText(
+                                          text: "+\$${payAmount.toString()}",
+                                          fontSize: 12,
+                                          textColor: AppColors.black,
+                                        ),
+                                  heightSpace(0.5),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: item.status == "STARTED"
+                                          ? Colors.orange.withOpacity(0.15)
+                                          : item.status == "PAID"
+                                              ? const Color(0xff12BC42)
+                                                  .withOpacity(0.15)
+                                              : Colors.red.withOpacity(0.15),
+                                    ),
+                                    child: customText(
+                                      text: item.status!,
+                                      fontSize: 10,
                                       textColor: AppColors.black,
                                     ),
-                                    customText(
-                                      text: formattedDateTime,
-                                      fontSize: 10,
-                                      textColor: AppColors.textGrey,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    heightSpace(0.5),
-                                  ],
-                                )
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    item.currency == "NGN"
-                                        ? customText(
-                                            text: "+₦$payAmount",
-                                            fontSize: 12,
-                                            textColor: AppColors.black,
-                                          )
-                                        : customText(
-                                            text: "+\$${payAmount.toString()}",
-                                            fontSize: 12,
-                                            textColor: AppColors.black,
-                                          ),
-                                    heightSpace(0.5),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: item.status == "STARTED"
-                                            ? Colors.orange.withOpacity(0.15)
-                                            : item.status == "PAID"
-                                                ? const Color(0xff12BC42)
-                                                    .withOpacity(0.15)
-                                                : Colors.red.withOpacity(0.15),
-                                      ),
-                                      child: customText(
-                                        text: item.status!,
-                                        fontSize: 10,
-                                        textColor: AppColors.black,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  },
                 ),
         ),
       ),

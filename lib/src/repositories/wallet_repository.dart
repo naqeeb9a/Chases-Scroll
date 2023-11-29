@@ -9,6 +9,9 @@ import 'package:chases_scroll/src/repositories/endpoints.dart';
 import 'package:chases_scroll/src/services/storage_service.dart';
 
 class WalletRepository {
+  //orderID
+  static String orderCode =
+      locator<LocalStorageService>().getDataFromDisk(AppKeys.orderCode);
   final _storage = locator<LocalStorageService>();
   List<TransactionHistory> getWalletHistory = [];
 
@@ -16,6 +19,21 @@ class WalletRepository {
   List<EscrowModel> inEscrow = [];
   List<EscrowModel> inEscrowFinilized = [];
   List<EscrowModel> inEscrowRefund = [];
+
+  //withdrawl paystack amount
+  Future<dynamic> buyEventWithWallet() async {
+    String url = "${Endpoints.payWithWallet}?orderCode=$orderCode";
+    final response = await ApiClient.postWithoutBody(
+      url,
+      useToken: true,
+    );
+
+    if (response.status == 200 || response.status == 201) {
+      log("buyEventWithWallet ======>${response.message}");
+      return response.message;
+    }
+    return response.message;
+  }
 
   //get escrow balance USD
   Future<bool> checkAccountStatus() async {

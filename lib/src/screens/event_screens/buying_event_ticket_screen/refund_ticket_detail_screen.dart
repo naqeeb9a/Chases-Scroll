@@ -31,216 +31,223 @@ class RefundTicketDetailScreen extends ConsumerWidget {
           width: width,
           child: Padding(
             padding: PAD_ALL_15,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    customText(
-                      text: "Ticket Details",
-                      fontSize: 14,
-                      textColor: AppColors.black,
-                    ),
-                    ChasescrollButton(
-                      width: 100,
-                      buttonText: "Cancel Ticket",
-                      color: AppColors.red,
-                      textColor: AppColors.white,
-                      onTap: () {
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (BuildContext context) {
-                        //     return AlertDialog(
-                        //       //actionsAlignment: MainAxisAlignment.center,
-                        //       title: font18Tx700(
-                        //         "Do you want to allow\n“Chasescroll” cancel ticket?",
-                        //         Colors.black87,
-                        //       ),
-                        //       content: font14Tx500(
-                        //           "Are you sure you want to cancel ticket payment",
-                        //           Colors.black87),
-                        //       actions: [
-                        //         TextButton(
-                        //           onPressed: () {
-                        //             Navigator.of(context).push(
-                        //               MaterialPageRoute(
-                        //                 builder: (context) =>
-                        //                     const CancelTicketOptionScreenView(),
-                        //               ),
-                        //             );
-                        //           },
-                        //           child: const Text('Yes'),
-                        //         ),
-                        //         TextButton(
-                        //           onPressed: () {
-                        //             Navigator.pop(context);
-                        //           },
-                        //           child: const Text('No'),
-                        //         ),
-                        //       ],
-                        //     );
-                        //   },
-                        // );
-                        context.push(AppRoutes.bottomNav);
-                      },
-                    )
-                  ],
-                ),
-                heightSpace(3),
-                Container(
-                  height: height / 7,
-                  width: width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      customText(
+                        text: "Ticket Details",
+                        fontSize: 14,
+                        textColor: AppColors.black,
+                      ),
+                      ChasescrollButton(
+                        width: 100,
+                        height: 40,
+                        buttonText: "Cancel Ticket",
+                        color: const Color.fromARGB(255, 188, 194, 223),
+                        textColor: AppColors.red,
+                        onTap: () {
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (BuildContext context) {
+                          //     return AlertDialog(
+                          //       //actionsAlignment: MainAxisAlignment.center,
+                          //       title: font18Tx700(
+                          //         "Do you want to allow\n“Chasescroll” cancel ticket?",
+                          //         Colors.black87,
+                          //       ),
+                          //       content: font14Tx500(
+                          //           "Are you sure you want to cancel ticket payment",
+                          //           Colors.black87),
+                          //       actions: [
+                          //         TextButton(
+                          //           onPressed: () {
+                          //             Navigator.of(context).push(
+                          //               MaterialPageRoute(
+                          //                 builder: (context) =>
+                          //                     const CancelTicketOptionScreenView(),
+                          //               ),
+                          //             );
+                          //           },
+                          //           child: const Text('Yes'),
+                          //         ),
+                          //         TextButton(
+                          //           onPressed: () {
+                          //             Navigator.pop(context);
+                          //           },
+                          //           child: const Text('No'),
+                          //         ),
+                          //       ],
+                          //     );
+                          //   },
+                          // );
+                          context.push(AppRoutes.bottomNav);
+                        },
+                      )
+                    ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 100,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10),
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                            ),
-                            color: Colors.grey.shade200,
-                            image: DecorationImage(
-                              scale: 1.0,
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${state.image}",
+                  heightSpace(3),
+                  Container(
+                    height: height / 7,
+                    width: width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 90,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                              color: Colors.grey.shade200,
+                              image: DecorationImage(
+                                scale: 1.0,
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                  "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${state.image}",
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 45.w,
-                                  child: customText(
-                                    text: state.name!.toUpperCase(),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 45.w,
+                                    child: customText(
+                                      text: state.name!.toUpperCase(),
+                                      fontSize: 14,
+                                      textColor: AppColors.black,
+                                      fontWeight: FontWeight.w600,
+                                      lines: 2,
+                                    ),
+                                  ),
+                                  customText(
+                                    text: state.location ?? "",
                                     fontSize: 14,
-                                    textColor: AppColors.black,
-                                    fontWeight: FontWeight.w600,
+                                    textColor: AppColors.primary,
                                     lines: 2,
                                   ),
-                                ),
-                                customText(
-                                  text: state.location ?? "",
-                                  fontSize: 14,
-                                  textColor: AppColors.primary,
-                                  lines: 2,
-                                ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  heightSpace(1),
+                  Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
+                      border: Border.all(
+                          color: const Color(0xffD0D4EB), width: 0.3),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                containerTitleSub(
+                                    "Place", state.location ?? ""),
+                                heightSpace(2),
+                                containerTitleSub(
+                                    "Order ID", state.location ?? ""),
+                                heightSpace(2),
+                                containerTitleSub(
+                                    "Ticket Type", state.ticketType ?? ""),
+                                heightSpace(2),
+                                containerTitleSub(
+                                    "Ticket Fee", "${state.price}"),
                               ],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                heightSpace(1),
-                Container(
-                  width: width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                    border:
-                        Border.all(color: const Color(0xffD0D4EB), width: 0.3),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              containerTitleSub("Place", state.location ?? ""),
-                              heightSpace(2),
-                              containerTitleSub(
-                                  "Order ID", state.location ?? ""),
-                              heightSpace(2),
-                              containerTitleSub(
-                                  "Ticket Type", state.ticketType ?? ""),
-                              heightSpace(2),
-                              containerTitleSub("Ticket Fee", "${state.price}"),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff2D264B),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Padding(
-                                  padding: PAD_ALL_15,
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.person_rounded,
-                                      color: Colors.grey.shade500,
-                                      size: height / 14,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff2D264B),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Padding(
+                                    padding: PAD_ALL_15,
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.person_rounded,
+                                        color: Colors.grey.shade500,
+                                        size: height / 14,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              heightSpace(4),
-                              containerTitleSub("Name", "userID"),
-                              heightSpace(2),
-                              containerTitleSub("Time", state.time ?? ""),
-                            ],
+                                heightSpace(4),
+                                containerTitleSub("Name", "userID"),
+                                heightSpace(2),
+                                containerTitleSub("Time", state.time ?? ""),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  width: width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: PAD_ALL_10,
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          AppImages.hiddenBar,
-                          width: width,
-                        ),
-                        heightSpace(2),
-                        customText(
-                          text: "Powered By Chasescroll",
-                          fontSize: 12,
-                          textColor: AppColors.black,
-                        ),
-                      ],
+                  heightSpace(1),
+                  Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: PAD_ALL_10,
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            AppImages.hiddenBar,
+                            width: width,
+                            height: 100,
+                          ),
+                          heightSpace(2),
+                          customText(
+                            text: "Powered By Chasescroll",
+                            fontSize: 12,
+                            textColor: AppColors.black,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                heightSpace(3),
-                ChasescrollButton(
-                  buttonText: "Done",
-                  onTap: () {
-                    context.push(AppRoutes.bottomNav);
-                  },
-                )
-              ],
+                  heightSpace(1),
+                  ChasescrollButton(
+                    buttonText: "Done",
+                    onTap: () {
+                      context.push(AppRoutes.bottomNav);
+                    },
+                  )
+                ],
+              ),
             ),
           ),
         ),

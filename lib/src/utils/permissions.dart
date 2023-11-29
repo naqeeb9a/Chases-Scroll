@@ -27,13 +27,18 @@ Future<Placemark> getAddressFromLatLng(Position position) async {
 
 Future getCurrentPosition() async {
   final hasPermission = await handleLocationPermission();
-  if (!hasPermission) return;
+  Placemark? currentAddress;
+  if (!hasPermission) ToastResp.toastMsgError(resp: "Permission error");
 
-  Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
-  Placemark currentAddress = await getAddressFromLatLng(position);
-
-  return currentAddress.toJson();
+  try {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    currentAddress = await getAddressFromLatLng(position);
+    return currentAddress.toJson();
+  } catch (e) {
+    ToastResp.toastMsgError(resp: "Something went wrong");
+  }
+  return currentAddress?.toJson();
 }
 
 Future<bool> handleLocationPermission() async {
