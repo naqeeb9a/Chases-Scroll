@@ -43,12 +43,12 @@ class GroupChatMessage extends HookWidget {
     final userId =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
     final imageList = useState<List<File>>([]);
-    final imageString = useState<String>('');
+    // final imageString = useState<String>('');
     final chatDetailsModel = useState<ChatDetailsModel?>(null);
 
     final isLoading = useState<bool>(true);
     final imageToUpload = useState<List<String>>([]);
-    final locationValue = useState<String>("");
+    // final locationValue = useState<String>("");
     final pickFile = useState<File>(File(""));
     void uploadFile() async {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -61,9 +61,9 @@ class GroupChatMessage extends HookWidget {
       }
     }
 
-    sendChat() {
-      _chatRepository.postChat(chatId: chatDataModel.id, message: post.text);
-    }
+    // void sendChat() {
+    //   _chatRepository.postChat(chatId: chatDataModel.id, message: post.text);
+    // }
 
     getChat() {
       _chatRepository.getChatDetails(chatId: chatDataModel.id).then((value) {

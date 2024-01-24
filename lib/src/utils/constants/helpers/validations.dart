@@ -29,7 +29,7 @@ String? passwordLengthValidation(String? string) =>
 // }
 
 String? passwordValidation(String? string) =>
-    string!.length < 6 ? 'Atleast 6 characters is expected' : null;
+    string!.length < 8 ? 'Atleast 6 characters is expected' : null;
 
 String? phoneValidation(String? string) =>
     string!.length < 10 ? 'Atleast 10 characters is expected' : null;

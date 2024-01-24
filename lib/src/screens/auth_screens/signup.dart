@@ -9,6 +9,7 @@ import 'package:chases_scroll/src/utils/constants/helpers/validations.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -40,6 +41,9 @@ class SignupScreen extends StatelessWidget {
                 heightSpace(2),
                 AppTextFormField(
                   validator: stringValidation,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+                  ],
                   textEditingController: firstName,
                   hintText: "Enter First Name",
                 ),
@@ -47,6 +51,9 @@ class SignupScreen extends StatelessWidget {
                 AppTextFormField(
                   validator: stringValidation,
                   textEditingController: lastName,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+                  ],
                   hintText: "Enter Last Name",
                 ),
                 heightSpace(.5),
@@ -65,7 +72,7 @@ class SignupScreen extends StatelessWidget {
                 AppTextFormField(
                   isPassword: true,
                   validator: (val) {
-                    if (val!.isEmpty) {
+                    if (val?.isEmpty??true) {
                       return "Atleast 2 characters is expected";
                     }
                     if (val != password.text) {

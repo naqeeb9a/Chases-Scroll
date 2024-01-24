@@ -42,6 +42,7 @@ class _SignupTwoScreenState extends State<SignupTwoScreen> {
   int? dateSelected;
   bool ageValid = false;
   bool agreeTerms = false;
+  String? finalPhoneNumber;
   void agreeTermsBox() {
     setState(() {
       agreeTerms = !agreeTerms;
@@ -87,8 +88,13 @@ class _SignupTwoScreenState extends State<SignupTwoScreen> {
                     errorStyle: const TextStyle(fontSize: 12),
                   ),
                   initialCountryCode: 'NG',
+                  validator: (p0)=> phoneValidation(p0.toString()),
                   onChanged: (phone) {
                     print(phone.completeNumber);
+                    setState(() {
+                      finalPhoneNumber = phone.completeNumber;
+                    });
+                    print(finalPhoneNumber);
                   },
                 ),
                 AppTextFormField(
@@ -319,7 +325,7 @@ class _SignupTwoScreenState extends State<SignupTwoScreen> {
   }
 
   submitForm() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState?.validate()??false) {
       if (!ageValid) {
         ToastResp.toastMsgError(resp: "Enter a valid age");
         return;
@@ -329,14 +335,21 @@ class _SignupTwoScreenState extends State<SignupTwoScreen> {
             resp: "You must agree to the terms and conditions");
         return;
       }
+      if(phoneNumber.text.trim().isEmpty??true){
+         ToastResp.toastMsgError(
+            resp: "Please add the phone number");
+        return;
+      }
+      print(phoneNumber.text);
       bool result = await _authRepository.signup(
           username: widget.signupData.username,
           password: widget.signupData.password,
           email: emailController.text,
           lastName: widget.signupData.lastName,
           dob: returnBackendDate(date),
-          phone: phoneNumber.text,
+          phone: finalPhoneNumber ?? '',
           firstName: widget.signupData.firstname);
+          print(result);
 
       if (result) {
         bool result = await _authRepository.sendEmail(emailController.text, 1);

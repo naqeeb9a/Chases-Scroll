@@ -34,7 +34,7 @@ class AuthRepository {
 
     final response =
         await ApiClient.post(Endpoints.login, body: data, useToken: false);
-    log(response.status.toString());
+    log("${response.status}");
     if (response.status == 200) {
       _storage.saveDataToDisk(
           AppKeys.token, json.encode(response.message['access_token']));

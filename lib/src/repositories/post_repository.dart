@@ -6,7 +6,7 @@ import 'package:chases_scroll/src/models/post_model.dart';
 import 'package:chases_scroll/src/models/user_list_model.dart';
 import 'package:chases_scroll/src/repositories/api/api_clients.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
-import 'package:chases_scroll/src/services/storage_service.dart';
+// import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/getmime.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
@@ -14,10 +14,10 @@ import 'package:http_parser/http_parser.dart';
 // import 'package:minio/io.dart';
 // import 'package:minio/minio.dart';
 
-import '../config/locator.dart';
+// import '../config/locator.dart';
 
 class PostRepository {
-  final _storage = locator<LocalStorageService>();
+  // final _storage = locator<LocalStorageService>();
 
   Future<bool> addComment(
     String postId,

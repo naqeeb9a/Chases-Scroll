@@ -58,10 +58,13 @@ class PasswordScreen extends StatelessWidget {
                 heightSpace(2),
                 Align(
                     alignment: Alignment.centerLeft,
-                    child: customText(
-                        text: "Forgot Password?",
-                        fontSize: 12,
-                        textColor: AppColors.primary)),
+                    child: InkWell( 
+                      onTap: () => context.push(AppRoutes.forgotPassword),
+                      child: customText(
+                          text: "Forgot Password?",
+                          fontSize: 12,
+                          textColor: AppColors.primary),
+                    )),
                 heightSpace(2),
                 ChasescrollButton(
                   buttonText: "Login",

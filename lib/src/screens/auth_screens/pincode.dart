@@ -19,11 +19,12 @@ class PinCodeScreen extends StatelessWidget {
   final AuthRepository _authRepository = AuthRepository();
   final _formKey = GlobalKey<FormState>();
   final bool isSignup;
-  String pincode = "";
   PinCodeScreen({super.key, required this.isSignup});
+  
 
   @override
   Widget build(BuildContext context) {
+    String pincode = "";
     verify() async {
       if (pincode.length < 6) {
         ToastResp.toastMsgError(resp: "Enter a valid code");
