@@ -87,7 +87,6 @@ class AuthRepository {
 
     final response =
         await ApiClient.post(Endpoints.signup, body: data, useToken: false);
-
     if (response.status == 200 || response.status == 201) {
       return true;
     }

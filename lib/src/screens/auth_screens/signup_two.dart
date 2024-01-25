@@ -52,9 +52,9 @@ class _SignupTwoScreenState extends State<SignupTwoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar(),
-        body: SingleChildScrollView(
-            child: Padding(
+      appBar: appBar(),
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Form(
             key: _formKey,
@@ -88,7 +88,7 @@ class _SignupTwoScreenState extends State<SignupTwoScreen> {
                     errorStyle: const TextStyle(fontSize: 12),
                   ),
                   initialCountryCode: 'NG',
-                  validator: (p0)=> phoneValidation(p0.toString()),
+                  validator: (p0) => phoneValidation(p0.toString()),
                   onChanged: (phone) {
                     print(phone.completeNumber);
                     setState(() {
@@ -321,11 +321,13 @@ class _SignupTwoScreenState extends State<SignupTwoScreen> {
               ],
             ),
           ),
-        )));
+        ),
+      ),
+    );
   }
 
   submitForm() async {
-    if (_formKey.currentState?.validate()??false) {
+    if (_formKey.currentState?.validate() ?? false) {
       if (!ageValid) {
         ToastResp.toastMsgError(resp: "Enter a valid age");
         return;
@@ -335,9 +337,8 @@ class _SignupTwoScreenState extends State<SignupTwoScreen> {
             resp: "You must agree to the terms and conditions");
         return;
       }
-      if(phoneNumber.text.trim().isEmpty??true){
-         ToastResp.toastMsgError(
-            resp: "Please add the phone number");
+      if (phoneNumber.text.trim().isEmpty ?? true) {
+        ToastResp.toastMsgError(resp: "Please add the phone number");
         return;
       }
       print(phoneNumber.text);
@@ -349,7 +350,7 @@ class _SignupTwoScreenState extends State<SignupTwoScreen> {
           dob: returnBackendDate(date),
           phone: finalPhoneNumber ?? '',
           firstName: widget.signupData.firstname);
-          print(result);
+      print(result);
 
       if (result) {
         bool result = await _authRepository.sendEmail(emailController.text, 1);

@@ -25,9 +25,9 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar(),
-        body: SingleChildScrollView(
-            child: Padding(
+      appBar: appBar(),
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Form(
             key: _formKey,
@@ -72,7 +72,7 @@ class SignupScreen extends StatelessWidget {
                 AppTextFormField(
                   isPassword: true,
                   validator: (val) {
-                    if (val?.isEmpty??true) {
+                    if (val?.isEmpty ?? true) {
                       return "Atleast 2 characters is expected";
                     }
                     if (val != password.text) {
@@ -118,6 +118,8 @@ class SignupScreen extends StatelessWidget {
               ],
             ),
           ),
-        )));
+        ),
+      ),
+    );
   }
 }
