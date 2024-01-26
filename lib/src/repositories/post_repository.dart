@@ -5,6 +5,7 @@ import 'package:chases_scroll/src/models/comments_model.dart';
 import 'package:chases_scroll/src/models/post_model.dart';
 import 'package:chases_scroll/src/models/user_list_model.dart';
 import 'package:chases_scroll/src/repositories/api/api_clients.dart';
+import 'package:chases_scroll/src/repositories/api/api_response.dart';
 import 'package:chases_scroll/src/repositories/endpoints.dart';
 // import 'package:chases_scroll/src/services/storage_service.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/getmime.dart';
@@ -23,6 +24,7 @@ class PostRepository {
     String postId,
     String comment,
   ) async {
+    print(comment);
     var body = {
       "postID": postId,
       "comment": comment,
@@ -94,6 +96,7 @@ class PostRepository {
     String postId,
     String comment,
   ) async {
+    print(comment);
     var body = {
       "commentID": postId,
       "comment": comment,
@@ -220,9 +223,9 @@ class PostRepository {
   }
 
   Future<PostModel> getPost() async {
-    final response = await ApiClient.get(Endpoints.getPost, useToken: true);
+    ApiResponse response = await ApiClient.get(Endpoints.getPost, useToken: true);
 
-    if (response.status == 200 || response.status == 201) {
+    if ((response.status) == 200 || (response.status) == 201) {
       log("this is the message");
       log(response.message.toString());
       return PostModel.fromJson(response.message);

@@ -22,7 +22,7 @@ Widget customText({
           fontSize: fontSize.dp,
         ),
       ),
-      maxLines: lines ?? 1,
+      maxLines: lines,
       softWrap: true,
-      overflow: TextOverflow.ellipsis,
+      overflow: (lines==null)?null:TextOverflow.ellipsis,
     );

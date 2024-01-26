@@ -4,7 +4,7 @@ String formatEpoch(int timestamp) {
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
   String amPm = dateTime.hour < 12 ? 'AM' : 'PM';
   int hour = dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour;
-  String formattedTime = "$hour:${dateTime.minute} $amPm";
+  String formattedTime = DateFormat('hh:mm:aa').format(dateTime);
 
   return formattedTime;
 }

@@ -98,8 +98,7 @@ class MyCommunity extends HookConsumerWidget {
                               text: "You have not joined a community yet",
                               textColor: AppColors.textGrey,
                               fontSize: 14)),
-                    ...communityModel.value!.content!
-                        .mapIndexed((element, index) {
+                    ...(communityModel.value?.content??[]).mapIndexed((element, index) {
                       return InkWell(
                         onTap: () => context.push(AppRoutes.communityChat,
                             extra: CommunityData(

@@ -207,12 +207,12 @@ class CommunityChat extends HookConsumerWidget {
       _postRepository.addComment(postId, comment);
       ToastResp.toastMsgSuccess(
           resp: "Your comment has been added successfully");
-      getGroupChat();
+       callGroupChat();
     }
 
     addSubComment(String postId, String comment) {
       _postRepository.addSubComment(postId, comment);
-      getGroupChat();
+       callGroupChat();
     }
 
     createPost() async {
@@ -510,7 +510,7 @@ class CommunityChat extends HookConsumerWidget {
                               child: CircularProgressIndicator(),
                             )
                           : Column(children: [
-                              ...postModel.content![index].comments!.content!
+                              ...(postModel.content?[index].comments?.content??[])
                                   .mapIndexed((element, index) {
                                 final hasTapped =
                                     ref.watch(hasTappedComment(index));
@@ -523,7 +523,6 @@ class CommunityChat extends HookConsumerWidget {
                                     children: [
                                       Container(
                                         width: 300,
-                                        height: 80,
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 10, vertical: 10),
                                         decoration: BoxDecoration(
@@ -550,29 +549,31 @@ class CommunityChat extends HookConsumerWidget {
                                                         '${Endpoints.displayImages}/${element.user?.data?.imgMain?.value}',
                                                   ),
                                                   widthSpace(2),
-                                                  Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        customText(
+                                                  Flexible(
+                                                    child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          customText(
+                                                              text:
+                                                                  "${element.user?.username}",
+                                                              fontSize: 8,
+                                                              textColor: AppColors
+                                                                  .primary,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                          heightSpace(.5),
+                                                          customText(
                                                             text:
-                                                                "${element.user?.username}",
-                                                            fontSize: 8,
-                                                            textColor: AppColors
-                                                                .primary,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                        heightSpace(.5),
-                                                        customText(
-                                                          text:
-                                                              "${element.comment}",
-                                                          fontSize: 10,
-                                                          textColor:
-                                                              AppColors.black,
-                                                        ),
-                                                      ])
+                                                                "${element.comment}",
+                                                            fontSize: 10,
+                                                            textColor:
+                                                                AppColors.black,
+                                                          ),
+                                                        ]),
+                                                  )
                                                 ]),
                                             Align(
                                               alignment: Alignment.bottomRight,
@@ -788,6 +789,7 @@ class CommunityChat extends HookConsumerWidget {
                                     ],
                                   ),
                                 );
+                            
                               })
                             ])));
             });
