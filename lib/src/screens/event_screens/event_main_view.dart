@@ -138,7 +138,7 @@ class EventMainView extends HookWidget {
                 controller: pageController,
                 //physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  const FindEventsScreenView(),
+                   FindEventsScreenView(),
                   MyEventView(),
                   SavedEventsView(),
                   PastEventView(),

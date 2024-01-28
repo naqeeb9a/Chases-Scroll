@@ -85,7 +85,10 @@ class ApiClient {
     bool useToken = true,
     bool iscached = false,
   }) async {
-    final result = await _makeRequest(
+        print("${_dio.options.baseUrl}/$endpoint");
+        _getToken();
+    // print(_token.toString());
+    ApiResponse result = await _makeRequest(
       () async {
         final header = _defaultHeader;
         log('this is the token$_token');
@@ -94,7 +97,7 @@ class ApiClient {
             {'Authorization': 'Bearer $_token'},
           );
         }
-
+        
         final options = Options(headers: header);
         log('${_dio.options.baseUrl}/$endpoint');
 
@@ -107,6 +110,7 @@ class ApiClient {
         return response;
       },
     );
+    print(result);
     return result;
   }
 
@@ -153,6 +157,7 @@ class ApiClient {
         }
 
         final options = Options(headers: header);
+        print(_dio.options.baseUrl);
         log("${_dio.options.baseUrl}$endpoint $body");
         AppHelper.showOverlayLoader(
             backgroundColor: backgroundColor, widget: widget);
@@ -294,6 +299,7 @@ class ApiClient {
     String token =
         locator<LocalStorageService>().getDataFromDisk(AppKeys.token);
     log("this is the token here");
+    print(token);
     return json.decode(token);
   }
 

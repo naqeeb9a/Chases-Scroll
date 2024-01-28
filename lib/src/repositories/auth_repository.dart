@@ -34,16 +34,16 @@ class AuthRepository {
 
     final response =
         await ApiClient.post(Endpoints.login, body: data, useToken: false);
-    log("${response.status}");
+    log(response.status.toString());
     if (response.status == 200) {
       _storage.saveDataToDisk(
           AppKeys.token, json.encode(response.message['access_token']));
       _storage.saveDataToDisk(AppKeys.userId, response.message['user_id']);
 
-      log("this is the user id ==> ${response.message['user_id']}");
+      log("this is the user id ==> ${response.message?['user_id']}");
       return true;
     }
-    log("this is the user id ==> ${response.message['user_id']}");
+    log("this is the user id ==> ${response.message?['user_id']}");
     return false;
   }
 

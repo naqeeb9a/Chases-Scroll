@@ -28,17 +28,16 @@ class FindCommunity extends HookConsumerWidget {
     final initialContent = useState<GroupModel?>(null);
     final communityModel = useState<GroupModel?>(null);
     final isLoading = useState<bool>(true);
-    getCommunity() {
+    getCommunity() async{
       final keys =
           locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
       log(keys.toString());
       if (communityModel.value != null) {
         if (textValue!.isNotEmpty) {
-          List<Content> filteredCommunity = communityModel.value!.content!
-              .where((element) => "${element.data?.name}"
+          List<Content> filteredCommunity = communityModel.value?.content?.where((element) => "${element.data?.name}"
                   .toLowerCase()
                   .contains(textValue.toLowerCase()))
-              .toList();
+              .toList()??[];
 
           communityModel.value = GroupModel(content: filteredCommunity);
           return;
@@ -47,8 +46,8 @@ class FindCommunity extends HookConsumerWidget {
 
         return;
       }
-
-      _communityRepo.findCommunity().then((value) {
+      isLoading.value= true;
+      await _communityRepo.findCommunity().then((value) {
         isLoading.value = false;
         communityModel.value = value;
         initialContent.value = value;
@@ -96,13 +95,13 @@ class FindCommunity extends HookConsumerWidget {
                 )
               : Column(
                   children: [
-                    if (communityModel.value!.content!.isEmpty)
+                    if (communityModel.value?.content?.isEmpty??true)
                       Center(
                           child: customText(
                               text: "No Community created",
                               textColor: AppColors.black,
                               fontSize: 14)),
-                    ...communityModel.value!.content!.mapIndexed((e, i) {
+                    ...(communityModel.value?.content??[]).mapIndexed((e, i) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(

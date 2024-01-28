@@ -160,13 +160,11 @@ class EventDetailsMainView extends ConsumerWidget {
                     text: text,
                   );
                 },
-                child: Container(
-                  child: SvgPicture.asset(
-                    AppImages.share,
-                    height: 2.7.h,
-                    width: 2.7.w,
-                    color: Colors.black87,
-                  ),
+                child: SvgPicture.asset(
+                  AppImages.share,
+                  height: 2.7.h,
+                  width: 2.7.w,
+                  color: Colors.black87,
                 ),
               ),
               widthSpace(4),
@@ -195,116 +193,116 @@ class EventDetailsMainView extends ConsumerWidget {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-            padding: PAD_ALL_15,
-            child: SizedBox(
-              height: height,
-              width: width,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: PAD_ALL_10,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Screenshot(
-                            controller: controller,
-                            child: Container(
-                              height: 30.h,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(24),
-                                  bottomRight: Radius.circular(24),
-                                  topLeft: Radius.circular(24),
-                                  topRight: Radius.circular(0),
-                                ),
-                                color: Colors.grey.shade200,
-                                border: Border.all(
-                                    width: 1.2,
-                                    color: AppColors.backgroundSummaryScreen),
-                                image: DecorationImage(
-                                  scale: 1.0,
-                                  fit: BoxFit.fill,
-                                  image: NetworkImage(
-                                      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${eventDetails.currentPicUrl}"),
-                                ),
-                              ),
+        child: Container(
+          height: height,
+          width: width,
+          padding: PAD_ALL_15,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: PAD_ALL_10,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Screenshot(
+                        controller: controller,
+                        child: Container(
+                          height: 30.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(24),
+                              bottomRight: Radius.circular(24),
+                              topLeft: Radius.circular(24),
+                              topRight: Radius.circular(0),
+                            ),
+                            color: Colors.grey.shade200,
+                            border: Border.all(
+                                width: 1.2,
+                                color: AppColors.backgroundSummaryScreen),
+                            image: DecorationImage(
+                              scale: 1.0,
+                              fit: BoxFit.fill,
+                              image: NetworkImage(
+                                  "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${eventDetails.currentPicUrl}"),
                             ),
                           ),
-                          heightSpace(1.2),
-                          customText(
-                            text: eventDetails.eventName.toString(),
-                            fontSize: 14,
-                            textColor: AppColors.black,
-                            lines: 2,
+                        ),
+                      ),
+                      heightSpace(1.2),
+                      customText(
+                        text: eventDetails.eventName ?? 'N/A',
+                        fontSize: 14,
+                        textColor: AppColors.black,
+                        lines: 2,
+                      ),
+                      heightSpace(1),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          eventDetails.currency == "USD"
+                              ? customText(
+                                  text: "\$${eventDetails.minPrice}",
+                                  fontSize: 13,
+                                  textColor: AppColors.deepPrimary,
+                                  fontWeight: FontWeight.w500,
+                                )
+                              : Text(
+                                  "$naira${eventDetails.minPrice}",
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 13,
+                                    color: AppColors.deepPrimary,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                          const Expanded(
+                            flex: 7,
+                            child: SizedBox(),
                           ),
-                          heightSpace(1),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              eventDetails.currency == "USD"
-                                  ? customText(
-                                      text: "\$${eventDetails.minPrice}",
-                                      fontSize: 13,
-                                      textColor: AppColors.deepPrimary,
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  : Text(
-                                      "$naira${eventDetails.minPrice}",
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 13,
-                                        color: AppColors.deepPrimary,
-                                        fontWeight: FontWeight.w700,
-                                      ),
+                          Expanded(
+                            flex: eventDetails.interestedUsers!.length < 2
+                                ? 1
+                                : eventDetails.interestedUsers!.length < 3
+                                    ? 2
+                                    : 3,
+                            child: SizedBox(
+                              //color: Colors.amber,
+                              height: 30,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: eventDetails
+                                            .interestedUsers!.length <
+                                        2
+                                    ? eventDetails.interestedUsers!.length
+                                    : 2, // Replace with your actual item count
+                                itemBuilder: (context, index) {
+                                  InterestedUsers indiv =
+                                      eventDetails.interestedUsers![index];
+                                  // Replace this with your actual list item widget
+                                  return Container(
+                                    width: 8.w,
+                                    height: 6.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: AppColors.primary.withOpacity(0.2),
+                                      // image: DecorationImage(
+                                      //   scale: 1.0,
+                                      //   fit: BoxFit.fill,
+                                      //   image: NetworkImage(
+                                      //       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}"),
+                                      // ),
                                     ),
-                              const Expanded(
-                                flex: 7,
-                                child: Row(),
-                              ),
-                              Expanded(
-                                flex: eventDetails.interestedUsers!.length < 2
-                                    ? 1
-                                    : eventDetails.interestedUsers!.length < 3
-                                        ? 2
-                                        : 3,
-                                child: SizedBox(
-                                  //color: Colors.amber,
-                                  height: 30,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: eventDetails
-                                                .interestedUsers!.length <
-                                            2
-                                        ? eventDetails.interestedUsers!.length
-                                        : 2, // Replace with your actual item count
-                                    itemBuilder: (context, index) {
-                                      InterestedUsers indiv =
-                                          eventDetails.interestedUsers![index];
-                                      // Replace this with your actual list item widget
-                                      return Container(
-                                        width: 8.w,
-                                        height: 6.h,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          color: AppColors.primary
-                                              .withOpacity(0.2),
-                                          // image: DecorationImage(
-                                          //   scale: 1.0,
-                                          //   fit: BoxFit.fill,
-                                          //   image: NetworkImage(
-                                          //       "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${indiv.data!.imgMain!.value}"),
-                                          // ),
-                                        ),
-                                        child: eventDetails.createdBy!.data !=
-                                                null
+                                    child:
+                                        //this commented code is previous
+                                        // eventDetails.createdBy!.data !=
+                                        //         null
+                                        indiv.data?.imgMain == null
                                             ? Center(
                                                 child: indiv.firstName == null
                                                     ? customText(
@@ -340,198 +338,188 @@ class EventDetailsMainView extends ConsumerWidget {
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
-                                        // child: Visibility(
-                                        //     child: Center(
-                                        //   child: Text(
-                                        //       "${indiv.firstName![0]}${indiv.lastName![0]}"
-                                        //           .toUpperCase()),
-                                        // )),
-                                      );
-                                    },
-                                  ),
+                                    // child: Visibility(
+                                    //     child: Center(
+                                    //   child: Text(
+                                    //       "${indiv.firstName![0]}${indiv.lastName![0]}"
+                                    //           .toUpperCase()),
+                                    // )),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => context.push(
+                              AppRoutes.eventAttendeesView,
+                              extra: eventDetails,
+                            ),
+                            child: Container(
+                              width: 8.w,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: AppColors.deepPrimary,
+                              ),
+                              child: Center(
+                                child: customText(
+                                  text:
+                                      "+${eventDetails.memberCount.toString()}",
+                                  fontSize: 10,
+                                  textColor: AppColors.white,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () => context.push(
-                                  AppRoutes.eventAttendeesView,
-                                  extra: eventDetails,
-                                ),
-                                child: Container(
-                                  width: 8.w,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: AppColors.deepPrimary,
-                                  ),
-                                  child: Center(
-                                    child: customText(
-                                      text:
-                                          "+${eventDetails.memberCount.toString()}",
-                                      fontSize: 10,
-                                      textColor: AppColors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          heightSpace(1.6),
-                          EventDetailsIconText(
-                            iconString: AppImages.calendarAdd,
-                            title:
-                                "${startDate.toString()} - ${endDate.toString()}",
-                            subTitle:
-                                "Time-In ${formattedStartTime.toString()}",
-                            subTitle2:
-                                "Time-Out ${formattedEndTime.toString()}",
-                          ),
-                          heightSpace(1),
-                          eventDetails.location!.link!.isNotEmpty ||
-                                  eventDetails.location!.link == null
-                              ? EventDetailsIconText(
-                                  iconString: AppImages.location,
-                                  title: "Online Event",
-                                  link: "${eventDetails.location!.link}",
-                                  onlinktap: () async {
-                                    if (await launch(
-                                        "${eventDetails.location!.link}")) {
-                                      await canLaunch(
-                                          "${eventDetails.location!.link}");
-                                    } else {
-                                      print('Could not launch');
-                                    }
-                                  },
-                                )
-                              : EventDetailsIconText(
-                                  iconString: AppImages.location,
-                                  title: "${eventDetails.location!.address}",
-                                  subTitle:
-                                      "${eventDetails.location!.locationDetails}",
-                                ),
-                          heightSpace(2),
-                          const EventDetailsIconText(
-                            iconString: AppImages.ticket,
-                            title: "Select ticket Type",
-                          ),
-                          heightSpace(2),
-                          DropDownEventType(
-                            typeValue: selectedValue.isEmpty
-                                ? "Please select ticket option"
-                                : selectedValue,
-                            typeList: eventDetails.productTypeData!,
-                            onChanged: (value) {
-                              selectedValue = value!;
-                              Map<String, dynamic> selectedTicket =
-                                  jsonDecode(value);
-                              String ticketType = selectedTicket['ticketType'];
-
-                              double ticketPrice =
-                                  selectedTicket['ticketPrice'];
-
-                              ref
-                                  .read(isOpenProvider.notifier)
-                                  .resetState(true);
-
-                              log(formattedStartTime);
-
-                              notifier.updateTicketSummary(
-                                currency: eventDetails.currency,
-                                eventId: eventDetails.id,
-                                image: eventDetails.currentPicUrl,
-                                location: eventDetails.location!.address,
-                                name: eventDetails.eventName,
-                                numberOfTickets: 0,
-                                price: ticketPrice,
-                                ticketType: ticketType,
-                                time: formattedStartTime,
-                              );
-                            },
-                            onSaved: (value) {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    heightSpace(2),
-                    Visibility(
-                      visible: boolValue,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          OrganizerContainerWidget(
-                            height: height,
-                            width: width,
-                            isCreator: userId == eventDetails.createdBy!.userId
-                                ? true
-                                : false,
-                            orgId: eventDetails.createdBy!.userId ?? "",
-                            orgImage: eventDetails.createdBy!.data != null
-                                ? eventDetails
-                                        .createdBy!.data!.imgMain!.value ??
-                                    ""
-                                : "",
-                            orgFName:
-                                eventDetails.createdBy!.firstName.toString(),
-                            orgLName:
-                                eventDetails.createdBy!.lastName.toString(),
-                            joinStatus:
-                                eventDetails.createdBy!.joinStatus.toString(),
-                          ),
-                          heightSpace(2),
-                          customText(
-                            text: "Event Description",
-                            fontSize: 13,
-                            textColor: AppColors.deepPrimary,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          heightSpace(1),
-                          customText(
-                            text: eventDetails.eventDescription.toString(),
-                            fontSize: 12,
-                            textColor: AppColors.black,
-                            fontWeight: FontWeight.w400,
-                            lines: 4,
-                          ),
-                          heightSpace(1.5),
-                          EventDetailMapLocation(
-                            height: height,
-                            width: width,
-                            function: () {
-                              log(eventDetails.location!.address.toString());
-                              if (eventDetails.location!.address == null) {
-                                ToastResp.toastMsgError(
-                                    resp:
-                                        "Route to map cant open because event location is not available");
-                              } else {
-                                MapUtils.launchMapOnAddress(
-                                  eventDetails.location!.address!,
-                                );
-                              }
-                            },
-                          ),
-                          heightSpace(2),
-                          Visibility(
-                            visible:
-                                eventDetails.isOrganizer == true ? false : true,
-                            child: ChasescrollButton(
-                              buttonText: "Buy Ticket",
-                              onTap: () {
-                                ref
-                                    .read(selectPriceIndexNotifier.notifier)
-                                    .resetState();
-                                //log(notifier.state.name.toString());
-                                context
-                                    .push(AppRoutes.eventTicketSummaryScreen);
-                              },
                             ),
                           ),
                         ],
                       ),
-                    )
-                  ],
+                      heightSpace(1.6),
+                      EventDetailsIconText(
+                        iconString: AppImages.calendarAdd,
+                        title:
+                            "${startDate.toString()} - ${endDate.toString()}",
+                        subTitle: "Time-In ${formattedStartTime.toString()}",
+                        subTitle2: "Time-Out ${formattedEndTime.toString()}",
+                      ),
+                      heightSpace(1),
+                      eventDetails.location!.link!.isNotEmpty ||
+                              eventDetails.location!.link == null
+                          ? EventDetailsIconText(
+                              iconString: AppImages.location,
+                              title: "Online Event",
+                              link: "${eventDetails.location!.link}",
+                              onlinktap: () async {
+                                if (await launch(
+                                    "${eventDetails.location!.link}")) {
+                                  await canLaunch(
+                                      "${eventDetails.location!.link}");
+                                } else {
+                                  print('Could not launch');
+                                }
+                              },
+                            )
+                          : EventDetailsIconText(
+                              iconString: AppImages.location,
+                              title: "${eventDetails.location!.address}",
+                              subTitle:
+                                  "${eventDetails.location!.locationDetails}",
+                            ),
+                      heightSpace(2),
+                      const EventDetailsIconText(
+                        iconString: AppImages.ticket,
+                        title: "Select ticket Type",
+                      ),
+                      heightSpace(2),
+                      DropDownEventType(
+                        typeValue: selectedValue.isEmpty
+                            ? "Please select ticket option"
+                            : selectedValue,
+                        typeList: eventDetails.productTypeData!,
+                        onChanged: (value) {
+                          selectedValue = value!;
+                          Map<String, dynamic> selectedTicket =
+                              jsonDecode(value);
+                          String ticketType = selectedTicket['ticketType'];
+
+                          double ticketPrice = selectedTicket['ticketPrice'];
+
+                          ref.read(isOpenProvider.notifier).resetState(true);
+
+                          log(formattedStartTime);
+
+                          notifier.updateTicketSummary(
+                            currency: eventDetails.currency,
+                            eventId: eventDetails.id,
+                            image: eventDetails.currentPicUrl,
+                            location: eventDetails.location!.address,
+                            name: eventDetails.eventName,
+                            numberOfTickets: 0,
+                            price: ticketPrice,
+                            ticketType: ticketType,
+                            time: formattedStartTime,
+                          );
+                        },
+                        onSaved: (value) {},
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )),
+                heightSpace(2),
+                Visibility(
+                  visible: boolValue,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      OrganizerContainerWidget(
+                        height: height,
+                        width: width,
+                        isCreator: userId == eventDetails.createdBy!.userId
+                            ? true
+                            : false,
+                        orgId: eventDetails.createdBy!.userId ?? "",
+                        orgImage: eventDetails.createdBy!.data != null
+                            ? eventDetails.createdBy!.data!.imgMain!.value ?? ""
+                            : "",
+                        orgFName: eventDetails.createdBy!.firstName.toString(),
+                        orgLName: eventDetails.createdBy!.lastName.toString(),
+                        joinStatus:
+                            eventDetails.createdBy!.joinStatus.toString(),
+                      ),
+                      heightSpace(2),
+                      customText(
+                        text: "Event Description",
+                        fontSize: 13,
+                        textColor: AppColors.deepPrimary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      heightSpace(1),
+                      customText(
+                        text: eventDetails.eventDescription.toString(),
+                        fontSize: 12,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w400,
+                        lines: 4,
+                      ),
+                      heightSpace(1.5),
+                      EventDetailMapLocation(
+                        height: height,
+                        width: width,
+                        function: () {
+                          log(eventDetails.location!.address.toString());
+                          if (eventDetails.location!.address == null) {
+                            ToastResp.toastMsgError(
+                                resp:
+                                    "Route to map cant open because event location is not available");
+                          } else {
+                            MapUtils.launchMapOnAddress(
+                              eventDetails.location!.address!,
+                            );
+                          }
+                        },
+                      ),
+                      heightSpace(2),
+                      Visibility(
+                        visible:
+                            eventDetails.isOrganizer == true ? false : true,
+                        child: ChasescrollButton(
+                          buttonText: "Buy Ticket",
+                          onTap: () {
+                            ref
+                                .read(selectPriceIndexNotifier.notifier)
+                                .resetState();
+                            //log(notifier.state.name.toString());
+                            context.push(AppRoutes.eventTicketSummaryScreen);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

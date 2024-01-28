@@ -78,69 +78,69 @@ class _OrganizerContainerWidgetState extends State<OrganizerContainerWidget> {
                   extra: widget.orgId,
                 );
               },
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 45,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(24),
-                          bottomRight: Radius.circular(24),
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(0),
-                        ),
-                        color: Colors.grey.shade300,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 45,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(0),
                       ),
-                      child: widget.orgImage.isEmpty
-                          ? Center(
-                              child: customText(
-                                text:
-                                    "${widget.orgFName[0].toUpperCase()}${widget.orgLName[0].toUpperCase()}",
-                                fontSize: 14,
-                                textColor: AppColors.primary,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            )
-                          : ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(24),
-                                bottomRight: Radius.circular(24),
-                                topLeft: Radius.circular(24),
-                                topRight: Radius.circular(0),
-                              ),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.orgImage.toString()}",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                      color: Colors.grey.shade300,
                     ),
-                    const SizedBox(width: 15),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        customText(
-                          text: "Organizer",
-                          fontSize: 10,
-                          textColor: const Color(0xff6B6B6B),
-                          fontWeight: FontWeight.w500,
-                        ),
-                        customText(
+                    child: widget.orgImage.isEmpty
+                        ? Center(
+                            child: customText(
+                              text:
+                                  "${widget.orgFName[0].toUpperCase()}${widget.orgLName[0].toUpperCase()}",
+                              fontSize: 14,
+                              textColor: AppColors.primary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(24),
+                              bottomRight: Radius.circular(24),
+                              topLeft: Radius.circular(24),
+                              topRight: Radius.circular(0),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${widget.orgImage.toString()}",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      customText(
+                        text: "Organizer",
+                        fontSize: 10,
+                        textColor: const Color(0xff6B6B6B),
+                        fontWeight: FontWeight.w500,
+                      ),
+                      Flexible(
+                        child: customText(
                           text:
                               "${widget.orgFName.toUpperCase()} ${widget.orgLName.toUpperCase()}",
                           fontSize: 12,
                           textColor: AppColors.primary,
                           fontWeight: FontWeight.w500,
                         ),
-                        const SizedBox(height: 3),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                      const SizedBox(height: 3),
+                    ],
+                  ),
+                ],
               ),
             ),
             Visibility(

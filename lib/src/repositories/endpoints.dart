@@ -6,8 +6,8 @@ class Endpoints {
   // static const String baseUrl = "https://chaseenv.chasescroll.com/";
   // static const String baseUrl = "http://ec2-13-58-170-92.us-east-2.compute.amazonaws.com:8081/";
   // static const String baseUrl = "https://test-api.chasescroll.com/";
-  static const String baseUrl =
-      "https://test-api.chasescroll.com/";
+
+  static const String baseUrl = "https://test-api.chasescroll.com/";
 
   static const String port81 = ":8081";
   static const String port82 = ":8082";
