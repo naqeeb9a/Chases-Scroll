@@ -773,7 +773,7 @@ class _WidgetState extends ConsumerState<EditEventView> {
                                       textEditingController: desc,
                                       label: "Event Nearest Landmark",
                                       hintText:
-                                          "Description event nearest nearest",
+                                          "Description event nearest",
                                       maxLines: 4,
                                     ),
                                     heightSpace(2),

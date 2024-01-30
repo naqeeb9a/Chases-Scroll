@@ -23,6 +23,7 @@ import 'package:chases_scroll/src/utils/constants/colors.dart';
 import 'package:chases_scroll/src/utils/constants/extensions/index_of_map.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -30,6 +31,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:readmore/readmore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../config/locator.dart';
 import '../../utils/constants/helpers/change_millepoch.dart';
@@ -633,10 +636,22 @@ class HomeScreen extends HookConsumerWidget {
                                                 ],
                                               ),
                                               heightSpace(2),
-                                              customText(
-                                                  text: e.text!,
-                                                  fontSize: 12,
-                                                  textColor: AppColors.black),
+                                              ExpandableText(
+                                                e.text ?? '',
+                                                 style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.black),
+                                                expandText: 'see more',
+                                                collapseText: 'see less',
+                                                maxLines: 2,
+                                                linkColor: Colors.blue,
+                                                onUrlTap: (url)async{
+                                                  if (!await launchUrl(Uri.parse(url))) {
+                                                  ToastResp.toastMsgError(resp: "Couldn't launch");
+                                                  }
+                                                },
+                                              ),
                                               heightSpace(2),
                                               (() {
                                                 log('${Endpoints.displayImages}/${e.mediaRef}');
@@ -665,7 +680,7 @@ class HomeScreen extends HookConsumerWidget {
                                                               return Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                        .all(
+                                                                            .all(
                                                                         8.0),
                                                                 child: PictureContainer(
                                                                     image: e.multipleMediaRef![

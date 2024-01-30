@@ -53,6 +53,8 @@ dependencies:
   flutter_multi_formatter: ^2.8.0
   extended_masked_text: ^2.3.1
   charts_flutter:
+  readmore: ^2.2.0
+  expandable_text: ^2.3.0
 
 dev_dependencies:
   flutter_test:

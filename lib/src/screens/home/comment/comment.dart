@@ -13,11 +13,13 @@ import 'package:chases_scroll/src/utils/constants/extensions/index_of_map.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:chases_scroll/src/utils/constants/images.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Comment extends HookWidget {
   static final subComment = TextEditingController();
@@ -165,10 +167,22 @@ class Comment extends HookWidget {
                                               text: e.user!.username!,
                                               fontSize: 12,
                                               textColor: AppColors.primary),
-                                          customText(
-                                              text: e.comment!,
-                                              fontSize: 12,
-                                              textColor: AppColors.textGrey),
+                                          ExpandableText(
+                                            e.comment ?? '',
+                                            style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.textGrey),
+                                            expandText: 'see more',
+                                            collapseText: 'see less',
+                                            maxLines: 2,
+                                            linkColor: Colors.blue,
+                                            onUrlTap: (url)async{
+                                              if (!await launchUrl(Uri.parse(url))) {
+                                                ToastResp.toastMsgError(resp: "Couldn't launch");
+                                              }
+                                            },
+                                          ),
                                           Row(
                                             children: [
                                               Row(

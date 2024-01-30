@@ -203,7 +203,7 @@ class RefundTicketDetailScreen extends ConsumerWidget {
                                   ),
                                 ),
                                 heightSpace(4),
-                                containerTitleSub("Name", "userID"),
+                                containerTitleSub("Name", state.name ?? ''),
                                 heightSpace(2),
                                 containerTitleSub("Time", state.time ?? ""),
                               ],

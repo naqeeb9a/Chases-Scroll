@@ -684,7 +684,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                       textEditingController: desc,
                                       label: "Event Nearest Landmark",
                                       hintText:
-                                          "Description event nearest nearest",
+                                          "Description event nearest",
                                       maxLines: 4,
                                     ),
                                     heightSpace(2),
@@ -799,6 +799,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                           maxHeight: height / 2.5,
                                         ),
                                         child: ListView.builder(
+                                          controller: _scrollController,
                                           itemCount: formDataList.length,
                                           itemBuilder: (BuildContext context,
                                               int index) {

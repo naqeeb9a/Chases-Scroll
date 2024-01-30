@@ -291,9 +291,8 @@ class PostRepository {
     log(body.toString());
     final response =
         await ApiClient.post(Endpoints.sharePost, body: body, useToken: true);
-
     if (response.status == 200 || response.status == 201) {
-      log("this is the message");
+      log("this is the message of share post");
       log(response.message.toString());
       return true;
     }
