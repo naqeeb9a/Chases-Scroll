@@ -176,6 +176,8 @@ class Comment extends HookWidget {
                                             expandText: 'see more',
                                             collapseText: 'see less',
                                             maxLines: 2,
+                                            linkStyle: const TextStyle(color:Colors.blue),
+                                            urlStyle:const TextStyle(color:Colors.blue),
                                             linkColor: Colors.blue,
                                             onUrlTap: (url)async{
                                               if (!await launchUrl(Uri.parse(url))) {
