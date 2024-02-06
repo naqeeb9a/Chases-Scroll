@@ -885,7 +885,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                                         backgroundColor:
                                                             MaterialStateProperty
                                                                 .all(AppColors
-                                                                    .primary),
+                                                                    .red),
                                                       ),
                                                       onPressed: () {
                                                         setState(() {
@@ -919,6 +919,7 @@ class _WidgetState extends ConsumerState<AddEventView> {
                                             setState(() {
                                               formDataList
                                                   .add(ProductTypeDataa());
+                                              ToastResp.toastMsgCustom(resp: 'Ticket type added, please fill');
                                             });
                                             //print(formDataList);
                                             _scrollToBottom();
