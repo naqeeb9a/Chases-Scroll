@@ -648,7 +648,6 @@ class HomeScreen extends HookConsumerWidget {
                                                 linkColor: Colors.blue,
                                                 linkStyle: const TextStyle(color:Colors.blue),
                                                 urlStyle:const TextStyle(color:Colors.blue),
-                                                onLinkTap:(){},
                                                 onUrlTap: (url)async{
                                                   if (!await launchUrl(Uri.parse(url))) {
                                                   ToastResp.toastMsgError(resp: "Couldn't launch");

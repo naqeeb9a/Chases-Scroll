@@ -159,139 +159,147 @@ class Comment extends HookWidget {
                                           name:
                                               "${e.user!.firstName} ${e.user!.lastName} "),
                                       widthSpace(3),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          customText(
-                                              text: e.user!.username!,
-                                              fontSize: 12,
-                                              textColor: AppColors.primary),
-                                          ExpandableText(
-                                            e.comment ?? '',
-                                            style: const TextStyle(
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            customText(
+                                                text: e.user!.username!,
                                                 fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.textGrey),
-                                            expandText: 'see more',
-                                            collapseText: 'see less',
-                                            maxLines: 2,
-                                            linkStyle: const TextStyle(color:Colors.blue),
-                                            urlStyle:const TextStyle(color:Colors.blue),
-                                            linkColor: Colors.blue,
-                                            onUrlTap: (url)async{
-                                              if (!await launchUrl(Uri.parse(url))) {
-                                                ToastResp.toastMsgError(resp: "Couldn't launch");
-                                              }
-                                            },
-                                          ),
-                                          Row(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  customText(
-                                                    text: timeAgoFromEpoch(
-                                                        e.timeInMilliseconds!),
-                                                    fontSize: 10,
-                                                    textColor:
-                                                        AppColors.textGrey,
-                                                  ),
-                                                  widthSpace(3),
-                                                  customText(
-                                                      text: e.likeCount
-                                                          .toString(),
-                                                      fontSize: 11,
-                                                      textColor:
-                                                          AppColors.primary),
-                                                  widthSpace(1),
-                                                  customText(
-                                                      text: "likes",
+                                                textColor: AppColors.primary),
+                                            ExpandableText(
+                                              e.comment??'',
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.textGrey),
+                                              expandText: 'see more',
+                                              collapseText: 'see less',
+                                              maxLines: 2,
+                                              linkStyle: const TextStyle(
+                                                  color: Colors.blue),
+                                              urlStyle: const TextStyle(
+                                                  color: Colors.blue),
+                                              linkColor: Colors.blue,
+                                              onUrlTap: (url) async {
+                                                if (!await launchUrl(
+                                                    Uri.parse(url))) {
+                                                  ToastResp.toastMsgError(
+                                                      resp: "Couldn't launch");
+                                                }
+                                              },
+                                            ),
+                                            Row(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    customText(
+                                                      text: timeAgoFromEpoch(e
+                                                          .timeInMilliseconds!),
                                                       fontSize: 10,
                                                       textColor:
-                                                          AppColors.primary)
-                                                ],
-                                              ),
-                                              widthSpace(3),
-                                              Row(
-                                                children: [
-                                                  customText(
-                                                      text: e.subComments!
-                                                          .content!.length
-                                                          .toString(),
-                                                      fontSize: 10,
-                                                      textColor:
-                                                          AppColors.primary),
-                                                  widthSpace(1),
-                                                  InkWell(
-                                                    onTap: () => isReplyClicked
-                                                            .value =
-                                                        !isReplyClicked.value,
-                                                    child: customText(
-                                                        text: "Reply",
+                                                          AppColors.textGrey,
+                                                    ),
+                                                    widthSpace(3),
+                                                    customText(
+                                                        text: e.likeCount
+                                                            .toString(),
+                                                        fontSize: 11,
+                                                        textColor:
+                                                            AppColors.primary),
+                                                    widthSpace(1),
+                                                    customText(
+                                                        text: "likes",
+                                                        fontSize: 10,
+                                                        textColor:
+                                                            AppColors.primary)
+                                                  ],
+                                                ),
+                                                widthSpace(3),
+                                                Row(
+                                                  children: [
+                                                    customText(
+                                                        text: e.subComments!
+                                                            .content!.length
+                                                            .toString(),
                                                         fontSize: 10,
                                                         textColor:
                                                             AppColors.primary),
-                                                  ),
-                                                  widthSpace(3),
-                                                  if (e.subComments!.content!
-                                                      .isNotEmpty)
+                                                    widthSpace(1),
                                                     InkWell(
-                                                      onTap: () {
-                                                        hasClickedReply.value =
-                                                            !hasClickedReply
-                                                                .value;
-                                                        if (hasClickedReply
-                                                            .value) {
-                                                          getSubComment(e.id!);
-                                                          return;
-                                                        }
-                                                        subComments.value =
-                                                            null;
-                                                      },
+                                                      onTap: () =>
+                                                          isReplyClicked.value =
+                                                              !isReplyClicked
+                                                                  .value,
                                                       child: customText(
-                                                          text: hasClickedReply
-                                                                  .value
-                                                              ? "Hide Replies"
-                                                              : "Show Replies",
+                                                          text: "Reply",
                                                           fontSize: 10,
                                                           textColor: AppColors
                                                               .primary),
-                                                    )
-                                                ],
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      const Spacer(),
-                                      InkWell(
-                                          onTap: () {
-                                            log(hasLiked.value.toString());
-
-                                            if (hasLiked.value) {
-                                              likedCount.value =
-                                                  likedCount.value - 1;
-                                              log(likedCount.value.toString());
-                                              likeComment(e.id!);
-                                              hasLiked.value = !hasLiked.value;
-                                              return;
-                                            }
-                                            if (likedCount.value < 2) {
-                                              likedCount.value =
-                                                  likedCount.value + 1;
-                                            }
-                                            log(likedCount.value.toString());
-                                            hasLiked.value = !hasLiked.value;
-                                            likeComment(e.id!);
-                                          },
-                                          child: hasLiked.value
-                                              ? SvgPicture.asset(
-                                                  AppImages.favouriteFilled,
-                                                  color: AppColors.red,
+                                                    ),
+                                                    widthSpace(3),
+                                                    if (e.subComments!.content!
+                                                        .isNotEmpty)
+                                                      InkWell(
+                                                        onTap: () {
+                                                          hasClickedReply
+                                                                  .value =
+                                                              !hasClickedReply
+                                                                  .value;
+                                                          if (hasClickedReply
+                                                              .value) {
+                                                            getSubComment(
+                                                                e.id!);
+                                                            return;
+                                                          }
+                                                          subComments.value =
+                                                              null;
+                                                        },
+                                                        child: customText(
+                                                            text: hasClickedReply
+                                                                    .value
+                                                                ? "Hide Replies"
+                                                                : "Show Replies",
+                                                            fontSize: 10,
+                                                            textColor: AppColors
+                                                                .primary),
+                                                      )
+                                                  ],
                                                 )
-                                              : SvgPicture.asset(
-                                                  AppImages.like,
-                                                ))
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          log(hasLiked.value.toString());
+                                          if (hasLiked.value) {
+                                            likedCount.value =
+                                                likedCount.value - 1;
+                                            log(likedCount.value.toString());
+                                            likeComment(e.id!);
+                                            hasLiked.value = !hasLiked.value;
+                                            return;
+                                          }
+                                          if (likedCount.value < 2) {
+                                            likedCount.value =
+                                                likedCount.value + 1;
+                                          }
+                                          log(likedCount.value.toString());
+                                          hasLiked.value = !hasLiked.value;
+                                          likeComment(e.id!);
+                                        },
+                                        child: hasLiked.value
+                                            ? SvgPicture.asset(
+                                                AppImages.favouriteFilled,
+                                                color: AppColors.red,
+                                              )
+                                            : SvgPicture.asset(
+                                                AppImages.like,
+                                              ),
+                                      ),
                                     ],
                                   ),
                                   const Divider(

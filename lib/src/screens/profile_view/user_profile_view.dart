@@ -562,934 +562,920 @@ class UserMainProfileView extends HookWidget {
                         },
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
-                          Container(
-                            //color: Colors.green,
-                            child: GridView.builder(
-                              itemCount: postModel.value
-                                  .where(
-                                      (ticket) => ticket.type == "WITH_IMAGE")
-                                  .length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                childAspectRatio: 1,
-                              ),
-                              itemBuilder: (BuildContext context, int index) {
-                                Content contentPost = postModel.value[index];
-                                //print(contentPost);
-                                return GestureDetector(
-                                  onTap: () {
-                                    context.push(AppRoutes.seeMoreUserPost,
-                                        extra: userProfileModel.value.userId);
-                                  },
-                                  child: Card(
-                                    color: Colors.grey.shade200,
-                                    shadowColor: Colors.transparent,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(13.0),
-                                        bottomRight: Radius.circular(13.0),
-                                        bottomLeft: Radius.circular(13.0),
-                                        topRight: Radius.circular(0.0),
-                                      ),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(13.0),
-                                        bottomRight: Radius.circular(13.0),
-                                        bottomLeft: Radius.circular(13.0),
-                                        topRight: Radius.circular(0.0),
-                                      ),
-                                      child: contentPost.mediaRef == null
-                                          ? const SizedBox(
-                                              child: ColoredBox(
-                                                  color: Colors.transparent),
-                                            )
-                                          : CachedNetworkImage(
-                                              imageUrl:
-                                                  "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${contentPost.mediaRef.toString()}",
-                                              fit: BoxFit.cover,
-                                            ),
+                          GridView.builder(
+                            itemCount: postModel.value
+                                .where(
+                                    (ticket) => ticket.type == "WITH_IMAGE")
+                                .length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              childAspectRatio: 1,
+                            ),
+                            itemBuilder: (BuildContext context, int index) {
+                              Content contentPost = postModel.value[index];
+                              //print(contentPost);
+                              return GestureDetector(
+                                onTap: () {
+                                  context.push(AppRoutes.seeMoreUserPost,
+                                      extra: userProfileModel.value.userId);
+                                },
+                                child: Card(
+                                  color: Colors.grey.shade200,
+                                  shadowColor: Colors.transparent,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(13.0),
+                                      bottomRight: Radius.circular(13.0),
+                                      bottomLeft: Radius.circular(13.0),
+                                      topRight: Radius.circular(0.0),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(13.0),
+                                      bottomRight: Radius.circular(13.0),
+                                      bottomLeft: Radius.circular(13.0),
+                                      topRight: Radius.circular(0.0),
+                                    ),
+                                    child: contentPost.mediaRef == null
+                                        ? const SizedBox(
+                                            child: ColoredBox(
+                                                color: Colors.transparent),
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl:
+                                                "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${contentPost.mediaRef.toString()}",
+                                            fit: BoxFit.cover,
+                                          ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                          Container(
-                            //color: Colors.red,
-                            child: DefaultTabController(
-                              length: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 15),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 0, left: 5, right: 5),
-                                            child: AppTextFormField(
-                                              //textEditingController: searchController,
-                                              //label: "",
-                                              hintText:
-                                                  "Search for users, event or...",
-                                              onChanged: (value) {
-                                                //_runUsersFilter(value);
-
-                                                _runUsersFilter(value);
-                                              },
-                                            ),
+                          DefaultTabController(
+                            length: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 15),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 0, left: 5, right: 5),
+                                          child: AppTextFormField(
+                                            //textEditingController: searchController,
+                                            //label: "",
+                                            hintText:
+                                                "Search for users, event or...",
+                                            onChanged: (value) {
+                                              _runUsersFilter(value);
+                                            },
                                           ),
                                         ),
-                                        widthSpace(2),
-                                        GestureDetector(
-                                          onTap: () => context
-                                              .push(AppRoutes.profileUsersMore),
-                                          child: customText(
-                                            text: "See all",
-                                            fontSize: 14,
-                                            textColor: AppColors.deepPrimary,
-                                          ),
+                                      ),
+                                      widthSpace(2),
+                                      GestureDetector(
+                                        onTap: () => context
+                                            .push(AppRoutes.profileUsersMore),
+                                        child: customText(
+                                          text: "See all",
+                                          fontSize: 14,
+                                          textColor: AppColors.deepPrimary,
                                         ),
-                                        widthSpace(2),
+                                      ),
+                                      widthSpace(2),
+                                    ],
+                                  ),
+                                  heightSpace(1),
+                                  Container(
+                                    padding: PAD_ALL_5,
+                                    margin: const EdgeInsets.fromLTRB(
+                                        5, 0, 5, 10),
+                                    height: 6.h,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: TabBar(
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      indicator: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius:
+                                            BorderRadius.circular(5),
+                                      ),
+                                      labelColor: Colors.white,
+                                      unselectedLabelColor:
+                                          AppColors.subtitleColors,
+                                      tabs: const [
+                                        Tab(
+                                          text: 'Connects',
+                                        ),
+                                        Tab(
+                                          text: 'Requests',
+                                        ),
                                       ],
                                     ),
-                                    heightSpace(1),
-                                    Container(
-                                      padding: PAD_ALL_5,
-                                      margin: const EdgeInsets.fromLTRB(
-                                          5, 0, 5, 10),
-                                      height: 6.h,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: TabBar(
-                                        indicatorSize: TabBarIndicatorSize.tab,
-                                        indicator: BoxDecoration(
-                                          color: AppColors.primary,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        labelColor: Colors.white,
-                                        unselectedLabelColor:
-                                            AppColors.subtitleColors,
-                                        tabs: const [
-                                          Tab(
-                                            text: 'Connects',
-                                          ),
-                                          Tab(
-                                            text: 'Requests',
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: TabBarView(
-                                        children: [
-                                          Container(
-                                            //color: Colors.cyan,
-                                            child:
-                                                usersLoading.value ||
-                                                        foundUsers.value.isEmpty
-                                                    ? Center(
-                                                        child: customText(
-                                                          text:
-                                                              "No Connections Available",
-                                                          fontSize: 14,
-                                                          textColor: AppColors
-                                                              .deepPrimary,
-                                                        ),
-                                                      )
-                                                    : SizedBox(
-                                                        height: double.infinity,
-                                                        width: double.infinity,
-                                                        child: ListView.builder(
-                                                          itemCount: foundUsers
-                                                              .value.length,
-                                                          scrollDirection:
-                                                              Axis.vertical,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index) {
-                                                            ContentUser?
-                                                                content =
-                                                                foundUsers
-                                                                        .value[
-                                                                    index];
-                                                            return GestureDetector(
-                                                              onTap: () =>
-                                                                  context.push(
-                                                                AppRoutes
-                                                                    .otherUsersProfile,
-                                                                extra: content
-                                                                    .userId,
-                                                              ),
-                                                              child: Container(
-                                                                margin:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        bottom:
-                                                                            15,
-                                                                        left:
-                                                                            15,
-                                                                        right:
-                                                                            15),
-                                                                padding:
-                                                                    PAD_ALL_5,
-                                                                color: AppColors
-                                                                    .white,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Expanded(
-                                                                          flex:
-                                                                              2,
-                                                                          child:
-                                                                              Row(
-                                                                            children: [
-                                                                              Container(
-                                                                                height: 50,
-                                                                                width: 50,
-                                                                                decoration: BoxDecoration(
-                                                                                  borderRadius: const BorderRadius.only(
-                                                                                    bottomLeft: Radius.circular(40),
-                                                                                    bottomRight: Radius.circular(40),
-                                                                                    topLeft: Radius.circular(40),
-                                                                                    topRight: Radius.circular(0),
-                                                                                  ),
-                                                                                  color: Colors.grey.shade300,
-                                                                                  image: DecorationImage(
-                                                                                    fit: BoxFit.cover,
-                                                                                    image: NetworkImage(content.data!.imgMain!.value.toString()),
-                                                                                  ),
+                                  ),
+                                  Expanded(
+                                    child: TabBarView(
+                                      children: [
+                                        Container(
+                                          //color: Colors.cyan,
+                                          child:
+                                              usersLoading.value ||
+                                                      foundUsers.value.isEmpty
+                                                  ? Center(
+                                                      child: customText(
+                                                        text:
+                                                            "No Connections Available",
+                                                        fontSize: 14,
+                                                        textColor: AppColors
+                                                            .deepPrimary,
+                                                      ),
+                                                    )
+                                                  : SizedBox(
+                                                      height: double.infinity,
+                                                      width: double.infinity,
+                                                      child: ListView.builder(
+                                                        itemCount: foundUsers
+                                                            .value.length,
+                                                        scrollDirection:
+                                                            Axis.vertical,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          ContentUser?
+                                                              content =
+                                                              foundUsers
+                                                                      .value[
+                                                                  index];
+                                                          return GestureDetector(
+                                                            onTap: () =>
+                                                                context.push(
+                                                              AppRoutes
+                                                                  .otherUsersProfile,
+                                                              extra: content
+                                                                  .userId,
+                                                            ),
+                                                            child: Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      bottom:
+                                                                          15,
+                                                                      left:
+                                                                          15,
+                                                                      right:
+                                                                          15),
+                                                              padding:
+                                                                  PAD_ALL_5,
+                                                              color: AppColors
+                                                                  .white,
+                                                              child: Column(
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Expanded(
+                                                                        flex:
+                                                                            2,
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              height: 50,
+                                                                              width: 50,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: const BorderRadius.only(
+                                                                                  bottomLeft: Radius.circular(40),
+                                                                                  bottomRight: Radius.circular(40),
+                                                                                  topLeft: Radius.circular(40),
+                                                                                  topRight: Radius.circular(0),
                                                                                 ),
-                                                                                child: Center(
-                                                                                  child: customText(
-                                                                                      text: content.data!.imgMain!.value == null
-                                                                                          ? content.firstName!.isEmpty
-                                                                                              ? ""
-                                                                                              : "${content.firstName![0]}${content.lastName![0]}".toUpperCase()
-                                                                                          : "",
-                                                                                      fontSize: 12,
-                                                                                      textColor: AppColors.deepPrimary,
-                                                                                      fontWeight: FontWeight.w500),
+                                                                                color: Colors.grey.shade300,
+                                                                                image: DecorationImage(
+                                                                                  fit: BoxFit.cover,
+                                                                                  image: NetworkImage(content.data!.imgMain!.value.toString()),
                                                                                 ),
                                                                               ),
-                                                                              widthSpace(2),
-                                                                              SizedBox(
-                                                                                width: 40.w,
-                                                                                //color: Colors.amber,
-                                                                                child: Column(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                                  children: [
-                                                                                    customText(text: "${content.firstName} ${content.lastName}", fontSize: 11, textColor: AppColors.black, fontWeight: FontWeight.w700),
-                                                                                    customText(text: "Shared Affilations", fontSize: 11, textColor: AppColors.searchTextGrey, fontWeight: FontWeight.w400),
-                                                                                  ],
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
+                                                                              child: Center(
+                                                                                child: customText(
+                                                                                    text: content.data!.imgMain!.value == null
+                                                                                        ? content.firstName!.isEmpty
+                                                                                            ? ""
+                                                                                            : "${content.firstName![0]}${content.lastName![0]}".toUpperCase()
+                                                                                        : "",
+                                                                                    fontSize: 12,
+                                                                                    textColor: AppColors.deepPrimary,
+                                                                                    fontWeight: FontWeight.w500),
+                                                                              ),
+                                                                            ),
+                                                                            widthSpace(2),
+                                                                            SizedBox(
+                                                                              width: 40.w,
+                                                                              //color: Colors.amber,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  customText(text: "${content.firstName} ${content.lastName}", fontSize: 11, textColor: AppColors.black, fontWeight: FontWeight.w700),
+                                                                                  customText(text: "Shared Affilations", fontSize: 11, textColor: AppColors.searchTextGrey, fontWeight: FontWeight.w400),
+                                                                                ],
+                                                                              ),
+                                                                            )
+                                                                          ],
                                                                         ),
-                                                                        Row(
+                                                                      ),
+                                                                      Row(
+                                                                        children: [
+                                                                          GestureDetector(
+                                                                            onTap: () async {
+                                                                              final result = await _exploreRepository.disconnectWithFriend(friendID: content.userId);
+                                                                              if (result['updated'] == true) {
+                                                                                ToastResp.toastMsgSuccess(resp: result['message']);
+                                                                                refreshConnection();
+                                                                                log(result.toString());
+                                                                              } else {
+                                                                                log(content.userId.toString());
+                                                                                log(result.toString());
+                                                                                ToastResp.toastMsgError(resp: result['message']);
+                                                                              }
+                                                                            },
+                                                                            child: Container(
+                                                                              height: 40,
+                                                                              width: 90,
+                                                                              decoration: BoxDecoration(
+                                                                                color: content.joinStatus == "CONNECTED" ? AppColors.red : AppColors.primary,
+                                                                                borderRadius: BorderRadius.circular(10),
+                                                                              ),
+                                                                              child: Center(
+                                                                                child: customText(
+                                                                                  text: content.joinStatus == "CONNECTED"
+                                                                                      ? "Disconnect"
+                                                                                      : content.joinStatus == "NOT_CONNECTED"
+                                                                                          ? "Connect"
+                                                                                          : content.joinStatus == "FRIEND_REQUEST_SENT"
+                                                                                              ? "Pending"
+                                                                                              : "",
+                                                                                  fontSize: 12,
+                                                                                  textColor: AppColors.white,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  heightSpace(
+                                                                      0.2),
+                                                                  const Divider(
+                                                                    thickness:
+                                                                        0.5,
+                                                                    color: AppColors
+                                                                        .iconGrey,
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                        ),
+                                        Container(
+                                          //color: Colors.indigo,
+                                          child:
+                                              userRequestLoading.value ||
+                                                      foundUsersRequest
+                                                          .value.isEmpty
+                                                  ? Center(
+                                                      child: customText(
+                                                        text:
+                                                            "No Connection Request Available",
+                                                        fontSize: 14,
+                                                        textColor: AppColors
+                                                            .deepPrimary,
+                                                      ),
+                                                    )
+                                                  : SizedBox(
+                                                      height: double.infinity,
+                                                      width: double.infinity,
+                                                      child: ListView.builder(
+                                                        itemCount:
+                                                            foundUsersRequest
+                                                                .value.length,
+                                                        scrollDirection:
+                                                            Axis.vertical,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          final content =
+                                                              foundUsersRequest
+                                                                      .value[
+                                                                  index];
+                                                          return GestureDetector(
+                                                            onTap: () => context.push(
+                                                                AppRoutes
+                                                                    .otherUsersProfile,
+                                                                extra: content[
+                                                                        'fromUserID']
+                                                                    [
+                                                                    'userId']),
+                                                            child: Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          5,
+                                                                      left: 5,
+                                                                      right:
+                                                                          5),
+                                                              padding:
+                                                                  PAD_ALL_5,
+                                                              color: AppColors
+                                                                  .white,
+                                                              child: Column(
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Expanded(
+                                                                        flex:
+                                                                            2,
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              height: 50,
+                                                                              width: 50,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: const BorderRadius.only(
+                                                                                  bottomLeft: Radius.circular(40),
+                                                                                  bottomRight: Radius.circular(40),
+                                                                                  topLeft: Radius.circular(40),
+                                                                                  topRight: Radius.circular(0),
+                                                                                ),
+                                                                                border: Border.all(width: 3.5, color: Colors.grey.shade400),
+                                                                                color: Colors.grey.shade300,
+                                                                                image: DecorationImage(
+                                                                                  fit: BoxFit.cover,
+                                                                                  image: NetworkImage("http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content['fromUserID']['data']['imgMain']['value'].toString()}"),
+                                                                                ),
+                                                                              ),
+                                                                              child: Center(
+                                                                                child: customText(
+                                                                                    text: content['fromUserID']['data']['imgMain']['value'] == null
+                                                                                        ? content['fromUserID']['firstName']!.isEmpty
+                                                                                            ? ""
+                                                                                            : "${content['fromUserID']['firstName'][0]}${content['fromUserID']['lastName'][0]}".toUpperCase()
+                                                                                        : "",
+                                                                                    fontSize: 12,
+                                                                                    textColor: AppColors.deepPrimary,
+                                                                                    fontWeight: FontWeight.w500),
+                                                                              ),
+                                                                            ),
+                                                                            widthSpace(2),
+                                                                            SizedBox(
+                                                                              width: 40.w,
+                                                                              //color: Colors.amber,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  customText(text: "${content['fromUserID']['firstName']} ${content['fromUserID']['lastName']}", fontSize: 11, textColor: AppColors.black, fontWeight: FontWeight.w700),
+                                                                                  customText(text: "@${content['fromUserID']['username']} ", fontSize: 11, textColor: AppColors.searchTextGrey, fontWeight: FontWeight.w400),
+                                                                                ],
+                                                                              ),
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      Container(
+                                                                        padding:
+                                                                            PAD_ALL_10,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              AppColors.primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(30),
+                                                                        ),
+                                                                        child:
+                                                                            Row(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.center,
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
                                                                           children: [
                                                                             GestureDetector(
                                                                               onTap: () async {
-                                                                                final result = await _exploreRepository.disconnectWithFriend(friendID: content.userId);
+                                                                                final result = await _exploreRepository.acceptFriendRequest(friendID: content['fromUserID']['userId']);
                                                                                 if (result['updated'] == true) {
                                                                                   ToastResp.toastMsgSuccess(resp: result['message']);
-                                                                                  refreshConnection();
+
                                                                                   log(result.toString());
+                                                                                  refreshConnection();
                                                                                 } else {
-                                                                                  log(content.userId.toString());
                                                                                   log(result.toString());
                                                                                   ToastResp.toastMsgError(resp: result['message']);
                                                                                 }
                                                                               },
-                                                                              child: Container(
-                                                                                height: 40,
-                                                                                width: 90,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: content.joinStatus == "CONNECTED" ? AppColors.red : AppColors.primary,
-                                                                                  borderRadius: BorderRadius.circular(10),
-                                                                                ),
-                                                                                child: Center(
-                                                                                  child: customText(
-                                                                                    text: content.joinStatus == "CONNECTED"
-                                                                                        ? "Disconnect"
-                                                                                        : content.joinStatus == "NOT_CONNECTED"
-                                                                                            ? "Connect"
-                                                                                            : content.joinStatus == "FRIEND_REQUEST_SENT"
-                                                                                                ? "Pending"
-                                                                                                : "",
-                                                                                    fontSize: 12,
-                                                                                    textColor: AppColors.white,
-                                                                                  ),
-                                                                                ),
+                                                                              child: SvgPicture.asset(
+                                                                                AppImages.addOrganizer,
+                                                                                color: content['fromUserID']['joinStatus'] == "FRIEND_REQUEST_RECIEVED" ? AppColors.white : AppColors.white,
                                                                               ),
+                                                                            ),
+                                                                            widthSpace(2),
+                                                                            PopupMenuButton(
+                                                                              shape: RoundedRectangleBorder(
+                                                                                borderRadius: BorderRadius.circular(15),
+                                                                              ),
+                                                                              position: PopupMenuPosition.under,
+                                                                              color: Colors.white,
+                                                                              child: Container(
+                                                                                child: const Padding(
+                                                                                    padding: EdgeInsets.all(2.0),
+                                                                                    child: Icon(
+                                                                                      Icons.more_vert_outlined,
+                                                                                      color: Colors.white,
+                                                                                    )),
+                                                                              ),
+                                                                              itemBuilder: (ctx) => [
+                                                                                buildPopupMenuItem2(
+                                                                                  'Disconnect',
+                                                                                  AppColors.black,
+                                                                                  function: () async {
+                                                                                    final result = await _exploreRepository.rejectFriendRequest(friendID: content['fromUserID']['userId']);
+                                                                                    if (result['updated'] == true) {
+                                                                                      ToastResp.toastMsgSuccess(resp: result['message']);
+
+                                                                                      log(result.toString());
+                                                                                      refreshConnection();
+                                                                                    } else {
+                                                                                      log(result.toString());
+                                                                                      ToastResp.toastMsgError(resp: result['message']);
+                                                                                    }
+                                                                                  },
+                                                                                ),
+                                                                              ],
                                                                             ),
                                                                           ],
                                                                         ),
-                                                                      ],
-                                                                    ),
-                                                                    heightSpace(
-                                                                        0.2),
-                                                                    const Divider(
-                                                                      thickness:
-                                                                          0.5,
-                                                                      color: AppColors
-                                                                          .iconGrey,
-                                                                    )
-                                                                  ],
-                                                                ),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                  heightSpace(
+                                                                      0.2),
+                                                                  const Divider(
+                                                                    thickness:
+                                                                        0.5,
+                                                                    color: AppColors
+                                                                        .iconGrey,
+                                                                  )
+                                                                ],
                                                               ),
-                                                            );
-                                                          },
-                                                        ),
+                                                            ),
+                                                          );
+                                                        },
                                                       ),
-                                          ),
-                                          Container(
-                                            //color: Colors.indigo,
-                                            child:
-                                                userRequestLoading.value ||
-                                                        foundUsersRequest
-                                                            .value.isEmpty
-                                                    ? Center(
-                                                        child: customText(
-                                                          text:
-                                                              "No Connection Request Available",
-                                                          fontSize: 14,
-                                                          textColor: AppColors
-                                                              .deepPrimary,
-                                                        ),
-                                                      )
-                                                    : SizedBox(
-                                                        height: double.infinity,
-                                                        width: double.infinity,
-                                                        child: ListView.builder(
-                                                          itemCount:
-                                                              foundUsersRequest
-                                                                  .value.length,
-                                                          scrollDirection:
-                                                              Axis.vertical,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index) {
-                                                            final content =
-                                                                foundUsersRequest
-                                                                        .value[
-                                                                    index];
-                                                            return GestureDetector(
-                                                              onTap: () => context.push(
-                                                                  AppRoutes
-                                                                      .otherUsersProfile,
-                                                                  extra: content[
-                                                                          'fromUserID']
-                                                                      [
-                                                                      'userId']),
-                                                              child: Container(
-                                                                margin:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        top: 5,
-                                                                        bottom:
-                                                                            5,
-                                                                        left: 5,
-                                                                        right:
-                                                                            5),
-                                                                padding:
-                                                                    PAD_ALL_5,
-                                                                color: AppColors
-                                                                    .white,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Expanded(
-                                                                          flex:
-                                                                              2,
-                                                                          child:
-                                                                              Row(
-                                                                            children: [
-                                                                              Container(
-                                                                                height: 50,
-                                                                                width: 50,
-                                                                                decoration: BoxDecoration(
-                                                                                  borderRadius: const BorderRadius.only(
-                                                                                    bottomLeft: Radius.circular(40),
-                                                                                    bottomRight: Radius.circular(40),
-                                                                                    topLeft: Radius.circular(40),
-                                                                                    topRight: Radius.circular(0),
-                                                                                  ),
-                                                                                  border: Border.all(width: 3.5, color: Colors.grey.shade400),
-                                                                                  color: Colors.grey.shade300,
-                                                                                  image: DecorationImage(
-                                                                                    fit: BoxFit.cover,
-                                                                                    image: NetworkImage("http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${content['fromUserID']['data']['imgMain']['value'].toString()}"),
-                                                                                  ),
-                                                                                ),
-                                                                                child: Center(
-                                                                                  child: customText(
-                                                                                      text: content['fromUserID']['data']['imgMain']['value'] == null
-                                                                                          ? content['fromUserID']['firstName']!.isEmpty
-                                                                                              ? ""
-                                                                                              : "${content['fromUserID']['firstName'][0]}${content['fromUserID']['lastName'][0]}".toUpperCase()
-                                                                                          : "",
-                                                                                      fontSize: 12,
-                                                                                      textColor: AppColors.deepPrimary,
-                                                                                      fontWeight: FontWeight.w500),
-                                                                                ),
-                                                                              ),
-                                                                              widthSpace(2),
-                                                                              SizedBox(
-                                                                                width: 40.w,
-                                                                                //color: Colors.amber,
-                                                                                child: Column(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                                  children: [
-                                                                                    customText(text: "${content['fromUserID']['firstName']} ${content['fromUserID']['lastName']}", fontSize: 11, textColor: AppColors.black, fontWeight: FontWeight.w700),
-                                                                                    customText(text: "@${content['fromUserID']['username']} ", fontSize: 11, textColor: AppColors.searchTextGrey, fontWeight: FontWeight.w400),
-                                                                                  ],
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        Container(
-                                                                          padding:
-                                                                              PAD_ALL_10,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                AppColors.primary,
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(30),
-                                                                          ),
-                                                                          child:
-                                                                              Row(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.center,
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.center,
-                                                                            children: [
-                                                                              GestureDetector(
-                                                                                onTap: () async {
-                                                                                  final result = await _exploreRepository.acceptFriendRequest(friendID: content['fromUserID']['userId']);
-                                                                                  if (result['updated'] == true) {
-                                                                                    ToastResp.toastMsgSuccess(resp: result['message']);
-
-                                                                                    log(result.toString());
-                                                                                    refreshConnection();
-                                                                                  } else {
-                                                                                    log(result.toString());
-                                                                                    ToastResp.toastMsgError(resp: result['message']);
-                                                                                  }
-                                                                                },
-                                                                                child: SvgPicture.asset(
-                                                                                  AppImages.addOrganizer,
-                                                                                  color: content['fromUserID']['joinStatus'] == "FRIEND_REQUEST_RECIEVED" ? AppColors.white : AppColors.white,
-                                                                                ),
-                                                                              ),
-                                                                              widthSpace(2),
-                                                                              PopupMenuButton(
-                                                                                shape: RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.circular(15),
-                                                                                ),
-                                                                                position: PopupMenuPosition.under,
-                                                                                color: Colors.white,
-                                                                                child: Container(
-                                                                                  child: const Padding(
-                                                                                      padding: EdgeInsets.all(2.0),
-                                                                                      child: Icon(
-                                                                                        Icons.more_vert_outlined,
-                                                                                        color: Colors.white,
-                                                                                      )),
-                                                                                ),
-                                                                                itemBuilder: (ctx) => [
-                                                                                  buildPopupMenuItem2(
-                                                                                    'Disconnect',
-                                                                                    AppColors.black,
-                                                                                    function: () async {
-                                                                                      final result = await _exploreRepository.rejectFriendRequest(friendID: content['fromUserID']['userId']);
-                                                                                      if (result['updated'] == true) {
-                                                                                        ToastResp.toastMsgSuccess(resp: result['message']);
-
-                                                                                        log(result.toString());
-                                                                                        refreshConnection();
-                                                                                      } else {
-                                                                                        log(result.toString());
-                                                                                        ToastResp.toastMsgError(resp: result['message']);
-                                                                                      }
-                                                                                    },
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                    heightSpace(
-                                                                        0.2),
-                                                                    const Divider(
-                                                                      thickness:
-                                                                          0.5,
-                                                                      color: AppColors
-                                                                          .iconGrey,
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
-                                          ),
-                                        ],
+                                                    ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: AppTextFormField(
+                                        //textEditingController: searchController,
+                                        //label: "",
+                                        hintText: "Search for Events ...",
+                                        onChanged: (value) {
+                                          _runEventFilter(value);
+                                        },
+                                      ),
+                                    ),
+                                    widthSpace(4),
+                                    GestureDetector(
+                                      onTap: () => context
+                                          .push(AppRoutes.profileEventMore),
+                                      child: customText(
+                                        text: "See all",
+                                        fontSize: 14,
+                                        textColor: AppColors.deepPrimary,
                                       ),
                                     )
                                   ],
                                 ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            //color: Colors.orange,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: AppTextFormField(
-                                          //textEditingController: searchController,
-                                          //label: "",
-                                          hintText: "Search for Events ...",
-                                          onChanged: (value) {
-                                            _runEventFilter(value);
-                                          },
+                              foundEvents.value.isEmpty
+                                  ? Expanded(
+                                      child: SizedBox(
+                                        height: 30.h,
+                                        width: double.infinity,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 5.h,
+                                              backgroundColor: AppColors
+                                                  .deepPrimary
+                                                  .withOpacity(0.1),
+                                              child: SvgPicture.asset(
+                                                AppImages.calendarAdd,
+                                                color: AppColors.deepPrimary,
+                                                height: 5.h,
+                                              ),
+                                            ),
+                                            heightSpace(2),
+                                            customText(
+                                              text:
+                                                  "You have no created or attending event",
+                                              fontSize: 12,
+                                              textColor: AppColors.primary,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      widthSpace(4),
-                                      GestureDetector(
-                                        onTap: () => context
-                                            .push(AppRoutes.profileEventMore),
-                                        child: customText(
-                                          text: "See all",
-                                          fontSize: 14,
-                                          textColor: AppColors.deepPrimary,
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                    )
+                                  : Expanded(
+                                      child: ListView.builder(
+                                        itemCount: foundEvents.value.length,
+                                        scrollDirection: Axis.vertical,
+                                        itemBuilder: (BuildContext context,
+                                            int index) {
+                                          EventContent myEvent =
+                                              foundEvents.value[index];
+                                          //for formatted time
+                                          int startTimeInMillis =
+                                              myEvent.startTime!;
+                                          DateTime startTime = DateTimeUtils
+                                              .convertMillisecondsToDateTime(
+                                                  startTimeInMillis);
+                                          String formattedDate =
+                                              DateUtilss.formatDateTime(
+                                                  startTime);
+                                          String eventTypeString = myEvent
+                                              .eventType!
+                                              .replaceAll("_", " ");
+                                          return Padding(
+                                            padding:
+                                                const EdgeInsets.fromLTRB(
+                                                    10, 5, 10, 5),
+                                            child: EventSmallTitleCard(
+                                              eventName: myEvent.eventName,
+                                              date: formattedDate,
+                                              location:
+                                                  myEvent.location!.address,
+                                              image: myEvent.currentPicUrl,
+                                              price: myEvent.minPrice,
+                                              eventDetails: myEvent,
+                                              category: eventTypeString,
+                                              isOrganser: myEvent.isOrganizer,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: AppTextFormField(
+                                        //textEditingController: searchController,
+                                        //label: "",
+                                        hintText: "Search for Community ...",
+                                        onChanged: (value) {
+                                          _runCommunityFilter(value);
+                                        },
+                                      ),
+                                    ),
+                                    widthSpace(4),
+                                    GestureDetector(
+                                      onTap: () => context.push(
+                                          AppRoutes.profileCommmunityMore),
+                                      child: customText(
+                                        text: "See all",
+                                        fontSize: 14,
+                                        textColor: AppColors.deepPrimary,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                foundEvents.value.isEmpty
-                                    ? Expanded(
-                                        child: SizedBox(
-                                          height: 30.h,
-                                          width: double.infinity,
+                              ),
+                              heightSpace(1.5),
+                              Expanded(
+                                child: Container(
+                                  margin:
+                                      const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                  width: double.infinity,
+                                  child: ListView.builder(
+                                    itemCount: foundCommunity.value.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      CommContent comm =
+                                          foundCommunity.value[index];
+                                      log("comunity ID ==> ${comm.joinStatus}");
+
+                                      return GestureDetector(
+                                        onTap: () {
+                                          context.push(
+                                            AppRoutes.communityInfo,
+                                            extra: CommunityInfoModel(
+                                              description:
+                                                  comm.data!.description ??
+                                                      "",
+                                              groupId: comm.id,
+                                              name: comm.data!.name ?? "",
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                              bottom: 10),
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
                                             children: [
-                                              CircleAvatar(
-                                                radius: 5.h,
-                                                backgroundColor: AppColors
-                                                    .deepPrimary
-                                                    .withOpacity(0.1),
-                                                child: SvgPicture.asset(
-                                                  AppImages.calendarAdd,
-                                                  color: AppColors.deepPrimary,
-                                                  height: 5.h,
-                                                ),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    height: 55,
+                                                    width: 55,
+                                                    child: Stack(
+                                                      children: [
+                                                        Positioned(
+                                                          left: 0,
+                                                          child: Container(
+                                                            width: 35,
+                                                            height: 35,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .only(
+                                                                      bottomLeft:
+                                                                          Radius.circular(20),
+                                                                      bottomRight:
+                                                                          Radius.circular(20),
+                                                                      topLeft:
+                                                                          Radius.circular(20),
+                                                                      topRight:
+                                                                          Radius.circular(0),
+                                                                    ),
+                                                                    color: AppColors
+                                                                        .deepPrimary),
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          left: 5,
+                                                          child: Container(
+                                                            width: 35,
+                                                            height: 35,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  width: 1),
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                      .only(
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                bottomRight: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        0),
+                                                              ),
+                                                              color: AppColors
+                                                                  .deepPrimary,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          left: 10,
+                                                          child: Container(
+                                                            width: 35,
+                                                            height: 35,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  width: 1),
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                      .only(
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                bottomRight: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        0),
+                                                              ),
+                                                              color: Colors
+                                                                  .grey
+                                                                  .shade200,
+                                                              image:
+                                                                  DecorationImage(
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                image: NetworkImage(
+                                                                    "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm.data!.imgSrc}"),
+                                                              ),
+                                                            ),
+                                                            child: Center(
+                                                              child:
+                                                                  customText(
+                                                                text: comm.data!.imgSrc ==
+                                                                            null ||
+                                                                        comm
+                                                                            .data!
+                                                                            .imgSrc!
+                                                                            .isEmpty
+                                                                    ? extractFirstLetters(
+                                                                        "${comm.data!.name}"
+                                                                            .toUpperCase())
+                                                                    : "",
+                                                                fontSize: 10,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .deepPrimary,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  widthSpace(1),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        customText(
+                                                            text:
+                                                                comm.data!.name ==
+                                                                        null
+                                                                    ? ""
+                                                                    : comm
+                                                                        .data!
+                                                                        .name!,
+                                                            fontSize: 14,
+                                                            textColor:
+                                                                AppColors
+                                                                    .black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                        customText(
+                                                            text: comm.data!
+                                                                .description
+                                                                .toString(),
+                                                            fontSize: 12,
+                                                            textColor: AppColors
+                                                                .searchTextGrey,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500,
+                                                            lines: 3),
+                                                        heightSpace(1),
+                                                        Row(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                customText(
+                                                                    text: comm
+                                                                        .data!
+                                                                        .memberCount
+                                                                        .toString(),
+                                                                    fontSize:
+                                                                        10,
+                                                                    textColor:
+                                                                        AppColors
+                                                                            .deepPrimary,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                                widthSpace(1),
+                                                                customText(
+                                                                    text: comm.data!.memberCount ==
+                                                                            1
+                                                                        ? "Member"
+                                                                        : "Members",
+                                                                    fontSize:
+                                                                        10,
+                                                                    textColor:
+                                                                        AppColors
+                                                                            .searchTextGrey,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ],
+                                                            ),
+                                                            widthSpace(10),
+                                                            Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: const Color(
+                                                                    0xffD0D4EB),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            3),
+                                                              ),
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        3.0),
+                                                                child: customText(
+                                                                    text: comm.data!.isPublic ==
+                                                                            true
+                                                                        ? "Public"
+                                                                        : "Private",
+                                                                    fontSize:
+                                                                        8,
+                                                                    textColor:
+                                                                        AppColors
+                                                                            .red,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              heightSpace(2),
-                                              customText(
-                                                text:
-                                                    "You have no created or attending event",
-                                                fontSize: 12,
-                                                textColor: AppColors.primary,
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                              const Divider(),
                                             ],
                                           ),
                                         ),
-                                      )
-                                    : Expanded(
-                                        child: ListView.builder(
-                                          itemCount: foundEvents.value.length,
-                                          scrollDirection: Axis.vertical,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            EventContent myEvent =
-                                                foundEvents.value[index];
-                                            //for formatted time
-                                            int startTimeInMillis =
-                                                myEvent.startTime!;
-                                            DateTime startTime = DateTimeUtils
-                                                .convertMillisecondsToDateTime(
-                                                    startTimeInMillis);
-                                            String formattedDate =
-                                                DateUtilss.formatDateTime(
-                                                    startTime);
-                                            String eventTypeString = myEvent
-                                                .eventType!
-                                                .replaceAll("_", " ");
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      10, 5, 10, 5),
-                                              child: EventSmallTitleCard(
-                                                eventName: myEvent.eventName,
-                                                date: formattedDate,
-                                                location:
-                                                    myEvent.location!.address,
-                                                image: myEvent.currentPicUrl,
-                                                price: myEvent.minPrice,
-                                                eventDetails: myEvent,
-                                                category: eventTypeString,
-                                                isOrganser: myEvent.isOrganizer,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            //colorScheme.background: Colors.blue,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: AppTextFormField(
-                                          //textEditingController: searchController,
-                                          //label: "",
-                                          hintText: "Search for Community ...",
-                                          onChanged: (value) {
-                                            _runCommunityFilter(value);
-                                          },
-                                        ),
-                                      ),
-                                      widthSpace(4),
-                                      GestureDetector(
-                                        onTap: () => context.push(
-                                            AppRoutes.profileCommmunityMore),
-                                        child: customText(
-                                          text: "See all",
-                                          fontSize: 14,
-                                          textColor: AppColors.deepPrimary,
-                                        ),
-                                      )
-                                    ],
+                                      );
+                                    },
                                   ),
                                 ),
-                                heightSpace(1.5),
-                                Expanded(
-                                  child: Container(
-                                    margin:
-                                        const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                    width: double.infinity,
-                                    child: ListView.builder(
-                                      itemCount: foundCommunity.value.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        CommContent comm =
-                                            foundCommunity.value[index];
-                                        log("comunity ID ==> ${comm.joinStatus}");
-
-                                        return GestureDetector(
-                                          onTap: () {
-                                            context.push(
-                                              AppRoutes.communityInfo,
-                                              extra: CommunityInfoModel(
-                                                description:
-                                                    comm.data!.description ??
-                                                        "",
-                                                groupId: comm.id,
-                                                name: comm.data!.name ?? "",
-                                              ),
-                                            );
-                                          },
-                                          child: Container(
-                                            margin: const EdgeInsets.only(
-                                                bottom: 10),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 55,
-                                                      width: 55,
-                                                      child: Stack(
-                                                        children: [
-                                                          Positioned(
-                                                            left: 0,
-                                                            child: Container(
-                                                              width: 35,
-                                                              height: 35,
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .only(
-                                                                        bottomLeft:
-                                                                            Radius.circular(20),
-                                                                        bottomRight:
-                                                                            Radius.circular(20),
-                                                                        topLeft:
-                                                                            Radius.circular(20),
-                                                                        topRight:
-                                                                            Radius.circular(0),
-                                                                      ),
-                                                                      color: AppColors
-                                                                          .deepPrimary),
-                                                            ),
-                                                          ),
-                                                          Positioned(
-                                                            left: 5,
-                                                            child: Container(
-                                                              width: 35,
-                                                              height: 35,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                border: Border.all(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    width: 1),
-                                                                borderRadius:
-                                                                    const BorderRadius
-                                                                        .only(
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  topLeft: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          0),
-                                                                ),
-                                                                color: AppColors
-                                                                    .deepPrimary,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Positioned(
-                                                            left: 10,
-                                                            child: Container(
-                                                              width: 35,
-                                                              height: 35,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                border: Border.all(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    width: 1),
-                                                                borderRadius:
-                                                                    const BorderRadius
-                                                                        .only(
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  topLeft: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          0),
-                                                                ),
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade200,
-                                                                image:
-                                                                    DecorationImage(
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  image: NetworkImage(
-                                                                      "http://ec2-3-128-192-61.us-east-2.compute.amazonaws.com:8080/resource-api/download/${comm.data!.imgSrc}"),
-                                                                ),
-                                                              ),
-                                                              child: Center(
-                                                                child:
-                                                                    customText(
-                                                                  text: comm.data!.imgSrc ==
-                                                                              null ||
-                                                                          comm
-                                                                              .data!
-                                                                              .imgSrc!
-                                                                              .isEmpty
-                                                                      ? extractFirstLetters(
-                                                                          "${comm.data!.name}"
-                                                                              .toUpperCase())
-                                                                      : "",
-                                                                  fontSize: 10,
-                                                                  textColor:
-                                                                      AppColors
-                                                                          .deepPrimary,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    widthSpace(1),
-                                                    Expanded(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          customText(
-                                                              text:
-                                                                  comm.data!.name ==
-                                                                          null
-                                                                      ? ""
-                                                                      : comm
-                                                                          .data!
-                                                                          .name!,
-                                                              fontSize: 14,
-                                                              textColor:
-                                                                  AppColors
-                                                                      .black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                          customText(
-                                                              text: comm.data!
-                                                                  .description
-                                                                  .toString(),
-                                                              fontSize: 12,
-                                                              textColor: AppColors
-                                                                  .searchTextGrey,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              lines: 3),
-                                                          heightSpace(1),
-                                                          Row(
-                                                            children: [
-                                                              Row(
-                                                                children: [
-                                                                  customText(
-                                                                      text: comm
-                                                                          .data!
-                                                                          .memberCount
-                                                                          .toString(),
-                                                                      fontSize:
-                                                                          10,
-                                                                      textColor:
-                                                                          AppColors
-                                                                              .deepPrimary,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500),
-                                                                  widthSpace(1),
-                                                                  customText(
-                                                                      text: comm.data!.memberCount ==
-                                                                              1
-                                                                          ? "Member"
-                                                                          : "Members",
-                                                                      fontSize:
-                                                                          10,
-                                                                      textColor:
-                                                                          AppColors
-                                                                              .searchTextGrey,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500),
-                                                                ],
-                                                              ),
-                                                              widthSpace(10),
-                                                              Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: const Color(
-                                                                      0xffD0D4EB),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3),
-                                                                ),
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          3.0),
-                                                                  child: customText(
-                                                                      text: comm.data!.isPublic ==
-                                                                              true
-                                                                          ? "Public"
-                                                                          : "Private",
-                                                                      fontSize:
-                                                                          8,
-                                                                      textColor:
-                                                                          AppColors
-                                                                              .red,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const Divider(),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
