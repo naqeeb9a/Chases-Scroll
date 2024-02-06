@@ -169,7 +169,7 @@ class Comment extends HookWidget {
                                                 fontSize: 12,
                                                 textColor: AppColors.primary),
                                             ExpandableText(
-                                              e.comment ?? '',
+                                              e.comment??'',
                                               style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w500,
@@ -272,7 +272,6 @@ class Comment extends HookWidget {
                                           ],
                                         ),
                                       ),
-                                      const Spacer(),
                                       InkWell(
                                         onTap: () {
                                           log(hasLiked.value.toString());
