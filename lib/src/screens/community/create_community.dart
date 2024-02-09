@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -36,9 +37,8 @@ class CreateCommunity extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final keys = locator<LocalStorageService>().getDataFromDisk(AppKeys.userId);
-
-    final private = useState<bool>(true);
-    final public = useState<bool>(false);
+    final private = useState<bool>(!(communityInfoModel?.isPublic??true));
+    final public = useState<bool>(communityInfoModel?.isPublic??false);
     final imageValue = useState<File>(File(''));
     final imageString = useState<String>('');
     final imageToUpload = useState<String>("");

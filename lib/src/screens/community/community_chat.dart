@@ -392,6 +392,7 @@ class CommunityChat extends HookConsumerWidget {
                   Navigator.pop(context);
                   context.push(AppRoutes.communityInfo,
                       extra: CommunityInfoModel(
+                          isPublic: communityData.isPublic,
                           description: communityData.description,
                           groupId: communityData.groupId,
                           name: communityData.name,

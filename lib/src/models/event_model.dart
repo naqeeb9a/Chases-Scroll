@@ -134,7 +134,7 @@ class ContentUser {
 
 class Country {
   bool? objectPublic;
-  String? value;
+  List<dynamic>? value;
 
   Country({this.objectPublic, this.value});
 

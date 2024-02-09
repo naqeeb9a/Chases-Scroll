@@ -106,6 +106,7 @@ class CommunityRepo {
       Endpoints.findGroup,
       useToken: true,
     );
+    print(response.status);
     if (response.status == 200) {
       log(response.message.toString());
       return GroupModel.fromJson(response.message);

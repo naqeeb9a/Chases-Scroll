@@ -14,6 +14,7 @@ import 'package:chases_scroll/src/utils/constants/extensions/index_of_map.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/change_millepoch.dart';
 import 'package:chases_scroll/src/utils/constants/helpers/strings.dart';
 import 'package:chases_scroll/src/utils/constants/spacer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -67,7 +68,6 @@ class MyCommunity extends HookConsumerWidget {
       getCommunity();
       return null;
     }, [textValue]);
-
     return Container(
       padding: const EdgeInsets.only(bottom: 5, top: 10),
       decoration: BoxDecoration(
@@ -99,9 +99,11 @@ class MyCommunity extends HookConsumerWidget {
                               textColor: AppColors.textGrey,
                               fontSize: 14)),
                     ...(communityModel.value?.content??[]).mapIndexed((element, index) {
+                      print(json.encode(communityModel.value?.content?[index].data));
                       return InkWell(
                         onTap: () => context.push(AppRoutes.communityChat,
                             extra: CommunityData(
+                              isPublic: communityModel.value?.content?[index].data?.isPublic??false,
                                 imageUrl: '${element.data?.imgSrc}',
                                 groupId: element.id,
                                 name: element.data?.name,
