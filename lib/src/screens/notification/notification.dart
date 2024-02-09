@@ -33,56 +33,65 @@ class NotificationView extends HookWidget {
     }, []);
 
     return Scaffold(
-        appBar: AppBar(
-            centerTitle: true,
-            title: customText(
-                text: "Notification",
-                fontSize: 14,
-                textColor: AppColors.black)),
-        body: isLoading.value
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Column(children: [
-                ...notificationModel.value!.content!
-                    .mapIndexed((element, value) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(children: [
-                          ChaseScrollContainer(
-                              name:
-                                  "${element.createdBy!.firstName} ${element.createdBy!.lastName}",
-                              imageUrl:
-                                  "${Endpoints.displayImages}${element.lastModifiedBy?.data?.imgMain?.value}"),
-                          widthSpace(3),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: AppBar(
+          centerTitle: true,
+          title: customText(
+              text: "Notification", fontSize: 14, textColor: AppColors.black)),
+      body: isLoading.value
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  ...notificationModel.value!.content!.mapIndexed(
+                    (element, value) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
                               children: [
+                                ChaseScrollContainer(
+                                    name:
+                                        "${element.createdBy!.firstName} ${element.createdBy!.lastName}",
+                                    imageUrl:
+                                        "${Endpoints.displayImages}${element.lastModifiedBy?.data?.imgMain?.value}"),
+                                widthSpace(3),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    customText(
+                                        text: "${element.title}",
+                                        textColor: AppColors.primary,
+                                        fontSize: 14),
+                                    customText(
+                                        text: reduceStringLength(
+                                            "${element.message}", 25),
+                                        fontSize: 11,
+                                        textColor: AppColors.textGrey),
+                                  ],
+                                ),
+                                const Spacer(),
                                 customText(
-                                    text: "${element.title}",
-                                    textColor: AppColors.primary,
-                                    fontSize: 14),
-                                customText(
-                                    text: reduceStringLength(
-                                        "${element.message}", 25),
+                                    text:
+                                        timeAgoFromEpoch(element.createdDate!),
                                     fontSize: 11,
-                                    textColor: AppColors.textGrey)
-                              ]),
-                          const Spacer(),
-                          customText(
-                              text: timeAgoFromEpoch(element.createdDate!),
-                              fontSize: 11,
-                              textColor: AppColors.primary)
-                        ]),
-                        heightSpace(1),
-                        const Divider(color: Color(0x7F9B9696))
-                      ],
-                    ),
-                  );
-                })
-              ])));
+                                    textColor: AppColors.primary)
+                              ],
+                            ),
+                            heightSpace(1),
+                            const Divider(color: Color(0x7F9B9696))
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+    );
   }
 }
